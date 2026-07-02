@@ -7,13 +7,11 @@
 
   /* ---- Section 2: Rooms Slider ---- */
   if (document.getElementById('roomsSwiper')) {
-    var roomsSwiper = new Swiper('#roomsSwiper', {
+
+    new Swiper('#roomsSwiper', {
       centeredSlides: true,
-      centeredSlidesBounds: false,
       slidesPerView: 'auto',
       loop: true,
-      loopAdditionalSlides: 3,
-      initialSlide: 0,
       spaceBetween: 30,
       speed: 800,
       grabCursor: true,
@@ -26,7 +24,6 @@
       },
     });
 
-    roomsSwiper.slideToLoop(0, 0);
   }
 
   /* ---- Section 4: Special Offers Slider ---- */
