@@ -11,6 +11,7 @@
       centeredSlides: true,
       slidesPerView: 'auto',
       loop: true,
+      loopedSlides: 3,
       spaceBetween: 30,
       speed: 800,
       grabCursor: true,
