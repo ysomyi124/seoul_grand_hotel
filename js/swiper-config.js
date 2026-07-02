@@ -11,22 +11,12 @@
       centeredSlides: true,
       slidesPerView: 'auto',
       loop: true,
-      spaceBetween: 24,
-      speed: 600,
+      spaceBetween: 30,
+      speed: 800,
+      grabCursor: true,
       navigation: {
         prevEl: '.rooms-swiper__prev',
         nextEl: '.rooms-swiper__next',
-      },
-      breakpoints: {
-        0: {
-          spaceBetween: 14,
-        },
-        768: {
-          spaceBetween: 20,
-        },
-        1024: {
-          spaceBetween: 24,
-        },
       },
     });
   }

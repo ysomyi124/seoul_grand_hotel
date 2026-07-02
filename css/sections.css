@@ -94,6 +94,7 @@
 /* Rooms Swiper */
 .rooms-swiper-container {
   position: relative;
+  overflow: hidden;
   padding-bottom: 80px;
 }
 
@@ -103,12 +104,13 @@
 }
 
 .rooms-slide {
-  width: 55%;
-  max-width: 860px;
-  transition: opacity 0.55s ease;
-  opacity: 0.5;
+  width: 50%;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+  transform: scale(0.92);
+  opacity: 0.6;
 }
 .rooms-slide.swiper-slide-active {
+  transform: scale(1);
   opacity: 1;
 }
 
@@ -179,17 +181,25 @@
 /* Rooms Navigation Buttons */
 .rooms-swiper__prev,
 .rooms-swiper__next {
+  top: 38%;
+  margin-top: 0;
   width: 52px;
   height: 52px;
-  background-color: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   color: var(--color-black);
   transition: background-color var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
   border-radius: 0;
 }
+.rooms-swiper__prev {
+  left: 10%;
+}
+.rooms-swiper__next {
+  right: 10%;
+}
 .rooms-swiper__prev::after,
 .rooms-swiper__next::after {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--color-black);
   transition: color var(--ease-fast);
