@@ -1,0 +1,50 @@
+/* =============================================
+   CSS VARIABLES
+   ============================================= */
+
+:root {
+  /* ---- Colors ---- */
+  --color-black:      #111111;
+  --color-white:      #ffffff;
+  --color-accent:     #866552;
+  --color-text-sub:   #767676;
+  --color-line:       #E8E8E8;
+  --color-bg-light:   #F7F7F7;
+  --color-bg-dark:    #111111;
+
+  /* ---- Typography ---- */
+  --font-en:  'Montserrat', sans-serif;
+  --font-ko:  'Pretendard', sans-serif;
+
+  --fs-display:  clamp(60px, 9vw, 140px);
+  --fs-h1:       30px;
+  --fs-h2:       28px;
+  --fs-body:     16px;
+  --fs-caption:  13px;
+
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  --lh-tight:  1.1;
+  --lh-snug:   1.2;
+  --lh-normal: 1.6;
+
+  /* ---- Layout ---- */
+  --max-width:        1920px;
+  --container-px:     80px;
+  --section-gap:      120px;
+  --section-gap-mob:  64px;
+
+  /* ---- Header ---- */
+  --topbar-h:       40px;
+  --header-h:       90px;
+  --header-h-sm:    64px;
+
+  /* ---- Transitions ---- */
+  --ease-fast:   0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-normal: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-slow:   0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}

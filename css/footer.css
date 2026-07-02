@@ -1,0 +1,79 @@
+/* =============================================
+   FOOTER
+   ============================================= */
+
+.footer {
+  background-color: var(--color-bg-dark);
+  padding: 64px 0 40px;
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ---- Top Row: Logo + Nav ---- */
+.footer__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.footer__logo img {
+  height: 34px;
+  width: auto;
+  opacity: 0.85;
+  transition: opacity var(--ease-fast);
+}
+.footer__logo:hover img {
+  opacity: 1;
+}
+
+.footer__nav-list {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.footer__nav-list a {
+  font-family: var(--font-ko);
+  font-size: 13px;
+  font-weight: var(--fw-regular);
+  color: rgba(255, 255, 255, 0.55);
+  transition: color var(--ease-fast);
+}
+.footer__nav-list a:hover {
+  color: var(--color-white);
+}
+.footer__nav-highlight {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* ---- Divider ---- */
+.footer__divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ---- Address ---- */
+.footer__address {
+  font-family: var(--font-ko);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 2;
+}
+
+/* ---- Bottom Row: Copyright ---- */
+.footer__bottom {
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.footer__copyright {
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}

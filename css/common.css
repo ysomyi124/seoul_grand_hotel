@@ -1,0 +1,132 @@
+/* =============================================
+   COMMON / UTILITIES
+   ============================================= */
+
+/* ---- Container ---- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 40px;
+  font-family: var(--font-en);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid var(--color-black);
+}
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--color-black);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+.btn-outline:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-white);
+}
+
+.btn-outline-dark {
+  background-color: transparent;
+  color: var(--color-black);
+  border: 1px solid var(--color-black);
+}
+.btn-outline-dark:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+/* ---- Section Label (small uppercase over title) ---- */
+.section-label {
+  display: block;
+  font-family: var(--font-en);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 14px;
+}
+
+/* ---- Page Transition Overlay ---- */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-black);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.page-transition.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ---- Scroll Reveal Animations ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.12s; }
+.reveal-delay-2 { transition-delay: 0.24s; }
+.reveal-delay-3 { transition-delay: 0.36s; }
+.reveal-delay-4 { transition-delay: 0.48s; }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.reveal-scale.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.reveal-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}

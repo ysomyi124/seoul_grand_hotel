@@ -1,0 +1,560 @@
+/* =============================================
+   MAIN SECTIONS
+   ============================================= */
+
+/* =============================================
+   SECTION 1 — TIMELESS LUXURY
+   ============================================= */
+
+.sec-timeless {
+  padding: var(--section-gap) 0;
+  overflow: hidden;
+  background-color: var(--color-white);
+}
+
+.sec-timeless__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sec-timeless__word {
+  font-family: 'Playfair Display', serif;
+  font-size: var(--fs-display);
+  font-weight: var(--fw-semibold);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--color-black);
+  position: relative;
+  z-index: 2;
+  padding-inline: var(--container-px);
+  pointer-events: none;
+  user-select: none;
+}
+.sec-timeless__word--top {
+  margin-bottom: -0.08em;
+}
+.sec-timeless__word--bottom {
+  text-align: right;
+  margin-top: -0.08em;
+}
+
+.sec-timeless__image {
+  position: relative;
+  z-index: 1;
+  width: 72%;
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  padding: 20px 0;
+}
+.sec-timeless__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 1.2s ease;
+}
+.sec-timeless__image:hover img {
+  transform: scale(1.04);
+}
+
+/* =============================================
+   SECTION 2 — ROOMS
+   ============================================= */
+
+.sec-rooms {
+  padding-top: var(--section-gap);
+  padding-bottom: 0;
+  background-color: var(--color-white);
+}
+
+.sec-rooms__header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.sec-rooms__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  color: var(--color-black);
+  margin-bottom: 16px;
+}
+
+.sec-rooms__desc {
+  font-family: var(--font-ko);
+  font-size: var(--fs-body);
+  color: var(--color-text-sub);
+  line-height: var(--lh-normal);
+}
+
+/* Rooms Swiper */
+.rooms-swiper-container {
+  position: relative;
+  padding-bottom: 80px;
+}
+
+.rooms-swiper {
+  overflow: visible;
+  padding-inline: 0;
+}
+
+.rooms-slide {
+  width: 55%;
+  max-width: 860px;
+  transition: opacity 0.55s ease;
+  opacity: 0.5;
+}
+.rooms-slide.swiper-slide-active {
+  opacity: 1;
+}
+
+.rooms-slide__image-wrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.rooms-slide__image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s ease;
+}
+.rooms-slide.swiper-slide-active .rooms-slide__image-wrap img:hover {
+  transform: scale(1.04);
+}
+
+.rooms-slide__info {
+  text-align: center;
+  padding: 28px 20px 0;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+}
+.rooms-slide.swiper-slide-active .rooms-slide__info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rooms-slide__category {
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  color: var(--color-black);
+  margin-bottom: 8px;
+}
+
+.rooms-slide__types {
+  font-family: var(--font-en);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-regular);
+  color: var(--color-text-sub);
+  letter-spacing: 0.1em;
+}
+.rooms-slide__types span {
+  margin-inline: 2px;
+}
+
+.rooms-slide__link {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 2px;
+  transition: color var(--ease-fast), border-color var(--ease-fast);
+}
+.rooms-slide__link:hover {
+  color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+/* Rooms Navigation Buttons */
+.rooms-swiper__prev,
+.rooms-swiper__next {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: var(--color-black);
+  transition: background-color var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+  border-radius: 0;
+}
+.rooms-swiper__prev::after,
+.rooms-swiper__next::after {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-black);
+  transition: color var(--ease-fast);
+}
+.rooms-swiper__prev:hover,
+.rooms-swiper__next:hover {
+  background-color: var(--color-black);
+  border-color: var(--color-black);
+}
+.rooms-swiper__prev:hover::after,
+.rooms-swiper__next:hover::after {
+  color: var(--color-white);
+}
+
+/* Rooms Pagination */
+.rooms-swiper__pagination {
+  bottom: 32px !important;
+}
+.rooms-swiper__pagination .swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-line);
+  opacity: 1;
+  transition: background-color var(--ease-fast), width var(--ease-fast);
+}
+.rooms-swiper__pagination .swiper-pagination-bullet-active {
+  width: 24px;
+  border-radius: 3px;
+  background-color: var(--color-black);
+}
+
+/* =============================================
+   MARQUEE BAND
+   ============================================= */
+
+.marquee-band {
+  overflow: hidden;
+  padding: 20px 0;
+  background-color: var(--color-bg-light);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 22s linear infinite;
+}
+
+.marquee-content {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+  flex-shrink: 0;
+}
+
+.marquee-content span {
+  font-family: var(--font-en);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-sub);
+  white-space: nowrap;
+}
+
+.marquee-dot {
+  color: var(--color-accent) !important;
+  font-size: 18px !important;
+  letter-spacing: 0 !important;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* =============================================
+   SECTION 3 — EXPLORE OUR WORLD
+   ============================================= */
+
+.sec-explore {
+  padding: var(--section-gap) 0;
+  background-color: var(--color-white);
+}
+
+.sec-explore__header {
+  margin-bottom: 60px;
+}
+
+.sec-explore__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 3.8vw, 56px);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.02em;
+  line-height: var(--lh-tight);
+  color: var(--color-black);
+}
+
+.sec-explore__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.explore-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.explore-card__link {
+  display: block;
+}
+
+.explore-card__img-wrap {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  position: relative;
+}
+.explore-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.explore-card:hover .explore-card__img-wrap img {
+  transform: scale(1.06);
+}
+
+/* Dark overlay on hover */
+.explore-card__img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background var(--ease-normal);
+}
+.explore-card:hover .explore-card__img-wrap::after {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.explore-card__body {
+  padding: 24px 0 0;
+}
+
+.explore-card__label {
+  display: block;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 8px;
+}
+
+.explore-card__title {
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.01em;
+  color: var(--color-black);
+  margin-bottom: 10px;
+}
+
+.explore-card__desc {
+  font-family: var(--font-ko);
+  font-size: 14px;
+  color: var(--color-text-sub);
+  line-height: var(--lh-normal);
+  margin-bottom: 16px;
+}
+
+.explore-card__more {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  border-bottom: 1px solid var(--color-black);
+  padding-bottom: 2px;
+  transition: color var(--ease-fast), border-color var(--ease-fast);
+}
+.explore-card:hover .explore-card__more {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* =============================================
+   SECTION 4 — SPECIAL OFFERS
+   ============================================= */
+
+.sec-offers {
+  padding-top: var(--section-gap);
+  padding-bottom: 0;
+  background-color: var(--color-white);
+  overflow: hidden;
+}
+
+.sec-offers__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.sec-offers__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.02em;
+  color: var(--color-black);
+}
+
+/* Offers Swiper */
+.offers-swiper-container {
+  position: relative;
+  padding-bottom: 56px;
+}
+
+.offers-swiper {
+  overflow: visible;
+  padding-left: var(--container-px);
+}
+
+.offers-slide {
+  width: 650px;
+  cursor: pointer;
+}
+.offers-slide__link {
+  display: block;
+}
+.offers-slide__img-wrap {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+}
+.offers-slide__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+.offers-slide:hover .offers-slide__img-wrap img {
+  transform: scale(1.06);
+}
+
+.offers-slide__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    transparent 70%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px 28px;
+}
+
+.offers-slide__tag {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 4px 12px;
+  margin-bottom: 12px;
+  width: fit-content;
+}
+
+.offers-slide__title {
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+  line-height: 1.2;
+}
+
+/* Offers Progress Pagination */
+.offers-swiper-container {
+  position: relative;
+}
+.offers-swiper__pagination.swiper-pagination-progressbar {
+  position: absolute;
+  height: 2px;
+  background-color: var(--color-line);
+  top: auto;
+  bottom: -20px;
+  left: var(--container-px) !important;
+  width: calc(100% - var(--container-px) * 2) !important;
+  border-radius: 1px;
+}
+.offers-swiper__pagination .swiper-pagination-progressbar-fill {
+  background-color: var(--color-black);
+  border-radius: 1px;
+}
+
+/* =============================================
+   SECTION 5 — CTA
+   ============================================= */
+
+.sec-cta {
+  position: relative;
+  height: 80vh;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-top: var(--section-gap);
+}
+
+.sec-cta__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.sec-cta__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+}
+
+.sec-cta__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+.sec-cta__content {
+  position: relative;
+  z-index: 2;
+}
+
+.sec-cta__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4.5vw, 68px);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  margin-bottom: 24px;
+}
+
+.sec-cta__desc {
+  font-family: var(--font-ko);
+  font-size: var(--fs-body);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: var(--lh-normal);
+  margin-bottom: 40px;
+}
+
+.sec-cta .section-label {
+  color: rgba(255, 255, 255, 0.65);
+}

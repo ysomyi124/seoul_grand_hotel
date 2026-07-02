@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    body {
+      font-family: 'Pretendard', 'Montserrat', sans-serif;
+      background-color: #F7F7F7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .page-header {
+      background-color: #111;
+      padding: 20px 40px;
+    }
+    .page-header__logo img { height: 32px; }
+
+    .register-wrap {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 60px 24px 80px;
+    }
+    .register-box {
+      width: 100%;
+      max-width: 560px;
+      background: #fff;
+      padding: 52px 48px 48px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+    }
+    .register-box__title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .register-box__sub {
+      font-size: 14px;
+      color: #767676;
+      margin-bottom: 40px;
+    }
+
+    /* Section divider */
+    .form-section {
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #E8E8E8;
+    }
+    .form-section:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .form-section__title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #866552;
+      margin-bottom: 24px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .form-label .required {
+      color: #866552;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .form-input, .form-select {
+      display: block;
+      width: 100%;
+      padding: 13px 16px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 15px;
+      color: #111;
+      background-color: #fff;
+      border: 1px solid #E8E8E8;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus { border-color: #111; }
+    .form-input::placeholder { color: #bbb; }
+    .form-select { cursor: pointer; }
+
+    /* Gender radio */
+    .gender-group {
+      display: flex;
+      gap: 16px;
+    }
+    .gender-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .gender-option input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #111;
+      cursor: pointer;
+    }
+    .gender-option span {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 15px;
+      color: #111;
+    }
+
+    /* Phone verification */
+    .phone-group {
+      display: flex;
+      gap: 10px;
+    }
+    .phone-group .form-input { flex: 1; }
+    .btn-verify {
+      flex-shrink: 0;
+      padding: 0 20px;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid #111;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .btn-verify:hover {
+      background-color: transparent;
+      color: #111;
+    }
+
+    /* Error / hint */
+    .form-hint {
+      font-size: 12px;
+      color: #767676;
+      margin-top: 6px;
+    }
+    .form-error {
+      display: none;
+      font-size: 12px;
+      color: #c0392b;
+      margin-top: 6px;
+    }
+    .form-group.has-error .form-input,
+    .form-group.has-error .form-select {
+      border-color: #c0392b;
+    }
+    .form-group.has-error .form-error { display: block; }
+    .form-group.is-valid .form-input,
+    .form-group.is-valid .form-select {
+      border-color: #27ae60;
+    }
+
+    /* Submit */
+    .btn-submit {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid #111;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      margin-top: 36px;
+    }
+    .btn-submit:hover {
+      background-color: transparent;
+      color: #111;
+    }
+
+    .page-footer {
+      padding: 24px 40px;
+      text-align: center;
+      border-top: 1px solid #E8E8E8;
+    }
+    .page-footer p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: #aaa;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 600px) {
+      .register-box { padding: 40px 24px 36px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="../index.html" class="page-header__logo">
+      <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
+    </a>
+  </header>
+
+  <main class="register-wrap">
+    <div class="register-box">
+      <h1 class="register-box__title">Sign Up</h1>
+      <p class="register-box__sub">Seoul Grand Hotel 회원이 되어 다양한 혜택을 누리세요.</p>
+
+      <form id="registerForm" novalidate>
+
+        <!-- 계정 정보 -->
+        <div class="form-section">
+          <p class="form-section__title">Account</p>
+
+          <div class="form-group" id="grp-userid">
+            <label class="form-label" for="regId">아이디 <span class="required">*</span></label>
+            <input type="text" class="form-input" id="regId" name="userId"
+                   placeholder="영문·숫자 조합, 6자 이상" autocomplete="username">
+            <span class="form-error" id="err-userid">아이디를 입력해주세요.</span>
+          </div>
+
+          <div class="form-group" id="grp-pw">
+            <label class="form-label" for="regPw">비밀번호 <span class="required">*</span></label>
+            <input type="password" class="form-input" id="regPw" name="password"
+                   placeholder="8~20자 이내 영문·숫자·특수문자" autocomplete="new-password">
+            <span class="form-hint">영문, 숫자, 특수문자(!@#$%^&amp;*) 포함 8자리 이상</span>
+            <span class="form-error" id="err-pw">올바른 비밀번호를 입력해주세요. (영문+숫자+특수문자 포함 8자 이상)</span>
+          </div>
+
+          <div class="form-group" id="grp-pw2">
+            <label class="form-label" for="regPw2">비밀번호 확인 <span class="required">*</span></label>
+            <input type="password" class="form-input" id="regPw2" name="password2"
+                   placeholder="비밀번호를 다시 입력하세요" autocomplete="new-password">
+            <span class="form-error" id="err-pw2">비밀번호가 일치하지 않습니다.</span>
+          </div>
+        </div>
+
+        <!-- 개인 정보 -->
+        <div class="form-section">
+          <p class="form-section__title">Personal Info</p>
+
+          <div class="form-group" id="grp-gender">
+            <label class="form-label">성별 <span class="required">*</span></label>
+            <div class="gender-group">
+              <label class="gender-option">
+                <input type="radio" name="gender" value="male">
+                <span>남성</span>
+              </label>
+              <label class="gender-option">
+                <input type="radio" name="gender" value="female">
+                <span>여성</span>
+              </label>
+            </div>
+            <span class="form-error" id="err-gender">성별을 선택해주세요.</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="grp-nameKo">
+              <label class="form-label" for="nameKo">한글 이름 <span class="required">*</span></label>
+              <input type="text" class="form-input" id="nameKo" name="nameKo" placeholder="홍길동">
+              <span class="form-error" id="err-nameKo">한글 이름을 입력해주세요.</span>
+            </div>
+            <div class="form-group" id="grp-nameEn">
+              <label class="form-label" for="nameEn">영문 이름 <span class="required">*</span></label>
+              <input type="text" class="form-input" id="nameEn" name="nameEn" placeholder="HONG GIL DONG">
+              <span class="form-error" id="err-nameEn">영문 이름을 입력해주세요.</span>
+            </div>
+          </div>
+
+          <div class="form-group" id="grp-birth">
+            <label class="form-label" for="birth">생년월일 <span class="required">*</span></label>
+            <input type="date" class="form-input" id="birth" name="birth">
+            <span class="form-error" id="err-birth">생년월일을 입력해주세요.</span>
+          </div>
+
+          <div class="form-group" id="grp-phone">
+            <label class="form-label" for="phone">휴대폰번호 <span class="required">*</span></label>
+            <div class="phone-group">
+              <input type="tel" class="form-input" id="phone" name="phone"
+                     placeholder="010-0000-0000">
+              <button type="button" class="btn-verify" id="btnVerify">인증하기</button>
+            </div>
+            <span class="form-error" id="err-phone">올바른 휴대폰 번호를 입력해주세요.</span>
+          </div>
+        </div>
+
+        <!-- 선택 정보 -->
+        <div class="form-section">
+          <p class="form-section__title">Optional</p>
+
+          <div class="form-group">
+            <label class="form-label" for="email">이메일</label>
+            <input type="email" class="form-input" id="email" name="email" placeholder="example@email.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="address">주소</label>
+            <input type="text" class="form-input" id="address" name="address" placeholder="주소를 입력하세요">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">회원가입</button>
+
+      </form>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <script>
+    (function () {
+      const form = document.getElementById('registerForm');
+
+      document.getElementById('btnVerify').addEventListener('click', function () {
+        const phone = document.getElementById('phone').value.trim();
+        if (!phone) {
+          alert('휴대폰 번호를 먼저 입력해주세요.');
+          return;
+        }
+        alert('인증번호가 발송되었습니다. (데모)');
+      });
+
+      function setError(grpId, show) {
+        const g = document.getElementById(grpId);
+        if (g) {
+          g.classList.toggle('has-error', show);
+          if (!show) g.classList.remove('has-error');
+        }
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let valid = true;
+
+        const id   = document.getElementById('regId').value.trim();
+        const pw   = document.getElementById('regPw').value;
+        const pw2  = document.getElementById('regPw2').value;
+        const nameKo = document.getElementById('nameKo').value.trim();
+        const nameEn = document.getElementById('nameEn').value.trim();
+        const birth  = document.getElementById('birth').value;
+        const phone  = document.getElementById('phone').value.trim();
+        const gender = document.querySelector('input[name="gender"]:checked');
+
+        // ID
+        if (!id || id.length < 4) { setError('grp-userid', true); valid = false; }
+        else setError('grp-userid', false);
+
+        // Password: 8+ chars, must contain letter, number, special char
+        const pwRe = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,20}$/;
+        if (!pwRe.test(pw)) { setError('grp-pw', true); valid = false; }
+        else setError('grp-pw', false);
+
+        // Password confirm
+        if (pw !== pw2) { setError('grp-pw2', true); valid = false; }
+        else setError('grp-pw2', false);
+
+        // Gender
+        const genderGrp = document.getElementById('grp-gender');
+        if (!gender) {
+          genderGrp.classList.add('has-error');
+          document.getElementById('err-gender').style.display = 'block';
+          valid = false;
+        } else {
+          genderGrp.classList.remove('has-error');
+          document.getElementById('err-gender').style.display = 'none';
+        }
+
+        // Korean name
+        if (!nameKo) { setError('grp-nameKo', true); valid = false; }
+        else setError('grp-nameKo', false);
+
+        // English name
+        if (!nameEn) { setError('grp-nameEn', true); valid = false; }
+        else setError('grp-nameEn', false);
+
+        // Birth
+        if (!birth) { setError('grp-birth', true); valid = false; }
+        else setError('grp-birth', false);
+
+        // Phone
+        const phoneRe = /^01[0-9]-?\d{3,4}-?\d{4}$/;
+        if (!phoneRe.test(phone.replace(/-/g, ''))) { setError('grp-phone', true); valid = false; }
+        else setError('grp-phone', false);
+
+        if (!valid) return;
+
+        alert('회원가입이 완료되었습니다.');
+        window.location.href = 'login.html';
+      });
+    })();
+  </script>
+
+</body>
+</html>

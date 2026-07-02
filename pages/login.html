@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    body {
+      font-family: 'Pretendard', 'Montserrat', sans-serif;
+      background-color: #F7F7F7;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ---- Page Header ---- */
+    .page-header {
+      background-color: #111;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+    }
+    .page-header__logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    /* ---- Login Container ---- */
+    .login-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 460px;
+      background-color: #fff;
+      padding: 56px 48px 48px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+    }
+
+    .login-box__title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .login-box__sub {
+      font-size: 14px;
+      color: #767676;
+      margin-bottom: 40px;
+    }
+
+    /* ---- Form Fields ---- */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 15px;
+      color: #111;
+      background-color: #fff;
+      border: 1px solid #E8E8E8;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: #111;
+    }
+    .form-input::placeholder {
+      color: #bbb;
+    }
+
+    /* ---- Save ID checkbox ---- */
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .form-check input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #111;
+      cursor: pointer;
+    }
+    .form-check label {
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+    }
+
+    /* ---- Submit ---- */
+    .btn-login {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid #111;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      margin-bottom: 24px;
+    }
+    .btn-login:hover {
+      background-color: transparent;
+      color: #111;
+    }
+
+    /* ---- Links ---- */
+    .login-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .login-links a {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 13px;
+      color: #767676;
+      transition: color 0.2s;
+    }
+    .login-links a:hover {
+      color: #111;
+    }
+    .login-links__divider {
+      width: 1px;
+      height: 12px;
+      background-color: #E8E8E8;
+    }
+
+    /* ---- Error message ---- */
+    .form-error {
+      display: none;
+      font-size: 12px;
+      color: #c0392b;
+      margin-top: 6px;
+    }
+    .form-group.has-error .form-input {
+      border-color: #c0392b;
+    }
+    .form-group.has-error .form-error {
+      display: block;
+    }
+
+    /* ---- Simple footer ---- */
+    .page-footer {
+      padding: 24px 40px;
+      text-align: center;
+      border-top: 1px solid #E8E8E8;
+    }
+    .page-footer p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: #aaa;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 40px 28px 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="page-header">
+    <a href="../index.html" class="page-header__logo">
+      <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
+    </a>
+  </header>
+
+  <!-- Login -->
+  <main class="login-wrap">
+    <div class="login-box">
+      <h1 class="login-box__title">Login</h1>
+      <p class="login-box__sub">서울 그랜드 호텔에 오신 것을 환영합니다.</p>
+
+      <form id="loginForm" novalidate>
+
+        <div class="form-group" id="groupId">
+          <label class="form-label" for="userId">아이디</label>
+          <input type="text" class="form-input" id="userId" name="userId"
+                 placeholder="아이디를 입력하세요" autocomplete="username">
+          <span class="form-error" id="errId">아이디를 입력해주세요.</span>
+        </div>
+
+        <div class="form-group" id="groupPw">
+          <label class="form-label" for="userPw">비밀번호</label>
+          <input type="password" class="form-input" id="userPw" name="userPw"
+                 placeholder="비밀번호를 입력하세요" autocomplete="current-password">
+          <span class="form-error" id="errPw">비밀번호를 입력해주세요.</span>
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" id="saveId" name="saveId">
+          <label for="saveId">아이디 저장</label>
+        </div>
+
+        <button type="submit" class="btn-login">로그인</button>
+
+      </form>
+
+      <div class="login-links">
+        <a href="register.html">회원가입</a>
+        <span class="login-links__divider"></span>
+        <a href="#">아이디 찾기</a>
+        <span class="login-links__divider"></span>
+        <a href="#">비밀번호 찾기</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <script>
+    (function () {
+      const form     = document.getElementById('loginForm');
+      const idInput  = document.getElementById('userId');
+      const pwInput  = document.getElementById('userPw');
+      const groupId  = document.getElementById('groupId');
+      const groupPw  = document.getElementById('groupPw');
+      const saveChk  = document.getElementById('saveId');
+
+      // Restore saved ID
+      const savedId = localStorage.getItem('sgh_saved_id');
+      if (savedId) {
+        idInput.value = savedId;
+        saveChk.checked = true;
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let valid = true;
+
+        if (!idInput.value.trim()) {
+          groupId.classList.add('has-error');
+          valid = false;
+        } else {
+          groupId.classList.remove('has-error');
+        }
+
+        if (!pwInput.value.trim()) {
+          groupPw.classList.add('has-error');
+          valid = false;
+        } else {
+          groupPw.classList.remove('has-error');
+        }
+
+        if (!valid) return;
+
+        // Save / remove ID
+        if (saveChk.checked) {
+          localStorage.setItem('sgh_saved_id', idInput.value.trim());
+        } else {
+          localStorage.removeItem('sgh_saved_id');
+        }
+
+        // Demo login (no real auth)
+        localStorage.setItem('sgh_logged_in', 'true');
+        localStorage.setItem('sgh_user_name', idInput.value.trim());
+        alert('로그인되었습니다.');
+        window.location.href = '../index.html';
+      });
+
+      // Clear errors on input
+      idInput.addEventListener('input', function () { groupId.classList.remove('has-error'); });
+      pwInput.addEventListener('input', function () { groupPw.classList.remove('has-error'); });
+    })();
+  </script>
+
+</body>
+</html>

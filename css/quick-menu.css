@@ -1,0 +1,60 @@
+/* =============================================
+   QUICK MENU (Fixed Sidebar)
+   ============================================= */
+
+.quick-menu {
+  position: fixed;
+  right: 24px;
+  bottom: 40px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-menu__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 56px;
+  height: 56px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  font-family: var(--font-en);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast), box-shadow var(--ease-fast);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.quick-menu__btn:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
+
+.quick-menu__btn svg {
+  flex-shrink: 0;
+}
+
+/* Top Button — hidden at the very top of page */
+.quick-menu__btn--top {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity var(--ease-normal), transform var(--ease-normal),
+              background-color var(--ease-fast), color var(--ease-fast);
+}
+.quick-menu__btn--top.is-visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상담하기 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    body {
+      font-family: 'Pretendard', 'Montserrat', sans-serif;
+      background-color: #F7F7F7;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ---- Chat Header ---- */
+    .chat-header {
+      background-color: #111;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .chat-header__left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .chat-header__logo img { height: 26px; }
+    .chat-header__title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+    }
+    .chat-header__back {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .chat-header__back:hover { color: #fff; }
+
+    /* ---- Status Bar ---- */
+    .chat-status {
+      background-color: #866552;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .chat-status__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #fff;
+      animation: pulse 1.8s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .chat-status__text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ---- Chat Body ---- */
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    /* ---- Quick Action Buttons ---- */
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .quick-btn {
+      padding: 9px 18px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #111;
+      background-color: #fff;
+      border: 1px solid #E8E8E8;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .quick-btn:hover {
+      background-color: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    /* ---- Messages ---- */
+    .msg {
+      display: flex;
+      gap: 10px;
+      max-width: 80%;
+      animation: msgIn 0.3s ease;
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg--bot { align-self: flex-start; }
+    .msg--user { align-self: flex-end; flex-direction: row-reverse; }
+
+    .msg__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+
+    .msg__bubble {
+      padding: 13px 18px;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .msg--bot .msg__bubble {
+      background-color: #fff;
+      color: #111;
+      border-radius: 0 12px 12px 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .msg--user .msg__bubble {
+      background-color: #111;
+      color: #fff;
+      border-radius: 12px 0 12px 12px;
+    }
+
+    .msg__time {
+      font-size: 11px;
+      color: #bbb;
+      align-self: flex-end;
+      padding-bottom: 4px;
+      white-space: nowrap;
+    }
+
+    /* ---- Link button inside messages ---- */
+    .msg-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background-color 0.2s;
+    }
+    .msg-link-btn:hover { background-color: #866552; }
+
+    /* ---- Typing indicator ---- */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 18px;
+      background-color: #fff;
+      border-radius: 0 12px 12px 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      width: fit-content;
+    }
+    .typing-indicator span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #ccc;
+      animation: typing-bounce 1.2s ease infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing-bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* ---- Input Area ---- */
+    .chat-input-area {
+      background-color: #fff;
+      border-top: 1px solid #E8E8E8;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 15px;
+      color: #111;
+      background: none;
+      border: none;
+      outline: none;
+      resize: none;
+      line-height: 1.5;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+    .chat-input::placeholder { color: #bbb; }
+    .chat-send {
+      width: 40px;
+      height: 40px;
+      background-color: #111;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color 0.2s;
+    }
+    .chat-send:hover { background-color: #866552; }
+    .chat-send svg { color: #fff; }
+
+    /* ---- Agent Connect Banner ---- */
+    .agent-connect {
+      background-color: #fff8f5;
+      border: 1px solid #866552;
+      padding: 14px 18px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 4px 0;
+    }
+    .agent-connect p {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .agent-connect a {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      background-color: #866552;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background-color 0.2s;
+    }
+    .agent-connect a:hover { background-color: #6d5040; }
+
+    /* Scrollbar */
+    .chat-body::-webkit-scrollbar { width: 4px; }
+    .chat-body::-webkit-scrollbar-track { background: transparent; }
+    .chat-body::-webkit-scrollbar-thumb { background-color: #ddd; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+  <!-- Chat Header -->
+  <div class="chat-header">
+    <div class="chat-header__left">
+      <a href="../index.html" class="chat-header__logo">
+        <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
+      </a>
+      <span class="chat-header__title">Concierge</span>
+    </div>
+    <a href="../index.html" class="chat-header__back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      홈으로
+    </a>
+  </div>
+
+  <!-- Status -->
+  <div class="chat-status">
+    <div class="chat-status__dot"></div>
+    <span class="chat-status__text" id="statusText">상담원 연결 가능 (09:00 – 22:00)</span>
+  </div>
+
+  <!-- Chat Body -->
+  <div class="chat-body" id="chatBody">
+
+    <!-- Welcome message -->
+    <div class="msg msg--bot" id="welcomeMsg">
+      <div class="msg__avatar">SG</div>
+      <div>
+        <div class="msg__bubble" id="welcomeBubble">
+          안녕하세요! <strong>Seoul Grand Hotel</strong> 컨시어지 서비스에 오신 것을 환영합니다.<br><br>
+          무엇을 도와드릴까요? 아래 메뉴를 선택하거나 직접 질문을 입력하세요.
+        </div>
+        <!-- Quick Actions -->
+        <div class="quick-actions" style="margin-top:12px;">
+          <button class="quick-btn" data-topic="room">🏨 객실 FAQ</button>
+          <button class="quick-btn" data-topic="dining">🍽️ 다이닝 FAQ</button>
+          <button class="quick-btn" data-topic="location">📍 오시는 길</button>
+          <button class="quick-btn" data-topic="reservation">📅 예약 가이드</button>
+          <button class="quick-btn" data-topic="facility">🏊 부대시설</button>
+          <button class="quick-btn" data-topic="agent">👤 직원 연결</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Input Area -->
+  <div class="chat-input-area">
+    <textarea class="chat-input" id="chatInput"
+              placeholder="메시지를 입력하세요..." rows="1"></textarea>
+    <button class="chat-send" id="sendBtn" aria-label="메시지 전송">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+  (function () {
+    const chatBody  = document.getElementById('chatBody');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn   = document.getElementById('sendBtn');
+
+    // Check operating hours (09:00 ~ 22:00)
+    const now = new Date();
+    const hour = now.getHours();
+    const isOpen = hour >= 9 && hour < 22;
+    if (!isOpen) {
+      document.getElementById('statusText').textContent = '현재 상담 운영 시간이 아닙니다 (운영: 09:00 – 22:00)';
+      document.querySelector('.chat-status').style.backgroundColor = '#555';
+    }
+
+    // Personalize greeting if logged in
+    const userName = localStorage.getItem('sgh_user_name');
+    if (userName) {
+      const bubble = document.getElementById('welcomeBubble');
+      bubble.innerHTML = '안녕하세요, <strong>' + userName + ' 님</strong>! Seoul Grand Hotel 컨시어지입니다.<br><br>' +
+        '무엇을 도와드릴까요? 아래 메뉴를 선택하거나 직접 질문을 입력하세요.';
+    }
+
+    // ---- Bot responses ----
+    const responses = {
+      room: {
+        text: '🏨 <strong>객실 FAQ</strong><br><br>' +
+          '• 체크인 15:00 / 체크아웃 11:00<br>' +
+          '• 얼리 체크인(12:00~): ₩30,000 추가<br>' +
+          '• 레이트 체크아웃(~18:00): ₩30,000 추가<br>' +
+          '• 아기 침대, 공기청정기, 가습기 무료 대여<br>' +
+          '• 짐 보관 서비스 운영 (프론트 문의)',
+        link: { label: '객실 예약하기', href: '../index.html#rooms' }
+      },
+      dining: {
+        text: '🍽️ <strong>다이닝 FAQ</strong><br><br>' +
+          '• 조식 뷔페: 07:00 – 10:30 (2F)<br>' +
+          '• 레스토랑 런치: 12:00 – 15:00<br>' +
+          '• 레스토랑 디너: 18:00 – 22:00<br>' +
+          '• 루프탑 바: 18:00 – 01:00 (20F)<br>' +
+          '• 콜키지 차지: ₩50,000/병<br>' +
+          '• 드레스 코드: 스마트 캐주얼 이상',
+        link: { label: '다이닝 예약하기', href: '../index.html#dining' }
+      },
+      location: {
+        text: '📍 <strong>오시는 길</strong><br><br>' +
+          '서울 중구 남대문로 7길 19 (소공동 70)<br><br>' +
+          '• 지하철: 1·2호선 시청역 4번 출구 도보 3분<br>' +
+          '• 버스: 남대문세무서 정류장 하차<br>' +
+          '• 인천공항 리무진: 6015번 서울시청 하차<br>' +
+          '• 주차: 발렛파킹 ₩5,000/시간 (투숙객 2시간 무료)',
+      },
+      reservation: {
+        text: '📅 <strong>예약 가이드</strong><br><br>' +
+          '• 당일 예약: 재실 현황에 따라 가능<br>' +
+          '• 취소 정책: 체크인 3일 전까지 무료 취소<br>' +
+          '• 패키지: 신혼여행, 비즈니스, 가족 패키지 운영<br>' +
+          '• 멤버십 회원: 추가 10% 할인 및 Late Checkout 제공<br>' +
+          '• 법인 예약: 별도 문의 (02-750-5900)',
+        link: { label: '지금 예약하기', href: '../index.html#hero' }
+      },
+      facility: {
+        text: '🏊 <strong>부대시설</strong><br><br>' +
+          '• 수영장: 07:00 – 22:00 / 투숙객 무료<br>' +
+          '• 스파: 09:00 – 21:00 / 사전 예약 필수<br>' +
+          '• 피트니스: 06:00 – 23:00 / 투숙객 무료<br>' +
+          '• 키즈룸: 10:00 – 19:00<br>' +
+          '• 비즈니스 센터: 08:00 – 22:00 (투숙객 무료)',
+      },
+      agent: {
+        text: isOpen
+          ? '👤 상담원을 연결합니다. 잠시만 기다려 주세요.<br><br>전화 연결: <strong>02-750-5900</strong>'
+          : '현재 운영 시간이 아닙니다 (09:00 – 22:00).<br><br>문의사항을 남겨주시면 다음 날 오전 중으로 답변드립니다.<br>메일: rsvn@crownparkhotel.co.kr',
+      }
+    };
+
+    // Keyword detection
+    function detectTopic(text) {
+      const t = text.toLowerCase();
+      if (/객실|체크인|체크아웃|룸|room/.test(t)) return 'room';
+      if (/다이닝|레스토랑|식사|조식|dinner|dining/.test(t)) return 'dining';
+      if (/위치|오시는|주차|교통|지하철|버스/.test(t)) return 'location';
+      if (/예약|취소|패키지|reservation/.test(t)) return 'reservation';
+      if (/수영|스파|피트니스|시설|facility/.test(t)) return 'facility';
+      if (/상담원|직원|연결|agent/.test(t)) return 'agent';
+      return null;
+    }
+
+    function getTime() {
+      return now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
+
+    function addMsg(html, isUser) {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg msg--' + (isUser ? 'user' : 'bot');
+
+      if (!isUser) {
+        const avatar = document.createElement('div');
+        avatar.className = 'msg__avatar';
+        avatar.textContent = 'SG';
+        wrap.appendChild(avatar);
+      }
+
+      const inner = document.createElement('div');
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg__bubble';
+      bubble.innerHTML = html;
+      inner.appendChild(bubble);
+
+      const time = document.createElement('span');
+      time.className = 'msg__time';
+      time.textContent = getTime();
+      inner.appendChild(time);
+
+      wrap.appendChild(inner);
+      chatBody.appendChild(wrap);
+      chatBody.scrollTop = chatBody.scrollHeight;
+      return wrap;
+    }
+
+    function addLinkBtn(container, label, href) {
+      const a = document.createElement('a');
+      a.href = href;
+      a.className = 'msg-link-btn';
+      a.textContent = label;
+      container.querySelector('.msg__bubble').appendChild(document.createElement('br'));
+      container.querySelector('.msg__bubble').appendChild(a);
+    }
+
+    function showTyping() {
+      const row = document.createElement('div');
+      row.className = 'msg msg--bot';
+      row.id = 'typingRow';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'msg__avatar';
+      avatar.textContent = 'SG';
+      row.appendChild(avatar);
+
+      const ind = document.createElement('div');
+      ind.className = 'typing-indicator';
+      ind.innerHTML = '<span></span><span></span><span></span>';
+      row.appendChild(ind);
+
+      chatBody.appendChild(row);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function removeTyping() {
+      const t = document.getElementById('typingRow');
+      if (t) t.remove();
+    }
+
+    function botReply(topic, userText) {
+      showTyping();
+      setTimeout(function () {
+        removeTyping();
+        const resp = responses[topic];
+        if (resp) {
+          const msgEl = addMsg(resp.text, false);
+          if (resp.link) addLinkBtn(msgEl, resp.link.label, resp.link.href);
+          if (topic === 'agent' && isOpen) {
+            // Agent connect banner
+            const banner = document.createElement('div');
+            banner.className = 'agent-connect';
+            banner.innerHTML =
+              '<p>복잡한 문의는 상담원과 직접 연결하실 수 있습니다.</p>' +
+              '<a href="tel:0275005900">전화 연결</a>';
+            chatBody.appendChild(banner);
+            chatBody.scrollTop = chatBody.scrollHeight;
+          }
+        } else {
+          addMsg('죄송합니다. 좀 더 구체적으로 질문해 주시거나 아래 메뉴를 이용해 주세요.<br><br>' +
+            '전화: <strong>02-750-5900</strong><br>메일: rsvn@crownparkhotel.co.kr', false);
+        }
+      }, 900);
+    }
+
+    function handleSend() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addMsg(text, true);
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+      const topic = detectTopic(text);
+      botReply(topic || 'unknown', text);
+    }
+
+    // Quick action buttons
+    document.querySelectorAll('.quick-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const topic = this.dataset.topic;
+        const label = this.textContent.trim();
+        addMsg(label, true);
+        botReply(topic, label);
+      });
+    });
+
+    // Send button
+    sendBtn.addEventListener('click', handleSend);
+
+    // Enter key (Shift+Enter for newline)
+    chatInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+
+    // Auto-resize textarea
+    chatInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+
+  })();
+  </script>
+
+</body>
+</html>
