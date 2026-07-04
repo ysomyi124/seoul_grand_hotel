@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    body { font-family:'Pretendard','Montserrat',sans-serif; background:#F7F7F7; display:flex; flex-direction:column; min-height:100vh; }
+    .page-header { background:#111; padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header__logo img { height:32px; }
+    .page-header__nav a { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-decoration:none; opacity:.7; transition:opacity .2s; }
+    .page-header__nav a:hover { opacity:1; }
+
+    .signup-wrap { flex:1; display:flex; align-items:flex-start; justify-content:center; padding:60px 24px 80px; }
+    .signup-box { width:100%; max-width:560px; background:#fff; padding:56px 48px 48px; box-shadow:0 4px 32px rgba(0,0,0,.07); }
+    .signup-box__title { font-family:'Montserrat',sans-serif; font-size:24px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#111; margin-bottom:8px; }
+    .signup-box__sub { font-size:14px; color:#767676; margin-bottom:40px; }
+
+    .section-label { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#111; padding-bottom:12px; border-bottom:1px solid #E8E8E8; margin-bottom:24px; margin-top:32px; }
+    .section-label:first-of-type { margin-top:0; }
+
+    .form-group { margin-bottom:20px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#111; margin-bottom:8px; }
+    .form-label .req { color:#c0392b; margin-left:2px; }
+    .form-input { display:block; width:100%; padding:13px 16px; font-family:'Pretendard',sans-serif; font-size:15px; color:#111; background:#fff; border:1px solid #E8E8E8; outline:none; transition:border-color .2s; box-sizing:border-box; }
+    .form-input:focus { border-color:#111; }
+    .form-input::placeholder { color:#bbb; }
+    .form-group.has-error .form-input { border-color:#c0392b; }
+    .form-error { display:none; font-size:12px; color:#c0392b; margin-top:5px; }
+    .form-group.has-error .form-error { display:block; }
+    .form-hint { font-size:11px; color:#aaa; margin-top:5px; }
+
+    .gender-row { display:flex; gap:12px; }
+    .gender-btn { flex:1; padding:12px; font-family:'Pretendard',sans-serif; font-size:14px; color:#767676; background:#fff; border:1px solid #E8E8E8; cursor:pointer; transition:all .15s; }
+    .gender-btn.active { background:#111; color:#fff; border-color:#111; }
+
+    .address-row { display:flex; gap:8px; margin-bottom:8px; }
+    .address-row .form-input { flex:1; }
+    .btn-find-addr { padding:13px 16px; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; white-space:nowrap; background:#fff; border:1px solid #111; color:#111; cursor:pointer; transition:all .15s; }
+    .btn-find-addr:hover { background:#111; color:#fff; }
+
+    .terms-box { border:1px solid #E8E8E8; padding:20px; margin-bottom:16px; }
+    .terms-all { display:flex; align-items:center; gap:10px; padding-bottom:16px; border-bottom:1px solid #F0F0F0; margin-bottom:16px; }
+    .terms-all label { font-weight:700; font-size:14px; color:#111; cursor:pointer; }
+    .terms-item { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .terms-item:last-child { margin-bottom:0; }
+    .terms-item label { font-size:13px; color:#555; cursor:pointer; flex:1; }
+    .terms-item .terms-link { font-size:12px; color:#aaa; text-decoration:underline; cursor:pointer; }
+    input[type="checkbox"] { width:16px; height:16px; accent-color:#111; cursor:pointer; flex-shrink:0; }
+
+    .alert-box { display:none; padding:14px 16px; font-size:13px; border-radius:3px; margin-bottom:20px; }
+    .alert-box.error   { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
+    .alert-box.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
+
+    .btn-submit { display:block; width:100%; padding:17px; background:#111; color:#fff; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; border:1.5px solid #111; cursor:pointer; transition:background .2s,color .2s; margin-top:32px; }
+    .btn-submit:hover { background:transparent; color:#111; }
+    .btn-submit:disabled { opacity:.5; cursor:not-allowed; }
+
+    .signup-links { text-align:center; margin-top:24px; font-size:13px; color:#767676; }
+    .signup-links a { color:#111; font-weight:600; text-decoration:none; }
+
+    .page-footer { padding:24px 40px; text-align:center; border-top:1px solid #E8E8E8; }
+    .page-footer p { font-family:'Montserrat',sans-serif; font-size:11px; color:#aaa; letter-spacing:.08em; }
+
+    @media (max-width:580px) {
+      .signup-box { padding:40px 24px 36px; }
+      .form-row { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="../index.html" class="page-header__logo">
+      <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
+    </a>
+    <nav class="page-header__nav">
+      <a href="login.html">로그인</a>
+    </nav>
+  </header>
+
+  <main class="signup-wrap">
+    <div class="signup-box">
+      <h1 class="signup-box__title">Sign Up</h1>
+      <p class="signup-box__sub">서울 그랜드 호텔 회원이 되어 다양한 혜택을 누리세요.</p>
+
+      <div class="alert-box" id="alertBox"></div>
+
+      <form id="signupForm" novalidate>
+
+        <!-- 계정 정보 -->
+        <p class="section-label">계정 정보</p>
+
+        <div class="form-group" id="grpUsername">
+          <label class="form-label" for="username">아이디 <span class="req">*</span></label>
+          <input type="text" class="form-input" id="username" name="username"
+                 placeholder="영문·숫자 6~20자" autocomplete="username" maxlength="20">
+          <span class="form-error" id="errUsername">영문, 숫자로 6~20자를 입력해주세요.</span>
+        </div>
+
+        <div class="form-group" id="grpEmail">
+          <label class="form-label" for="email">이메일 <span class="req">*</span></label>
+          <input type="email" class="form-input" id="email" name="email"
+                 placeholder="example@email.com" autocomplete="email">
+          <span class="form-error" id="errEmail">올바른 이메일 주소를 입력해주세요.</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="grpPw">
+            <label class="form-label" for="password">비밀번호 <span class="req">*</span></label>
+            <input type="password" class="form-input" id="password" name="password"
+                   placeholder="영문+숫자+특수문자 8자 이상" autocomplete="new-password">
+            <span class="form-error" id="errPw">영문, 숫자, 특수문자를 포함해 8자 이상 입력해주세요.</span>
+          </div>
+          <div class="form-group" id="grpPwConfirm">
+            <label class="form-label" for="passwordConfirm">비밀번호 확인 <span class="req">*</span></label>
+            <input type="password" class="form-input" id="passwordConfirm" name="passwordConfirm"
+                   placeholder="비밀번호 재입력" autocomplete="new-password">
+            <span class="form-error" id="errPwConfirm">비밀번호가 일치하지 않습니다.</span>
+          </div>
+        </div>
+
+        <!-- 개인 정보 -->
+        <p class="section-label">개인 정보</p>
+
+        <div class="form-group" id="grpGender">
+          <label class="form-label">성별 <span class="req">*</span></label>
+          <div class="gender-row">
+            <button type="button" class="gender-btn" data-val="male">남성</button>
+            <button type="button" class="gender-btn" data-val="female">여성</button>
+            <button type="button" class="gender-btn" data-val="other">기타</button>
+          </div>
+          <input type="hidden" id="gender" name="gender">
+          <span class="form-error" id="errGender" style="display:none;">성별을 선택해주세요.</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="grpNameKo">
+            <label class="form-label" for="nameKo">한글 이름 <span class="req">*</span></label>
+            <input type="text" class="form-input" id="nameKo" name="nameKo"
+                   placeholder="홍길동" autocomplete="name">
+            <span class="form-error" id="errNameKo">한글 이름을 입력해주세요.</span>
+          </div>
+          <div class="form-group" id="grpNameEn">
+            <label class="form-label" for="nameEn">영문 이름 <span class="req">*</span></label>
+            <input type="text" class="form-input" id="nameEn" name="nameEn"
+                   placeholder="HONG GIL DONG" autocomplete="name" style="text-transform:uppercase;">
+            <span class="form-error" id="errNameEn">영문 이름을 입력해주세요.</span>
+          </div>
+        </div>
+
+        <div class="form-group" id="grpBirth">
+          <label class="form-label" for="birthDate">생년월일 <span class="req">*</span></label>
+          <input type="date" class="form-input" id="birthDate" name="birthDate"
+                 max="" autocomplete="bday">
+          <span class="form-error" id="errBirth">생년월일을 입력해주세요.</span>
+        </div>
+
+        <div class="form-group" id="grpPhone">
+          <label class="form-label" for="phone">휴대폰 번호 <span class="req">*</span></label>
+          <input type="tel" class="form-input" id="phone" name="phone"
+                 placeholder="010-0000-0000" autocomplete="tel">
+          <span class="form-error" id="errPhone">올바른 휴대폰 번호를 입력해주세요.</span>
+        </div>
+
+        <div class="form-group" id="grpAddress">
+          <label class="form-label" for="address">주소</label>
+          <div class="address-row">
+            <input type="text" class="form-input" id="addressZip" placeholder="우편번호" readonly>
+            <button type="button" class="btn-find-addr" id="btnFindAddr">주소 검색</button>
+          </div>
+          <input type="text" class="form-input" id="addressMain" placeholder="기본주소" readonly style="margin-bottom:8px;">
+          <input type="text" class="form-input" id="addressDetail" placeholder="상세주소 입력" name="addressDetail">
+          <input type="hidden" id="address" name="address">
+        </div>
+
+        <!-- 약관 동의 -->
+        <p class="section-label">약관 동의</p>
+
+        <div class="terms-box">
+          <div class="terms-all">
+            <input type="checkbox" id="agreeAll">
+            <label for="agreeAll">전체 동의</label>
+          </div>
+          <div class="terms-item">
+            <input type="checkbox" id="agreeTerms" name="agreeTerms">
+            <label for="agreeTerms">이용약관 동의 <span style="color:#c0392b;">(필수)</span></label>
+            <span class="terms-link" onclick="openTerms('terms')">보기</span>
+          </div>
+          <div class="terms-item">
+            <input type="checkbox" id="agreePrivacy" name="agreePrivacy">
+            <label for="agreePrivacy">개인정보 수집·이용 동의 <span style="color:#c0392b;">(필수)</span></label>
+            <span class="terms-link" onclick="openTerms('privacy')">보기</span>
+          </div>
+          <div class="terms-item">
+            <input type="checkbox" id="agreeMarketing" name="agreeMarketing">
+            <label for="agreeMarketing">마케팅 정보 수신 동의 <span style="color:#aaa;">(선택)</span></label>
+            <span class="terms-link" onclick="openTerms('marketing')">보기</span>
+          </div>
+        </div>
+        <span class="form-error" id="errTerms" style="display:block;margin-bottom:12px;display:none;">필수 약관에 동의해주세요.</span>
+
+        <button type="submit" class="btn-submit" id="submitBtn">회원가입</button>
+
+      </form>
+
+      <div class="signup-links">
+        이미 계정이 있으신가요? <a href="login.html">로그인</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+
+  <script>
+  function openTerms(type) {
+    var urls = {
+      terms:     '#',
+      privacy:   '#',
+      marketing: '#',
+    };
+    window.open(urls[type] || '#', '_blank', 'width=680,height=600');
+  }
+
+  (function () {
+
+    /* ── 생년월일 max 오늘 ── */
+    document.getElementById('birthDate').max = new Date().toISOString().slice(0, 10);
+
+    /* ── 성별 선택 ── */
+    document.querySelectorAll('.gender-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.gender-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('gender').value = btn.dataset.val;
+        document.getElementById('errGender').style.display = 'none';
+      });
+    });
+
+    /* ── 전체 동의 ── */
+    var agreeAll  = document.getElementById('agreeAll');
+    var agreeChks = ['agreeTerms','agreePrivacy','agreeMarketing'].map(function (id) { return document.getElementById(id); });
+
+    agreeAll.addEventListener('change', function () {
+      agreeChks.forEach(function (c) { c.checked = agreeAll.checked; });
+    });
+    agreeChks.forEach(function (c) {
+      c.addEventListener('change', function () {
+        agreeAll.checked = agreeChks.every(function (x) { return x.checked; });
+      });
+    });
+
+    /* ── 휴대폰 자동 하이픈 ── */
+    document.getElementById('phone').addEventListener('input', function () {
+      var v = this.value.replace(/\D/g, '');
+      if (v.length <= 3)       this.value = v;
+      else if (v.length <= 7)  this.value = v.slice(0,3) + '-' + v.slice(3);
+      else if (v.length <= 11) this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7);
+      else                     this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
+    });
+
+    /* ── 영문이름 대문자 ── */
+    document.getElementById('nameEn').addEventListener('input', function () {
+      var pos = this.selectionStart;
+      this.value = this.value.toUpperCase();
+      this.setSelectionRange(pos, pos);
+    });
+
+    /* ── 주소 조합 ── */
+    function combineAddress() {
+      var zip    = document.getElementById('addressZip').value;
+      var main   = document.getElementById('addressMain').value;
+      var detail = document.getElementById('addressDetail').value;
+      document.getElementById('address').value = [zip ? '(' + zip + ')' : '', main, detail].filter(Boolean).join(' ');
+    }
+    document.getElementById('addressDetail').addEventListener('input', combineAddress);
+
+    /* ── 주소 검색 (Kakao 없으면 수동 입력 fallback) ── */
+    document.getElementById('btnFindAddr').addEventListener('click', function () {
+      if (window.daum && window.daum.Postcode) {
+        new window.daum.Postcode({
+          oncomplete: function (data) {
+            document.getElementById('addressZip').value  = data.zonecode;
+            document.getElementById('addressMain').value = data.address;
+            document.getElementById('addressDetail').focus();
+            combineAddress();
+          },
+        }).open();
+      } else {
+        document.getElementById('addressZip').removeAttribute('readonly');
+        document.getElementById('addressMain').removeAttribute('readonly');
+        document.getElementById('addressZip').placeholder  = '우편번호 직접 입력';
+        document.getElementById('addressMain').placeholder = '주소 직접 입력';
+        document.getElementById('addressZip').focus();
+        document.getElementById('addressZip').addEventListener('input', combineAddress);
+        document.getElementById('addressMain').addEventListener('input', combineAddress);
+      }
+    });
+
+    /* ── Alert ── */
+    var alertBox = document.getElementById('alertBox');
+    function showAlert(msg, type) {
+      alertBox.textContent    = msg;
+      alertBox.className      = 'alert-box ' + (type || 'error');
+      alertBox.style.display  = 'block';
+      alertBox.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+    function hideAlert() { alertBox.style.display = 'none'; }
+
+    /* ── 필드 에러 토글 ── */
+    function setErr(grpId, show, errId) {
+      var grp = document.getElementById(grpId);
+      var err = document.getElementById(errId);
+      if (grp) grp.classList.toggle('has-error', show);
+      if (err) err.style.display = show ? 'block' : 'none';
+    }
+
+    /* ── 유효성 검사 ── */
+    function validate() {
+      var ok = true;
+
+      var username = document.getElementById('username').value.trim();
+      if (!username || !/^[a-z0-9_]{6,20}$/i.test(username)) {
+        setErr('grpUsername', true, 'errUsername'); ok = false;
+      } else { setErr('grpUsername', false, 'errUsername'); }
+
+      var email = document.getElementById('email').value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setErr('grpEmail', true, 'errEmail'); ok = false;
+      } else { setErr('grpEmail', false, 'errEmail'); }
+
+      var pw = document.getElementById('password').value;
+      if (!pw || !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(pw)) {
+        setErr('grpPw', true, 'errPw'); ok = false;
+      } else { setErr('grpPw', false, 'errPw'); }
+
+      var pwc = document.getElementById('passwordConfirm').value;
+      if (pw !== pwc) {
+        setErr('grpPwConfirm', true, 'errPwConfirm'); ok = false;
+      } else { setErr('grpPwConfirm', false, 'errPwConfirm'); }
+
+      var gender = document.getElementById('gender').value;
+      if (!gender) {
+        document.getElementById('grpGender').classList.add('has-error');
+        document.getElementById('errGender').style.display = 'block'; ok = false;
+      } else {
+        document.getElementById('grpGender').classList.remove('has-error');
+        document.getElementById('errGender').style.display = 'none';
+      }
+
+      if (!document.getElementById('nameKo').value.trim()) {
+        setErr('grpNameKo', true, 'errNameKo'); ok = false;
+      } else { setErr('grpNameKo', false, 'errNameKo'); }
+
+      if (!document.getElementById('nameEn').value.trim()) {
+        setErr('grpNameEn', true, 'errNameEn'); ok = false;
+      } else { setErr('grpNameEn', false, 'errNameEn'); }
+
+      if (!document.getElementById('birthDate').value) {
+        setErr('grpBirth', true, 'errBirth'); ok = false;
+      } else { setErr('grpBirth', false, 'errBirth'); }
+
+      var phone = document.getElementById('phone').value.replace(/\D/g, '');
+      if (!phone || phone.length < 10) {
+        setErr('grpPhone', true, 'errPhone'); ok = false;
+      } else { setErr('grpPhone', false, 'errPhone'); }
+
+      var terms   = document.getElementById('agreeTerms').checked;
+      var privacy = document.getElementById('agreePrivacy').checked;
+      var errTerms = document.getElementById('errTerms');
+      if (!terms || !privacy) {
+        errTerms.style.display = 'block'; ok = false;
+      } else { errTerms.style.display = 'none'; }
+
+      return ok;
+    }
+
+    /* ── 폼 제출 ── */
+    document.getElementById('signupForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideAlert();
+
+      if (!validate()) {
+        showAlert('입력 정보를 확인해주세요.');
+        return;
+      }
+
+      var btn = document.getElementById('submitBtn');
+      btn.disabled    = true;
+      btn.textContent = '처리 중...';
+
+      if (!window.SGH || !window.SGH.auth) {
+        showAlert('인증 서비스를 사용할 수 없습니다. 잠시 후 다시 시도해주세요.');
+        btn.disabled = false; btn.textContent = '회원가입';
+        return;
+      }
+
+      var email    = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value;
+
+      var meta = {
+        username:   document.getElementById('username').value.trim(),
+        name_ko:    document.getElementById('nameKo').value.trim(),
+        name_en:    document.getElementById('nameEn').value.trim().toUpperCase(),
+        gender:     document.getElementById('gender').value,
+        birth_date: document.getElementById('birthDate').value,
+        phone:      document.getElementById('phone').value.trim(),
+        address:    document.getElementById('address').value.trim() || null,
+      };
+
+      var agreements = {
+        terms:     document.getElementById('agreeTerms').checked,
+        privacy:   document.getElementById('agreePrivacy').checked,
+        marketing: document.getElementById('agreeMarketing').checked,
+      };
+
+      var res = await window.SGH.auth.signUp(email, password, meta, agreements);
+
+      if (res.error) {
+        var msg = res.error.message || '';
+        if (msg.includes('already registered') || msg.includes('already been registered')) {
+          msg = '이미 사용 중인 이메일 주소입니다.';
+        } else if (msg.includes('Password')) {
+          msg = '비밀번호는 6자 이상이어야 합니다.';
+        } else {
+          msg = '회원가입 중 오류가 발생했습니다: ' + msg;
+        }
+        showAlert(msg);
+        btn.disabled = false; btn.textContent = '회원가입';
+        return;
+      }
+
+      /* 성공 */
+      showAlert('회원가입이 완료되었습니다! 이메일 인증 후 로그인해주세요.', 'success');
+      btn.textContent = '완료';
+      setTimeout(function () { window.location.href = 'login.html'; }, 3000);
+    });
+
+    /* ── 이미 로그인된 경우 ── */
+    if (window.SGH && window.SGH.supabase) {
+      window.SGH.supabase.auth.getSession().then(function (res) {
+        if (res.data && res.data.session) window.location.href = '../index.html';
+      });
+    }
+
+  })();
+  </script>
+
+</body>
+</html>

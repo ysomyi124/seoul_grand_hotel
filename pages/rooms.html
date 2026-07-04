@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>객실 안내 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    :root { --accent:#866552; --black:#111; --white:#fff; --sub:#767676; --line:#E8E8E8; --bg:#F7F7F7; }
+    body { font-family:'Pretendard','Montserrat',sans-serif; background:var(--bg); display:flex; flex-direction:column; min-height:100vh; }
+
+    /* ── Header ── */
+    .page-header { background:var(--black); padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header__logo img { height:32px; }
+    .page-header__nav { display:flex; align-items:center; gap:24px; }
+    .page-header__nav a { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-decoration:none; opacity:.7; transition:opacity .2s; }
+    .page-header__nav a:hover { opacity:1; }
+
+    /* ── Hero ── */
+    .rooms-hero { background:var(--black); padding:72px 40px; text-align:center; }
+    .rooms-hero__eyebrow { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.28em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+    .rooms-hero__title { font-family:'Montserrat',sans-serif; font-size:36px; font-weight:300; letter-spacing:.06em; text-transform:uppercase; color:#fff; margin-bottom:16px; }
+    .rooms-hero__sub { font-size:15px; color:rgba(255,255,255,.6); max-width:560px; margin:0 auto; }
+
+    /* ── Filters ── */
+    .filter-bar { background:var(--white); border-bottom:1px solid var(--line); padding:20px 40px; }
+    .filter-inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .filter-select { padding:10px 16px; border:1px solid var(--line); background:var(--white); font-family:'Pretendard',sans-serif; font-size:13px; color:var(--black); outline:none; cursor:pointer; }
+    .filter-select:focus { border-color:var(--black); }
+    .btn-filter { padding:10px 24px; background:var(--black); color:#fff; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:none; cursor:pointer; transition:opacity .2s; }
+    .btn-filter:hover { opacity:.8; }
+    .filter-count { margin-left:auto; font-size:13px; color:var(--sub); }
+
+    /* ── Rooms Grid ── */
+    .rooms-section { max-width:1100px; margin:0 auto; padding:48px 24px 80px; }
+    .rooms-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:32px; }
+
+    .room-card { background:var(--white); box-shadow:0 2px 16px rgba(0,0,0,.07); overflow:hidden; transition:transform .3s,box-shadow .3s; }
+    .room-card:hover { transform:translateY(-4px); box-shadow:0 8px 32px rgba(0,0,0,.12); }
+
+    .room-card__img { width:100%; height:260px; object-fit:cover; display:block; background:#E8E8E8; }
+    .room-card__img-placeholder { width:100%; height:260px; background:#E8E8E8; display:flex; align-items:center; justify-content:center; color:#ccc; font-size:40px; }
+
+    .room-card__body { padding:28px 28px 24px; }
+    .room-card__type { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+    .room-card__name { font-family:'Montserrat',sans-serif; font-size:20px; font-weight:600; letter-spacing:.04em; color:var(--black); margin-bottom:12px; }
+    .room-card__desc { font-size:13px; color:var(--sub); line-height:1.7; margin-bottom:20px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+    .room-card__specs { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+    .spec-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--sub); }
+    .spec-item i { font-style:normal; font-size:14px; }
+
+    .room-card__amenities { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+    .amenity-tag { padding:4px 10px; background:var(--bg); font-size:11px; color:var(--sub); border:1px solid var(--line); }
+
+    .room-card__footer { display:flex; align-items:center; justify-content:space-between; padding-top:20px; border-top:1px solid var(--line); }
+    .room-card__price { }
+    .room-price-label { font-size:11px; color:var(--sub); margin-bottom:2px; }
+    .room-price-val { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:700; color:var(--black); }
+    .room-price-night { font-size:11px; color:var(--sub); }
+    .room-price-origin { font-size:12px; color:#bbb; text-decoration:line-through; margin-bottom:2px; }
+    .btn-reserve { padding:12px 24px; background:var(--black); color:#fff; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; transition:background .2s; display:inline-block; }
+    .btn-reserve:hover { background:var(--accent); }
+
+    /* Loading / Empty */
+    .loading-state { text-align:center; padding:80px 24px; color:var(--sub); }
+    .loading-spinner { display:inline-block; width:32px; height:32px; border:3px solid var(--line); border-top-color:var(--black); border-radius:50%; animation:spin .7s linear infinite; margin-bottom:16px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .empty-state { text-align:center; padding:80px 24px; color:var(--sub); }
+    .empty-state p { font-size:15px; margin-bottom:8px; }
+
+    /* Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:9000; display:none; align-items:center; justify-content:center; padding:24px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:#fff; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; position:relative; }
+    .modal__close { position:absolute; top:16px; right:20px; font-size:24px; background:none; border:none; cursor:pointer; color:var(--sub); z-index:10; }
+    .modal__close:hover { color:var(--black); }
+    .modal__img { width:100%; height:320px; object-fit:cover; display:block; background:#E8E8E8; }
+    .modal__body { padding:32px; }
+    .modal__type { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+    .modal__name { font-size:24px; font-weight:700; color:var(--black); margin-bottom:16px; }
+    .modal__desc { font-size:14px; color:var(--sub); line-height:1.8; margin-bottom:24px; }
+    .modal__specs { display:flex; gap:24px; flex-wrap:wrap; padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-bottom:24px; }
+    .modal__spec { text-align:center; }
+    .modal__spec-label { font-size:11px; color:var(--sub); margin-bottom:4px; }
+    .modal__spec-val { font-weight:700; font-size:15px; color:var(--black); }
+    .modal__amenities { margin-bottom:28px; }
+    .modal__amenities h4 { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--black); margin-bottom:12px; }
+    .modal__amenity-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .modal__footer { display:flex; align-items:center; justify-content:space-between; padding-top:24px; border-top:1px solid var(--line); }
+
+    /* Page footer */
+    .page-footer { padding:24px 40px; text-align:center; border-top:1px solid var(--line); }
+    .page-footer p { font-family:'Montserrat',sans-serif; font-size:11px; color:#aaa; letter-spacing:.08em; }
+
+    @media (max-width:900px) { .rooms-grid { grid-template-columns:1fr; } }
+    @media (max-width:600px) {
+      .filter-bar { padding:16px 20px; }
+      .rooms-hero { padding:48px 20px; }
+      .rooms-section { padding:32px 16px 60px; }
+      .room-card__img, .room-card__img-placeholder { height:200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="../index.html" class="page-header__logo">
+      <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
+    </a>
+    <nav class="page-header__nav">
+      <a href="../index.html">홈</a>
+      <a href="reservation.html">예약</a>
+      <a href="login.html" id="authLink">로그인</a>
+    </nav>
+  </header>
+
+  <section class="rooms-hero">
+    <p class="rooms-hero__eyebrow">Rooms & Suites</p>
+    <h1 class="rooms-hero__title">객실 안내</h1>
+    <p class="rooms-hero__sub">서울의 전경을 담은 럭셔리한 공간에서 최상의 휴식을 경험하세요.</p>
+  </section>
+
+  <div class="filter-bar">
+    <div class="filter-inner">
+      <select class="filter-select" id="filterBed">
+        <option value="">침대 유형 전체</option>
+        <option value="twin">트윈</option>
+        <option value="double">더블</option>
+        <option value="king">킹</option>
+      </select>
+      <select class="filter-select" id="filterMaxAdults">
+        <option value="">인원 전체</option>
+        <option value="1">1인</option>
+        <option value="2">2인</option>
+        <option value="3">3인</option>
+        <option value="4">4인 이상</option>
+      </select>
+      <button class="btn-filter" id="btnFilter">조회</button>
+      <span class="filter-count" id="filterCount"></span>
+    </div>
+  </div>
+
+  <section class="rooms-section">
+    <div class="rooms-grid" id="roomsGrid">
+      <div class="loading-state" style="grid-column:1/-1;">
+        <div class="loading-spinner"></div>
+        <p>객실 정보를 불러오는 중...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 상세 모달 -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modalBox">
+      <button class="modal__close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/room.js"></script>
+
+  <script>
+  (function () {
+    var allRooms = [];
+
+    /* ── 헤더 Auth ── */
+    if (window.SGH && window.SGH.auth) window.SGH.auth.initAuthUI();
+
+    /* ── 객실 로드 ── */
+    async function loadRooms() {
+      if (!window.SGH || !window.SGH.room) {
+        renderError('서비스 연결에 실패했습니다.');
+        return;
+      }
+      var res = await window.SGH.room.getAll();
+      if (res.error || !res.data) {
+        renderError('객실 정보를 불러오지 못했습니다.');
+        return;
+      }
+      allRooms = res.data;
+      renderRooms(allRooms);
+    }
+
+    /* ── 필터 ── */
+    document.getElementById('btnFilter').addEventListener('click', function () {
+      var bed    = document.getElementById('filterBed').value;
+      var adults = parseInt(document.getElementById('filterMaxAdults').value) || 0;
+
+      var filtered = allRooms.filter(function (r) {
+        if (bed && !r.bed_type.toLowerCase().includes(bed)) return false;
+        if (adults && r.max_adults < adults) return false;
+        return true;
+      });
+      renderRooms(filtered);
+    });
+
+    /* ── 렌더링 ── */
+    function renderRooms(rooms) {
+      var grid = document.getElementById('roomsGrid');
+      var countEl = document.getElementById('filterCount');
+
+      countEl.textContent = rooms.length + '개 객실';
+
+      if (rooms.length === 0) {
+        grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><p>해당 조건의 객실이 없습니다.</p></div>';
+        return;
+      }
+
+      grid.innerHTML = rooms.map(function (r) {
+        var price       = Number(r.price_per_night);
+        var discount    = Number(r.discount_percent || 0);
+        var finalPrice  = discount > 0 ? Math.round(price * (1 - discount / 100)) : price;
+        var imgHtml     = r.mainImage
+          ? '<img class="room-card__img" src="' + r.mainImage + '" alt="' + (r.name_ko || '') + '" loading="lazy">'
+          : '<div class="room-card__img-placeholder">🏨</div>';
+        var amenityTags = (r.amenities || []).slice(0, 5).map(function (a) {
+          return '<span class="amenity-tag">' + (a.name_ko || '') + '</span>';
+        }).join('');
+        var typeLabel = r.room_types ? r.room_types.name_ko : '';
+
+        return '<article class="room-card" onclick="openModal(\'' + r.id + '\')" style="cursor:pointer;">' +
+          imgHtml +
+          '<div class="room-card__body">' +
+          (typeLabel ? '<p class="room-card__type">' + typeLabel + '</p>' : '') +
+          '<h2 class="room-card__name">' + (r.name_ko || '') + '</h2>' +
+          '<p class="room-card__desc">' + (r.description_ko || '') + '</p>' +
+          '<div class="room-card__specs">' +
+          '<span class="spec-item"><i>🛏</i>' + (r.bed_type || '—') + '</span>' +
+          '<span class="spec-item"><i>📐</i>' + (r.size_sqm || '—') + 'm²</span>' +
+          '<span class="spec-item"><i>👤</i>최대 ' + (r.max_adults || 2) + '인</span>' +
+          '</div>' +
+          (amenityTags ? '<div class="room-card__amenities">' + amenityTags + '</div>' : '') +
+          '<div class="room-card__footer">' +
+          '<div class="room-card__price">' +
+          '<p class="room-price-label">1박 기준</p>' +
+          (discount > 0 ? '<p class="room-price-origin">₩' + price.toLocaleString() + '</p>' : '') +
+          '<p class="room-price-val">₩' + finalPrice.toLocaleString() + '</p>' +
+          '<p class="room-price-night">/ 1박 (세금 별도)</p>' +
+          '</div>' +
+          '<a href="reservation.html?roomId=' + r.id + '" class="btn-reserve" onclick="event.stopPropagation()">예약하기</a>' +
+          '</div>' +
+          '</div>' +
+          '</article>';
+      }).join('');
+    }
+
+    function renderError(msg) {
+      document.getElementById('roomsGrid').innerHTML =
+        '<div class="empty-state" style="grid-column:1/-1;"><p>' + msg + '</p></div>';
+    }
+
+    /* ── 상세 모달 ── */
+    window.openModal = function (roomId) {
+      var r = allRooms.find(function (x) { return x.id === roomId; });
+      if (!r) return;
+
+      var price      = Number(r.price_per_night);
+      var discount   = Number(r.discount_percent || 0);
+      var finalPrice = discount > 0 ? Math.round(price * (1 - discount / 100)) : price;
+      var mainImg    = r.mainImage || '';
+
+      var amenityHtml = (r.amenities || []).map(function (a) {
+        return '<span class="amenity-tag">' + (a.name_ko || '') + '</span>';
+      }).join('');
+
+      var typeLabel = r.room_types ? r.room_types.name_ko : '';
+
+      document.getElementById('modalContent').innerHTML =
+        (mainImg ? '<img class="modal__img" src="' + mainImg + '" alt="' + (r.name_ko || '') + '">' : '') +
+        '<div class="modal__body">' +
+        (typeLabel ? '<p class="modal__type">' + typeLabel + '</p>' : '') +
+        '<h2 class="modal__name">' + (r.name_ko || '') + (r.name_en ? ' <span style="font-size:14px;font-weight:400;color:#aaa;">' + r.name_en + '</span>' : '') + '</h2>' +
+        '<p class="modal__desc">' + (r.description_ko || '') + '</p>' +
+        '<div class="modal__specs">' +
+        '<div class="modal__spec"><p class="modal__spec-label">침대</p><p class="modal__spec-val">' + (r.bed_type || '—') + '</p></div>' +
+        '<div class="modal__spec"><p class="modal__spec-label">면적</p><p class="modal__spec-val">' + (r.size_sqm || '—') + 'm²</p></div>' +
+        '<div class="modal__spec"><p class="modal__spec-label">층</p><p class="modal__spec-val">' + (r.floor || '—') + 'F</p></div>' +
+        '<div class="modal__spec"><p class="modal__spec-label">최대 인원</p><p class="modal__spec-val">성인 ' + (r.max_adults || 2) + '명</p></div>' +
+        '</div>' +
+        (amenityHtml ? '<div class="modal__amenities"><h4>편의 시설</h4><div class="modal__amenity-list">' + amenityHtml + '</div></div>' : '') +
+        '<div class="modal__footer">' +
+        '<div class="room-card__price">' +
+        (discount > 0 ? '<p class="room-price-origin">₩' + price.toLocaleString() + '</p>' : '') +
+        '<p class="room-price-val">₩' + finalPrice.toLocaleString() + '</p>' +
+        '<p class="room-price-night">/ 1박 (세금 별도)</p>' +
+        '</div>' +
+        '<a href="reservation.html?roomId=' + r.id + '" class="btn-reserve">예약하기</a>' +
+        '</div>' +
+        '</div>';
+
+      document.getElementById('modalOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function (e) {
+      if (e && e.target !== document.getElementById('modalOverlay') && e.type === 'click') return;
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') window.closeModal();
+    });
+
+    /* 시작 */
+    loadRooms();
+  })();
+  </script>
+
+</body>
+</html>

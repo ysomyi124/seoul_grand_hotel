@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 대시보드 | Seoul Grand Hotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--accent:#866552;--black:#111;--white:#fff;--sub:#767676;--line:#E8E8E8;--bg:#F4F4F4;--sidebar:220px;}
+    body{font-family:'Pretendard','Montserrat',sans-serif;background:var(--bg);display:flex;min-height:100vh;}
+
+    /* ── Sidebar ── */
+    .sidebar{width:var(--sidebar);background:var(--black);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
+    .sidebar__logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.1);}
+    .sidebar__logo span{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+    .sidebar__logo small{display:block;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;margin-top:2px;}
+    .sidebar__nav{flex:1;padding:16px 0;}
+    .sidebar__nav a{display:flex;align-items:center;gap:10px;padding:13px 20px;font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;transition:all .15s;}
+    .sidebar__nav a:hover,.sidebar__nav a.active{color:#fff;background:rgba(255,255,255,.08);}
+    .sidebar__nav a.active{border-left:3px solid var(--accent);}
+    .sidebar__bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1);}
+    .sidebar__logout{width:100%;padding:10px;background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;transition:all .2s;}
+    .sidebar__logout:hover{border-color:#fff;color:#fff;}
+
+    /* ── Main ── */
+    .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--line);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+    .topbar__title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--black);}
+    .topbar__user{font-size:13px;color:var(--sub);}
+    .content{padding:32px;}
+
+    /* ── Stats ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:32px;}
+    .stat-card{background:var(--white);padding:24px;box-shadow:0 1px 8px rgba(0,0,0,.06);}
+    .stat-card__label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);margin-bottom:8px;}
+    .stat-card__val{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;color:var(--black);margin-bottom:4px;}
+    .stat-card__sub{font-size:11px;color:var(--sub);}
+
+    /* ── Table ── */
+    .section-card{background:var(--white);box-shadow:0 1px 8px rgba(0,0,0,.06);margin-bottom:24px;}
+    .section-card__header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+    .section-card__title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--black);}
+    .section-card__link{font-size:12px;color:var(--accent);text-decoration:none;}
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;}
+    th{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
+    td{padding:13px 16px;font-size:13px;color:var(--black);border-bottom:1px solid var(--line);}
+    tr:last-child td{border:none;}
+    tr:hover td{background:#FAFAFA;}
+
+    .badge{display:inline-block;padding:3px 8px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;}
+    .badge.confirmed{background:#E8F4FD;color:#2980b9;}
+    .badge.pending{background:#FEF9E7;color:#d4ac0d;}
+    .badge.cancelled{background:#FDECEA;color:#c0392b;}
+    .badge.completed{background:#EAFAF1;color:#1b7a4c;}
+
+    @media(max-width:1024px){.stats-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:768px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;}.stats-grid{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar__logo">
+      <span>SGH Admin</span>
+      <small>Seoul Grand Hotel</small>
+    </div>
+    <nav class="sidebar__nav">
+      <a href="index.html" class="active">📊 대시보드</a>
+      <a href="reservations.html">📋 예약 관리</a>
+      <a href="rooms.html">🏨 객실 관리</a>
+      <a href="users.html">👥 회원 관리</a>
+    </nav>
+    <div class="sidebar__bottom">
+      <button class="sidebar__logout" id="logoutBtn">로그아웃</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="topbar__title">Dashboard</span>
+      <span class="topbar__user" id="adminName">관리자</span>
+    </div>
+    <div class="content">
+
+      <!-- 통계 카드 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <p class="stat-card__label">전체 예약</p>
+          <p class="stat-card__val" id="statTotal">—</p>
+          <p class="stat-card__sub">취소 제외</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card__label">오늘 체크인</p>
+          <p class="stat-card__val" id="statCI">—</p>
+          <p class="stat-card__sub">예정</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card__label">이달 매출</p>
+          <p class="stat-card__val" id="statRev">—</p>
+          <p class="stat-card__sub">결제 완료</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card__label">활성 객실</p>
+          <p class="stat-card__val" id="statRooms">—</p>
+          <p class="stat-card__sub">운영 중</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card__label">전체 회원</p>
+          <p class="stat-card__val" id="statUsers">—</p>
+          <p class="stat-card__sub">등록</p>
+        </div>
+      </div>
+
+      <!-- 최근 예약 -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <span class="section-card__title">최근 예약</span>
+          <a href="reservations.html" class="section-card__link">전체 보기 →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>예약번호</th><th>예약자</th><th>객실</th><th>체크인</th><th>체크아웃</th><th>금액</th><th>상태</th></tr>
+            </thead>
+            <tbody id="recentRsvBody">
+              <tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+  (function () {
+    var STATUS_KO = { pending:'대기중', confirmed:'확정', cancelled:'취소됨', completed:'완료' };
+
+    async function init() {
+      if (!window.SGH || !window.SGH.auth) return;
+      var ok = await window.SGH.auth.requireAdmin();
+      if (!ok) return;
+
+      /* 관리자 이름 */
+      var userRes = await window.SGH.supabase.auth.getUser();
+      if (userRes.data && userRes.data.user) {
+        var meta = userRes.data.user.user_metadata || {};
+        document.getElementById('adminName').textContent = (meta.name_ko || userRes.data.user.email) + ' (관리자)';
+      }
+
+      /* 통계 */
+      var stats = await window.SGH.admin.getStats();
+      document.getElementById('statTotal').textContent  = stats.totalReservations.toLocaleString();
+      document.getElementById('statCI').textContent     = stats.todayCheckins.toLocaleString();
+      document.getElementById('statRev').textContent    = '₩' + Math.round(stats.monthRevenue / 10000).toLocaleString() + '만';
+      document.getElementById('statRooms').textContent  = stats.activeRooms.toLocaleString();
+      document.getElementById('statUsers').textContent  = stats.totalUsers.toLocaleString();
+
+      /* 최근 예약 */
+      var rsvRes = await window.SGH.admin.getRecentReservations(10);
+      var tbody  = document.getElementById('recentRsvBody');
+      if (rsvRes.error || !rsvRes.data || rsvRes.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">예약 데이터가 없습니다.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rsvRes.data.map(function (r) {
+        var guest    = r.reservation_guests && r.reservation_guests[0];
+        var guestName = guest ? (guest.name_ko || '—') : (r.profiles ? r.profiles.name_ko : '—');
+        var roomName = r.reservation_rooms && r.reservation_rooms[0] && r.reservation_rooms[0].rooms
+          ? r.reservation_rooms[0].rooms.name_ko : '—';
+        return '<tr>' +
+          '<td style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;">' + (r.reservation_no || '—') + '</td>' +
+          '<td>' + guestName + '</td>' +
+          '<td>' + roomName + '</td>' +
+          '<td>' + (r.check_in || '—') + '</td>' +
+          '<td>' + (r.check_out || '—') + '</td>' +
+          '<td style="font-family:Montserrat,sans-serif;font-weight:600;">₩' + Number(r.price_total || 0).toLocaleString() + '</td>' +
+          '<td><span class="badge ' + r.status + '">' + (STATUS_KO[r.status] || r.status) + '</span></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      await window.SGH.auth.signOut();
+      window.location.href = '../index.html';
+    });
+
+    init();
+  })();
+  </script>
+
+</body>
+</html>

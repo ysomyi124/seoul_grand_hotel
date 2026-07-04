@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 관리 | SGH Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--accent:#866552;--black:#111;--white:#fff;--sub:#767676;--line:#E8E8E8;--bg:#F4F4F4;--sidebar:220px;}
+    body{font-family:'Pretendard','Montserrat',sans-serif;background:var(--bg);display:flex;min-height:100vh;}
+    .sidebar{width:var(--sidebar);background:var(--black);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
+    .sidebar__logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.1);}
+    .sidebar__logo span{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+    .sidebar__logo small{display:block;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;margin-top:2px;}
+    .sidebar__nav{flex:1;padding:16px 0;}
+    .sidebar__nav a{display:flex;align-items:center;gap:10px;padding:13px 20px;font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;transition:all .15s;}
+    .sidebar__nav a:hover,.sidebar__nav a.active{color:#fff;background:rgba(255,255,255,.08);}
+    .sidebar__nav a.active{border-left:3px solid var(--accent);}
+    .sidebar__bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1);}
+    .sidebar__logout{width:100%;padding:10px;background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;transition:all .2s;}
+    .sidebar__logout:hover{border-color:#fff;color:#fff;}
+    .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--line);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+    .topbar__title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--black);}
+    .content{padding:32px;}
+    .filter-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;align-items:flex-end;}
+    .f-group{display:flex;flex-direction:column;gap:6px;}
+    .f-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);}
+    .f-input{padding:10px 14px;border:1px solid var(--line);background:#fff;font-family:'Pretendard',sans-serif;font-size:13px;color:var(--black);outline:none;height:40px;}
+    .f-input:focus{border-color:var(--black);}
+    .btn-search{padding:10px 24px;background:var(--black);color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;height:40px;}
+    .section-card{background:var(--white);box-shadow:0 1px 8px rgba(0,0,0,.06);}
+    .section-card__header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+    .section-card__title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--black);}
+    .row-count{font-size:12px;color:var(--sub);}
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;min-width:800px;}
+    th{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;background:#FAFAFA;}
+    td{padding:12px 16px;font-size:13px;color:var(--black);border-bottom:1px solid var(--line);vertical-align:middle;}
+    tr:last-child td{border:none;}
+    tr:hover td{background:#FAFAFA;}
+    .badge{display:inline-block;padding:3px 8px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;border-radius:2px;}
+    .badge.admin{background:#FEF9E7;color:#d4ac0d;}
+    .badge.user{background:#E8E8E8;color:#555;}
+    select.role-sel{padding:5px 8px;border:1px solid var(--line);font-size:12px;background:#fff;cursor:pointer;}
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar__logo"><span>SGH Admin</span><small>Seoul Grand Hotel</small></div>
+    <nav class="sidebar__nav">
+      <a href="index.html">📊 대시보드</a>
+      <a href="reservations.html">📋 예약 관리</a>
+      <a href="rooms.html">🏨 객실 관리</a>
+      <a href="users.html" class="active">👥 회원 관리</a>
+    </nav>
+    <div class="sidebar__bottom">
+      <button class="sidebar__logout" id="logoutBtn">로그아웃</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="topbar__title">User Management</span>
+    </div>
+    <div class="content">
+
+      <div class="filter-row">
+        <div class="f-group">
+          <label class="f-label">이름/이메일 검색</label>
+          <input type="text" class="f-input" id="fSearch" placeholder="이름 또는 이메일" style="width:220px;">
+        </div>
+        <div class="f-group">
+          <label class="f-label">역할</label>
+          <select class="f-input" id="fRole">
+            <option value="">전체</option>
+            <option value="user">일반</option>
+            <option value="admin">관리자</option>
+          </select>
+        </div>
+        <button class="btn-search" id="btnSearch">검색</button>
+      </div>
+
+      <div class="section-card">
+        <div class="section-card__header">
+          <span class="section-card__title">회원 목록</span>
+          <span class="row-count" id="rowCount">0명</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>이름</th><th>아이디</th><th>이메일</th><th>휴대폰</th><th>가입일</th><th>최근 로그인</th><th>포인트</th><th>등급</th><th>역할</th></tr>
+            </thead>
+            <tbody id="userBody">
+              <tr><td colspan="9" style="text-align:center;padding:48px;color:#aaa;">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+  (function () {
+    async function init() {
+      if (!window.SGH || !window.SGH.auth) return;
+      var ok = await window.SGH.auth.requireAdmin();
+      if (!ok) return;
+      loadUsers({});
+    }
+
+    async function loadUsers(opts) {
+      var tbody = document.getElementById('userBody');
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">로딩 중...</td></tr>';
+      var res = await window.SGH.admin.getUsers(opts);
+      if (res.error || !res.data || res.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">회원 데이터가 없습니다.</td></tr>';
+        document.getElementById('rowCount').textContent = '0명';
+        return;
+      }
+      document.getElementById('rowCount').textContent = res.data.length + '명';
+
+      function fmt(s) {
+        if (!s) return '—';
+        return s.slice(0, 10);
+      }
+
+      tbody.innerHTML = res.data.map(function (u) {
+        var gradeName = u.membership_grades ? u.membership_grades.name : '—';
+        var roleOpts = ['user','admin'].map(function (r) {
+          return '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + (r === 'admin' ? '관리자' : '일반') + '</option>';
+        }).join('');
+        return '<tr>' +
+          '<td><strong>' + (u.name_ko || '—') + '</strong>' + (u.name_en ? ' <small style="color:#aaa;">' + u.name_en + '</small>' : '') + '</td>' +
+          '<td>' + (u.username || '—') + '</td>' +
+          '<td>' + (u.email || '—') + '</td>' +
+          '<td>' + (u.phone || '—') + '</td>' +
+          '<td>' + fmt(u.created_at) + '</td>' +
+          '<td>' + fmt(u.last_login_at) + '</td>' +
+          '<td style="font-family:Montserrat,sans-serif;">' + Number(u.points || 0).toLocaleString() + ' P</td>' +
+          '<td>' + gradeName + '</td>' +
+          '<td><select class="role-sel" data-id="' + u.id + '" onchange="changeRole(this)">' + roleOpts + '</select></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    window.changeRole = async function (sel) {
+      var id   = sel.dataset.id;
+      var role = sel.value;
+      if (!confirm('역할을 "' + role + '"으로 변경하시겠습니까?')) { return; }
+      var res = await window.SGH.admin.updateUserRole(id, role);
+      if (res.error) alert('변경 실패: ' + res.error.message);
+    };
+
+    document.getElementById('btnSearch').addEventListener('click', function () {
+      var opts = {
+        search: document.getElementById('fSearch').value || undefined,
+        role:   document.getElementById('fRole').value   || undefined,
+      };
+      Object.keys(opts).forEach(function (k) { if (!opts[k]) delete opts[k]; });
+      loadUsers(opts);
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      await window.SGH.auth.signOut();
+      window.location.href = '../index.html';
+    });
+
+    init();
+  })();
+  </script>
+
+</body>
+</html>

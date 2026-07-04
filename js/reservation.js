@@ -269,42 +269,66 @@
 
   window.SGH.reservation = {
 
-    /* 예약 생성 */
+    /* ──────────────────────────────────────────
+       예약 생성 — reservations → reservation_guests → reservation_rooms 순서로 INSERT
+    ────────────────────────────────────────── */
     create: async function (payload) {
-      var userRes = await window.SGH.supabase.auth.getUser();
+      var sb = window.SGH.supabase;
+      var userRes = await sb.auth.getUser();
       var userId = userRes.data && userRes.data.user ? userRes.data.user.id : null;
+      var price = payload.price || {};
 
-      return window.SGH.supabase
-        .from('reservations')
-        .insert([{
-          user_id:        userId,
-          room_id:        payload.roomId,
-          checkin_date:   payload.checkin,
-          checkout_date:  payload.checkout,
-          nights:         payload.nights,
-          rooms:          payload.rooms || 1,
-          adults:         payload.adults || 2,
-          children:       payload.children || 0,
-          package_id:     payload.packageId || null,
-          services:       payload.services || [],
-          coupon_code:    payload.couponCode || null,
-          guest_name_ko:  payload.guestInfo ? payload.guestInfo.nameKo  : null,
-          guest_name_en:  payload.guestInfo ? payload.guestInfo.nameEn  : null,
-          guest_email:    payload.guestInfo ? payload.guestInfo.email   : null,
-          guest_phone:    payload.guestInfo ? payload.guestInfo.phone   : null,
-          guest_country:  payload.guestInfo ? payload.guestInfo.country : null,
-          special_request: payload.specialRequest || null,
-          payment_method: payload.paymentMethod || null,
-          price_base:     payload.price ? payload.price.baseRoom   : 0,
-          price_pkg:      payload.price ? payload.price.pkgAdd     : 0,
-          price_svc:      payload.price ? payload.price.svcTotal   : 0,
-          price_discount: payload.price ? payload.price.pkgDiscount + (payload.price.coupon || 0) : 0,
-          price_tax:      payload.price ? payload.price.tax        : 0,
-          price_total:    payload.price ? payload.price.total      : 0,
-          status:         'confirmed',
-        }])
-        .select()
-        .single();
+      /* 1. reservations 메인 레코드 */
+      var rsvRes = await sb.from('reservations').insert([{
+        user_id:         userId,
+        check_in:        payload.checkin,
+        check_out:       payload.checkout,
+        nights:          payload.nights,
+        num_rooms:       payload.rooms    || 1,
+        num_adults:      payload.adults   || 2,
+        num_children:    payload.children || 0,
+        coupon_code:     payload.couponCode || null,
+        promotion_id:    payload.promotionId || null,
+        special_request: payload.specialRequest || null,
+        price_base:      price.baseRoom   || 0,
+        price_discount:  (price.pkgDiscount || 0) + (price.coupon || 0),
+        price_extra:     (price.pkgAdd || 0) + (price.svcTotal || 0),
+        price_tax:       price.tax        || 0,
+        price_total:     price.total      || 0,
+        status:          'confirmed',
+      }]).select('id, reservation_no').single();
+
+      if (rsvRes.error) return rsvRes;
+      var rsvId = rsvRes.data.id;
+
+      /* 2. reservation_guests */
+      if (payload.guestInfo) {
+        var g = payload.guestInfo;
+        await sb.from('reservation_guests').insert([{
+          reservation_id: rsvId,
+          name_ko:        g.nameKo   || null,
+          name_en:        g.nameEn   || null,
+          email:          g.email    || null,
+          phone:          g.phone    || null,
+          nationality:    g.country  || null,
+          is_primary:     true,
+        }]);
+      }
+
+      /* 3. reservation_rooms */
+      var roomIds = Array.isArray(payload.roomIds) ? payload.roomIds : (payload.roomId ? [payload.roomId] : []);
+      if (roomIds.length > 0) {
+        var roomRows = roomIds.map(function (rid) {
+          return {
+            reservation_id: rsvId,
+            room_id:        rid,
+            price_per_night: payload.pricePerNight || price.baseRoom || 0,
+          };
+        });
+        await sb.from('reservation_rooms').insert(roomRows);
+      }
+
+      return { data: rsvRes.data, error: null };
     },
 
     /* 현재 사용자의 예약 목록 조회 */
@@ -315,7 +339,7 @@
       }
       return window.SGH.supabase
         .from('reservations')
-        .select('*, rooms(*)')
+        .select('*, reservation_guests(*), reservation_rooms(*, rooms(name_ko, name_en, bed_type, room_images(url, is_main)))')
         .eq('user_id', userRes.data.user.id)
         .order('created_at', { ascending: false });
     },
@@ -324,17 +348,18 @@
     getById: async function (reservationId) {
       return window.SGH.supabase
         .from('reservations')
-        .select('*, rooms(*)')
+        .select('*, reservation_guests(*), reservation_rooms(*, rooms(*))')
         .eq('id', reservationId)
         .single();
     },
 
-    /* 예약 취소 */
+    /* 예약 취소 (pending/confirmed 상태만) */
     cancel: async function (reservationId) {
       return window.SGH.supabase
         .from('reservations')
         .update({ status: 'cancelled' })
         .eq('id', reservationId)
+        .in('status', ['pending', 'confirmed'])
         .select()
         .single();
     },

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>객실 관리 | SGH Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--accent:#866552;--black:#111;--white:#fff;--sub:#767676;--line:#E8E8E8;--bg:#F4F4F4;--sidebar:220px;}
+    body{font-family:'Pretendard','Montserrat',sans-serif;background:var(--bg);display:flex;min-height:100vh;}
+    .sidebar{width:var(--sidebar);background:var(--black);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
+    .sidebar__logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.1);}
+    .sidebar__logo span{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+    .sidebar__logo small{display:block;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;margin-top:2px;}
+    .sidebar__nav{flex:1;padding:16px 0;}
+    .sidebar__nav a{display:flex;align-items:center;gap:10px;padding:13px 20px;font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;transition:all .15s;}
+    .sidebar__nav a:hover,.sidebar__nav a.active{color:#fff;background:rgba(255,255,255,.08);}
+    .sidebar__nav a.active{border-left:3px solid var(--accent);}
+    .sidebar__bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1);}
+    .sidebar__logout{width:100%;padding:10px;background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;transition:all .2s;}
+    .sidebar__logout:hover{border-color:#fff;color:#fff;}
+    .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--line);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+    .topbar__title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--black);}
+    .content{padding:32px;}
+    .section-card{background:var(--white);box-shadow:0 1px 8px rgba(0,0,0,.06);}
+    .section-card__header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+    .section-card__title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--black);}
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;min-width:800px;}
+    th{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;background:#FAFAFA;}
+    td{padding:12px 16px;font-size:13px;color:var(--black);border-bottom:1px solid var(--line);vertical-align:middle;}
+    tr:last-child td{border:none;}
+    tr:hover td{background:#FAFAFA;}
+    .room-thumb{width:60px;height:44px;object-fit:cover;border-radius:2px;display:block;background:#E8E8E8;}
+    .badge{display:inline-block;padding:3px 8px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;border-radius:2px;}
+    .badge.available{background:#EAFAF1;color:#1b7a4c;}
+    .badge.unavailable{background:#FDECEA;color:#c0392b;}
+    .badge.maintenance{background:#FEF9E7;color:#d4ac0d;}
+    .toggle-wrap{display:flex;align-items:center;gap:8px;}
+    .toggle{position:relative;width:40px;height:22px;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:22px;cursor:pointer;transition:.3s;}
+    .toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+    .toggle input:checked + .toggle-slider{background:var(--black);}
+    .toggle input:checked + .toggle-slider:before{transform:translateX(18px);}
+    select.status-sel{padding:5px 8px;border:1px solid var(--line);font-size:12px;background:#fff;cursor:pointer;}
+    .price-edit{display:flex;align-items:center;gap:6px;}
+    .price-input{width:100px;padding:5px 8px;border:1px solid var(--line);font-family:'Pretendard',sans-serif;font-size:12px;}
+    .btn-save-price{padding:5px 10px;background:var(--black);color:#fff;border:none;font-size:11px;cursor:pointer;}
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar__logo"><span>SGH Admin</span><small>Seoul Grand Hotel</small></div>
+    <nav class="sidebar__nav">
+      <a href="index.html">📊 대시보드</a>
+      <a href="reservations.html">📋 예약 관리</a>
+      <a href="rooms.html" class="active">🏨 객실 관리</a>
+      <a href="users.html">👥 회원 관리</a>
+    </nav>
+    <div class="sidebar__bottom">
+      <button class="sidebar__logout" id="logoutBtn">로그아웃</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="topbar__title">Room Management</span>
+    </div>
+    <div class="content">
+
+      <div class="section-card">
+        <div class="section-card__header">
+          <span class="section-card__title">객실 목록</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th></th><th>객실명</th><th>타입</th><th>침대</th><th>면적</th><th>최대인원</th><th>1박 가격</th><th>운영 상태</th><th>활성</th></tr>
+            </thead>
+            <tbody id="roomBody">
+              <tr><td colspan="9" style="text-align:center;padding:48px;color:#aaa;">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+  (function () {
+    async function init() {
+      if (!window.SGH || !window.SGH.auth) return;
+      var ok = await window.SGH.auth.requireAdmin();
+      if (!ok) return;
+      loadRooms();
+    }
+
+    async function loadRooms() {
+      var tbody = document.getElementById('roomBody');
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">로딩 중...</td></tr>';
+      var res = await window.SGH.admin.getAllRooms();
+      if (res.error || !res.data || res.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">객실 데이터가 없습니다.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = res.data.map(function (r) {
+        var thumb = '';
+        if (r.room_images && r.room_images.length > 0) {
+          var main = r.room_images.find(function (i) { return i.is_main; }) || r.room_images[0];
+          thumb = '<img class="room-thumb" src="' + main.url + '" alt="' + (r.name_ko || '') + '">';
+        } else {
+          thumb = '<div class="room-thumb" style="display:flex;align-items:center;justify-content:center;font-size:18px;">🏨</div>';
+        }
+
+        var statusOpts = ['available','unavailable','maintenance'].map(function (s) {
+          return '<option value="' + s + '"' + (r.status === s ? ' selected' : '') + '>' + s + '</option>';
+        }).join('');
+
+        var typeName = r.room_types ? r.room_types.name_ko : '—';
+
+        return '<tr>' +
+          '<td>' + thumb + '</td>' +
+          '<td><strong>' + (r.name_ko || '—') + '</strong><br><small style="color:#aaa;">' + (r.name_en || '') + '</small></td>' +
+          '<td>' + typeName + '</td>' +
+          '<td>' + (r.bed_type || '—') + '</td>' +
+          '<td>' + (r.size_sqm || '—') + 'm²</td>' +
+          '<td style="text-align:center;">' + (r.max_adults || 0) + '인</td>' +
+          '<td>' +
+            '<div class="price-edit">' +
+            '<input class="price-input" type="number" id="price-' + r.id + '" value="' + (r.price_per_night || 0) + '">' +
+            '<button class="btn-save-price" onclick="savePrice(\'' + r.id + '\')">저장</button>' +
+            '</div>' +
+          '</td>' +
+          '<td><select class="status-sel" data-id="' + r.id + '" onchange="changeStatus(this)">' + statusOpts + '</select></td>' +
+          '<td>' +
+            '<label class="toggle">' +
+            '<input type="checkbox"' + (r.is_active ? ' checked' : '') + ' onchange="toggleActive(\'' + r.id + '\', this)">' +
+            '<span class="toggle-slider"></span>' +
+            '</label>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    window.changeStatus = async function (sel) {
+      var id  = sel.dataset.id;
+      var res = await window.SGH.admin.updateRoomStatus(id, sel.value);
+      if (res.error) { alert('변경 실패: ' + res.error.message); }
+    };
+
+    window.toggleActive = async function (id, chk) {
+      var res = await window.SGH.admin.toggleRoomActive(id, chk.checked);
+      if (res.error) { alert('변경 실패: ' + res.error.message); chk.checked = !chk.checked; }
+    };
+
+    window.savePrice = async function (id) {
+      var price = parseInt(document.getElementById('price-' + id).value);
+      if (isNaN(price) || price < 0) { alert('올바른 금액을 입력해주세요.'); return; }
+      var res = await window.SGH.admin.updateRoomPrice(id, price);
+      if (res.error) alert('저장 실패: ' + res.error.message);
+      else alert('가격이 저장되었습니다.');
+    };
+
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      await window.SGH.auth.signOut();
+      window.location.href = '../index.html';
+    });
+
+    init();
+  })();
+  </script>
+
+</body>
+</html>

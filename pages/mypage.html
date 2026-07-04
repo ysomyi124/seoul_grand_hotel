@@ -15,100 +15,84 @@
     :root { --accent:#866552; --black:#111; --white:#fff; --sub:#767676; --line:#E8E8E8; --bg:#F7F7F7; }
     body { font-family:'Pretendard','Montserrat',sans-serif; background:var(--bg); min-height:100vh; display:flex; flex-direction:column; }
 
-    /* ── Header ── */
     .page-header { background:var(--black); padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
     .page-header__logo img { height:32px; }
     .page-header__nav { display:flex; align-items:center; gap:24px; }
     .page-header__nav a { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-decoration:none; opacity:.7; transition:opacity .2s; }
     .page-header__nav a:hover { opacity:1; }
-    .btn-logout { background:transparent; border:1px solid rgba(255,255,255,.4); color:#fff; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:8px 16px; cursor:pointer; transition:border-color .2s; }
-    .btn-logout:hover { border-color:#fff; }
 
-    /* ── Layout ── */
-    .mypage-wrap { flex:1; max-width:1000px; margin:0 auto; padding:60px 24px 80px; width:100%; }
-    .mypage-title { font-family:'Montserrat',sans-serif; font-size:28px; font-weight:600; color:var(--black); letter-spacing:.04em; margin-bottom:8px; }
-    .mypage-sub   { font-size:14px; color:var(--sub); margin-bottom:48px; }
+    .mypage-wrap { flex:1; display:grid; grid-template-columns:240px 1fr; gap:32px; max-width:1100px; margin:0 auto; padding:48px 24px 80px; width:100%; box-sizing:border-box; }
 
-    /* ── Tab ── */
-    .tab-bar { display:flex; border-bottom:2px solid var(--line); margin-bottom:40px; }
-    .tab-item { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); padding:12px 20px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; }
-    .tab-item.is-active { color:var(--black); border-bottom-color:var(--black); }
+    /* Sidebar */
+    .sidebar { background:var(--white); padding:32px 24px; box-shadow:0 2px 16px rgba(0,0,0,.06); align-self:start; position:sticky; top:24px; }
+    .sidebar__avatar { width:72px; height:72px; background:#E8E8E8; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px; color:#aaa; }
+    .sidebar__name { text-align:center; font-weight:700; font-size:17px; color:var(--black); margin-bottom:4px; }
+    .sidebar__grade { text-align:center; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:20px; }
+    .sidebar__points { background:var(--bg); padding:12px 16px; text-align:center; margin-bottom:24px; }
+    .sidebar__points-label { font-size:11px; color:var(--sub); margin-bottom:4px; }
+    .sidebar__points-val { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:700; color:var(--black); }
 
-    /* ── Profile card ── */
-    .profile-card { background:var(--white); border:1px solid var(--line); padding:40px; margin-bottom:32px; }
-    .profile-header { display:flex; align-items:center; gap:24px; margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid var(--line); }
-    .profile-avatar { width:72px; height:72px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:28px; font-weight:600; color:var(--white); flex-shrink:0; }
-    .profile-name { font-size:20px; font-weight:600; color:var(--black); margin-bottom:4px; }
-    .profile-email { font-size:14px; color:var(--sub); margin-bottom:8px; }
-    .membership-badge { display:inline-block; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:4px 12px; background:var(--accent); color:var(--white); border-radius:2px; }
+    .sidebar__menu { list-style:none; }
+    .sidebar__menu li { border-bottom:1px solid var(--line); }
+    .sidebar__menu li:last-child { border:none; }
+    .sidebar__menu a { display:block; padding:13px 8px; font-size:14px; color:var(--sub); text-decoration:none; transition:color .2s; cursor:pointer; }
+    .sidebar__menu a:hover, .sidebar__menu a.active { color:var(--black); font-weight:600; }
+    .sidebar__logout { margin-top:24px; width:100%; padding:12px; background:transparent; border:1px solid var(--line); color:var(--sub); font-size:13px; cursor:pointer; transition:all .2s; }
+    .sidebar__logout:hover { border-color:var(--black); color:var(--black); }
 
-    .profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    .profile-field label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-bottom:6px; }
-    .profile-field .value { font-size:15px; color:var(--black); font-weight:500; }
+    /* Content */
+    .content { }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
 
-    /* ── Profile edit form ── */
-    .edit-form { display:none; border-top:1px solid var(--line); margin-top:32px; padding-top:32px; }
-    .edit-form.is-open { display:block; }
-    .edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
-    .edit-group label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--black); margin-bottom:6px; }
-    .edit-group input, .edit-group select { display:block; width:100%; padding:12px 14px; font-size:14px; border:1px solid var(--line); outline:none; transition:border-color .2s; box-sizing:border-box; }
-    .edit-group input:focus, .edit-group select:focus { border-color:var(--black); }
-    .edit-actions { display:flex; gap:12px; margin-top:24px; }
-    .btn-edit-save   { flex:1; padding:12px; background:var(--black); color:var(--white); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:none; cursor:pointer; }
-    .btn-edit-cancel { flex:1; padding:12px; background:transparent; color:var(--black); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:1.5px solid var(--line); cursor:pointer; }
+    .panel-title { font-family:'Montserrat',sans-serif; font-size:18px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--black); margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid var(--black); }
 
-    .btn-edit-toggle { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); background:transparent; border:1px solid var(--accent); padding:8px 18px; cursor:pointer; transition:background .2s,color .2s; }
-    .btn-edit-toggle:hover { background:var(--accent); color:var(--white); }
+    /* 예약 카드 */
+    .rsv-list { display:flex; flex-direction:column; gap:16px; }
+    .rsv-card { background:var(--white); padding:24px; box-shadow:0 2px 12px rgba(0,0,0,.05); }
+    .rsv-card__header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+    .rsv-no { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--black); }
+    .rsv-badge { display:inline-block; padding:4px 10px; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border-radius:2px; }
+    .rsv-badge.confirmed  { background:#E8F4FD; color:#2980b9; }
+    .rsv-badge.pending    { background:#FEF9E7; color:#d4ac0d; }
+    .rsv-badge.cancelled  { background:#FDECEA; color:#c0392b; }
+    .rsv-badge.completed  { background:#EAFAF1; color:#1b7a4c; }
+    .rsv-card__body { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+    .rsv-info { font-size:13px; color:var(--sub); }
+    .rsv-info strong { color:var(--black); font-weight:600; }
+    .rsv-card__footer { margin-top:16px; display:flex; gap:10px; justify-content:flex-end; }
+    .btn-cancel { padding:8px 18px; background:transparent; border:1px solid #c0392b; color:#c0392b; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+    .btn-cancel:hover { background:#c0392b; color:#fff; }
 
-    /* ── Points card ── */
-    .points-card { background:var(--black); color:var(--white); padding:32px 40px; margin-bottom:32px; display:flex; align-items:center; justify-content:space-between; }
-    .points-label { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; opacity:.6; margin-bottom:8px; }
-    .points-value { font-family:'Montserrat',sans-serif; font-size:36px; font-weight:700; letter-spacing:.02em; }
-    .points-unit  { font-size:14px; opacity:.6; margin-left:4px; }
+    /* 프로필 편집 */
+    .profile-form { background:var(--white); padding:32px; box-shadow:0 2px 12px rgba(0,0,0,.05); }
+    .form-group { margin-bottom:20px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--black); margin-bottom:8px; }
+    .form-input { display:block; width:100%; padding:12px 14px; font-family:'Pretendard',sans-serif; font-size:14px; color:var(--black); background:#fff; border:1px solid var(--line); outline:none; transition:border-color .2s; box-sizing:border-box; }
+    .form-input:focus { border-color:var(--black); }
+    .form-input[readonly] { background:var(--bg); color:var(--sub); }
+    .btn-save { padding:13px 32px; background:var(--black); color:#fff; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:1.5px solid var(--black); cursor:pointer; transition:all .2s; }
+    .btn-save:hover { background:transparent; color:var(--black); }
 
-    /* ── Reservation list ── */
-    .rsv-table-wrap { overflow-x:auto; }
-    .rsv-table { width:100%; border-collapse:collapse; background:var(--white); border:1px solid var(--line); }
-    .rsv-table th { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--sub); padding:14px 16px; text-align:left; border-bottom:2px solid var(--line); background:#fafafa; white-space:nowrap; }
-    .rsv-table td { font-size:13px; color:var(--black); padding:16px; border-bottom:1px solid var(--line); vertical-align:middle; }
-    .rsv-table tr:last-child td { border-bottom:none; }
-    .rsv-table tr:hover td { background:#fafafa; }
-
-    .status-badge { display:inline-block; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:2px; }
-    .status-badge.confirmed    { background:#e8f5e9; color:#2e7d32; }
-    .status-badge.checked_in   { background:#e3f2fd; color:#1565c0; }
-    .status-badge.checked_out  { background:#f5f5f5; color:#555; }
-    .status-badge.cancelled    { background:#fff3e0; color:#e65100; }
-    .status-badge.pending      { background:#fff8e1; color:#f57f17; }
-    .status-badge.no_show      { background:#fce4ec; color:#880e4f; }
-
-    .btn-cancel-rsv { font-size:11px; color:#c0392b; background:none; border:1px solid #c0392b; padding:4px 10px; cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:.08em; text-transform:uppercase; transition:background .2s,color .2s; }
-    .btn-cancel-rsv:hover { background:#c0392b; color:#fff; }
+    .alert-box { padding:12px 16px; font-size:13px; border-radius:2px; margin-bottom:20px; }
+    .alert-box.error   { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
+    .alert-box.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
 
     .empty-state { text-align:center; padding:60px 24px; color:var(--sub); }
-    .empty-state__icon { font-size:48px; margin-bottom:16px; }
-    .empty-state__title { font-family:'Montserrat',sans-serif; font-size:16px; font-weight:600; color:var(--black); margin-bottom:8px; }
-    .empty-state__sub { font-size:14px; margin-bottom:24px; }
-    .btn-reserve { display:inline-block; padding:12px 32px; background:var(--accent); color:var(--white); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; }
+    .empty-state p { font-size:15px; margin-bottom:16px; }
+    .btn-link { display:inline-block; padding:12px 28px; background:var(--black); color:#fff; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; transition:opacity .2s; }
+    .btn-link:hover { opacity:.8; }
 
-    /* ── Loading ── */
-    .loading-spinner { text-align:center; padding:60px; color:var(--sub); font-size:14px; }
-
-    /* ── Alert ── */
-    .alert-inline { padding:12px 16px; font-size:13px; border-radius:3px; margin-bottom:16px; display:none; }
-    .alert-inline.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
-    .alert-inline.error   { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
-
-    .tab-panel { display:none; }
-    .tab-panel.is-active { display:block; }
-
-    .page-footer { padding:24px 40px; text-align:center; border-top:1px solid var(--line); margin-top:auto; }
-    .page-footer p { font-family:'Montserrat',sans-serif; font-size:11px; color:#aaa; letter-spacing:.08em; }
-
-    @media(max-width:768px) {
-      .mypage-wrap { padding:40px 16px 60px; }
-      .profile-grid, .edit-grid { grid-template-columns:1fr; }
-      .points-card { flex-direction:column; align-items:flex-start; gap:12px; }
+    @media (max-width:800px) {
+      .mypage-wrap { grid-template-columns:1fr; }
+      .sidebar { position:static; }
+      .rsv-card__body { grid-template-columns:1fr; }
+      .form-row { grid-template-columns:1fr; }
+    }
+    @media (max-width:480px) {
+      .page-header { padding:16px 20px; }
+      .mypage-wrap { padding:24px 16px 60px; }
     }
   </style>
 </head>
@@ -119,118 +103,103 @@
       <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
     </a>
     <nav class="page-header__nav">
-      <a href="../index.html">Home</a>
-      <a href="reservation.html">예약</a>
-      <button class="btn-logout" id="logoutBtn">로그아웃</button>
+      <a href="../index.html">홈</a>
+      <a href="rooms.html">객실</a>
     </nav>
   </header>
 
-  <div class="mypage-wrap">
-    <h1 class="mypage-title">My Page</h1>
-    <p class="mypage-sub">예약 내역 및 회원 정보를 관리하세요.</p>
-
-    <div id="loadingArea" class="loading-spinner">불러오는 중...</div>
-
-    <div id="mypageContent" style="display:none;">
-
-      <!-- 탭 -->
-      <div class="tab-bar">
-        <div class="tab-item is-active" data-tab="profile">프로필</div>
-        <div class="tab-item" data-tab="reservations">예약 내역</div>
+  <main class="mypage-wrap">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar__avatar">👤</div>
+      <div class="sidebar__name" id="sidebarName">로딩 중...</div>
+      <div class="sidebar__grade" id="sidebarGrade">—</div>
+      <div class="sidebar__points">
+        <div class="sidebar__points-label">보유 포인트</div>
+        <div class="sidebar__points-val" id="sidebarPoints">0 P</div>
       </div>
+      <ul class="sidebar__menu">
+        <li><a class="active" data-tab="reservations" onclick="switchTab(this,'reservations')">예약 내역</a></li>
+        <li><a data-tab="profile" onclick="switchTab(this,'profile')">프로필 수정</a></li>
+        <li><a data-tab="password" onclick="switchTab(this,'password')">비밀번호 변경</a></li>
+      </ul>
+      <button class="sidebar__logout" id="logoutBtn">로그아웃</button>
+    </aside>
 
-      <!-- 프로필 탭 -->
-      <div class="tab-panel is-active" id="tab-profile">
+    <!-- 콘텐츠 -->
+    <section class="content">
 
-        <div class="profile-card">
-          <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatar">?</div>
-            <div>
-              <div class="profile-name" id="profileName">—</div>
-              <div class="profile-email" id="profileEmail">—</div>
-              <span class="membership-badge" id="profileMembership">Guest</span>
-            </div>
-            <button class="btn-edit-toggle" id="editToggleBtn" style="margin-left:auto;">프로필 수정</button>
-          </div>
-
-          <div class="profile-grid">
-            <div class="profile-field">
-              <label>영문 이름</label>
-              <div class="value" id="profileNameEn">—</div>
-            </div>
-            <div class="profile-field">
-              <label>휴대폰</label>
-              <div class="value" id="profilePhone">—</div>
-            </div>
-            <div class="profile-field">
-              <label>국적</label>
-              <div class="value" id="profileNationality">—</div>
-            </div>
-            <div class="profile-field">
-              <label>가입일</label>
-              <div class="value" id="profileCreated">—</div>
-            </div>
-          </div>
-
-          <!-- 편집 폼 -->
-          <div class="edit-form" id="editForm">
-            <div class="alert-inline" id="editAlert"></div>
-            <div class="edit-grid">
-              <div class="edit-group">
-                <label>한글 이름</label>
-                <input type="text" id="editNameKo" placeholder="홍길동">
-              </div>
-              <div class="edit-group">
-                <label>영문 이름</label>
-                <input type="text" id="editNameEn" placeholder="HONG GIL DONG">
-              </div>
-              <div class="edit-group">
-                <label>휴대폰</label>
-                <input type="tel" id="editPhone" placeholder="010-0000-0000">
-              </div>
-              <div class="edit-group">
-                <label>국적</label>
-                <select id="editNationality">
-                  <option value="KR">대한민국</option>
-                  <option value="US">미국</option>
-                  <option value="JP">일본</option>
-                  <option value="CN">중국</option>
-                  <option value="GB">영국</option>
-                  <option value="OTHER">기타</option>
-                </select>
-              </div>
-            </div>
-            <div class="edit-actions">
-              <button class="btn-edit-save"   id="editSaveBtn">저장</button>
-              <button class="btn-edit-cancel" id="editCancelBtn">취소</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 포인트 -->
-        <div class="points-card">
-          <div>
-            <div class="points-label">보유 포인트</div>
-            <div class="points-value" id="profilePoints">0 <span class="points-unit">P</span></div>
-          </div>
-          <div style="font-size:13px;opacity:.6;">멤버십 등급 상승 시 추가 포인트 적립</div>
-        </div>
-
-      </div><!-- /tab-profile -->
-
-      <!-- 예약 내역 탭 -->
-      <div class="tab-panel" id="tab-reservations">
-        <div id="rsvListWrap">
-          <div class="loading-spinner">예약 내역을 불러오는 중...</div>
+      <!-- 예약 내역 -->
+      <div class="tab-panel active" id="tab-reservations">
+        <h2 class="panel-title">My Reservations</h2>
+        <div id="rsvAlert"></div>
+        <div class="rsv-list" id="rsvList">
+          <div class="empty-state"><p>로딩 중...</p></div>
         </div>
       </div>
 
-    </div><!-- /mypageContent -->
-  </div>
+      <!-- 프로필 수정 -->
+      <div class="tab-panel" id="tab-profile">
+        <h2 class="panel-title">Profile</h2>
+        <div id="profileAlert"></div>
+        <div class="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">아이디</label>
+              <input type="text" class="form-input" id="fUsername" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">이메일</label>
+              <input type="email" class="form-input" id="fEmail" readonly>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">한글 이름</label>
+              <input type="text" class="form-input" id="fNameKo" placeholder="홍길동">
+            </div>
+            <div class="form-group">
+              <label class="form-label">영문 이름</label>
+              <input type="text" class="form-input" id="fNameEn" placeholder="HONG GIL DONG">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">휴대폰</label>
+              <input type="tel" class="form-input" id="fPhone" placeholder="010-0000-0000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">생년월일</label>
+              <input type="date" class="form-input" id="fBirth">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">주소</label>
+            <input type="text" class="form-input" id="fAddress" placeholder="주소">
+          </div>
+          <button class="btn-save" id="btnSaveProfile">저장</button>
+        </div>
+      </div>
 
-  <footer class="page-footer">
-    <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
-  </footer>
+      <!-- 비밀번호 변경 -->
+      <div class="tab-panel" id="tab-password">
+        <h2 class="panel-title">Change Password</h2>
+        <div id="pwAlert"></div>
+        <div class="profile-form">
+          <div class="form-group">
+            <label class="form-label">새 비밀번호</label>
+            <input type="password" class="form-input" id="newPw" placeholder="영문+숫자+특수문자 8자 이상">
+          </div>
+          <div class="form-group">
+            <label class="form-label">새 비밀번호 확인</label>
+            <input type="password" class="form-input" id="newPwConfirm" placeholder="비밀번호 재입력">
+          </div>
+          <button class="btn-save" id="btnChangePw">변경</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -240,213 +209,168 @@
   <script src="../js/reservation.js"></script>
 
   <script>
-  (function () {
-    var currentUser    = null;
-    var currentProfile = null;
+  /* ── 탭 전환 ── */
+  function switchTab(el, tabId) {
+    document.querySelectorAll('.sidebar__menu a').forEach(function (a) { a.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
+  }
 
-    var NAT_LABEL = { KR:'대한민국', US:'미국', JP:'일본', CN:'중국', GB:'영국', OTHER:'기타' };
-    var STATUS_LABEL = {
-      confirmed:'예약 확정', checked_in:'체크인', checked_out:'체크아웃',
-      cancelled:'취소됨', pending:'대기중', no_show:'노쇼'
+  (function () {
+    var STATUS_KO = { pending:'대기중', confirmed:'확정', cancelled:'취소됨', completed:'완료' };
+    var currentUserId = null;
+
+    /* ── 인증 가드 ── */
+    async function init() {
+      if (!window.SGH || !window.SGH.auth) {
+        window.location.href = 'login.html';
+        return;
+      }
+      var ok = await window.SGH.auth.requireLogin();
+      if (!ok) return;
+
+      /* 프로필 로드 */
+      var profRes = await window.SGH.profile.getCurrent();
+      if (profRes.data) {
+        currentUserId = profRes.data.id;
+        renderSidebar(profRes.data);
+        fillProfileForm(profRes.data);
+      }
+
+      /* 예약 목록 로드 */
+      loadReservations();
+    }
+
+    function renderSidebar(p) {
+      document.getElementById('sidebarName').textContent = (p.name_ko || p.username || '회원') + ' 님';
+      var grade = p.membership_grades && p.membership_grades.name ? p.membership_grades.name : '일반';
+      document.getElementById('sidebarGrade').textContent = grade;
+      document.getElementById('sidebarPoints').textContent = Number(p.points || 0).toLocaleString() + ' P';
+    }
+
+    function fillProfileForm(p) {
+      document.getElementById('fUsername').value = p.username || '';
+      document.getElementById('fEmail').value    = p.email    || '';
+      document.getElementById('fNameKo').value   = p.name_ko  || '';
+      document.getElementById('fNameEn').value   = p.name_en  || '';
+      document.getElementById('fPhone').value    = p.phone    || '';
+      document.getElementById('fBirth').value    = p.birth_date || '';
+      document.getElementById('fAddress').value  = p.address  || '';
+    }
+
+    /* ── 예약 목록 ── */
+    async function loadReservations() {
+      var res = await window.SGH.reservation.getByUser();
+      var list = document.getElementById('rsvList');
+
+      if (res.error || !res.data || res.data.length === 0) {
+        list.innerHTML = '<div class="empty-state"><p>예약 내역이 없습니다.</p>' +
+          '<a href="rooms.html" class="btn-link">객실 예약하기</a></div>';
+        return;
+      }
+
+      list.innerHTML = res.data.map(function (rsv) {
+        var guest = rsv.reservation_guests && rsv.reservation_guests[0];
+        var roomInfo = '';
+        if (rsv.reservation_rooms && rsv.reservation_rooms.length > 0) {
+          roomInfo = rsv.reservation_rooms.map(function (rr) {
+            return rr.rooms ? rr.rooms.name_ko : '';
+          }).filter(Boolean).join(', ');
+        }
+        var canCancel = rsv.status === 'pending' || rsv.status === 'confirmed';
+        return '<div class="rsv-card">' +
+          '<div class="rsv-card__header">' +
+          '<span class="rsv-no">' + (rsv.reservation_no || rsv.id.slice(0, 8).toUpperCase()) + '</span>' +
+          '<span class="rsv-badge ' + rsv.status + '">' + (STATUS_KO[rsv.status] || rsv.status) + '</span>' +
+          '</div>' +
+          '<div class="rsv-card__body">' +
+          '<div class="rsv-info"><strong>체크인</strong> ' + (rsv.check_in || '—') + '</div>' +
+          '<div class="rsv-info"><strong>체크아웃</strong> ' + (rsv.check_out || '—') + '</div>' +
+          '<div class="rsv-info"><strong>객실</strong> ' + (roomInfo || '—') + '</div>' +
+          '<div class="rsv-info"><strong>인원</strong> 성인 ' + rsv.num_adults + '명' + (rsv.num_children ? ' / 어린이 ' + rsv.num_children + '명' : '') + '</div>' +
+          '<div class="rsv-info"><strong>금액</strong> ₩' + Number(rsv.price_total || 0).toLocaleString() + '</div>' +
+          (guest ? '<div class="rsv-info"><strong>예약자</strong> ' + (guest.name_ko || '—') + '</div>' : '') +
+          '</div>' +
+          '<div class="rsv-card__footer">' +
+          (canCancel ? '<button class="btn-cancel" onclick="cancelRsv(\'' + rsv.id + '\', this)">예약 취소</button>' : '') +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    /* ── 예약 취소 ── */
+    window.cancelRsv = async function (id, btn) {
+      if (!confirm('예약을 취소하시겠습니까?\n취소 후 복구가 불가능합니다.')) return;
+      btn.disabled = true;
+      var res = await window.SGH.reservation.cancel(id);
+      if (res.error) {
+        alert('취소 중 오류가 발생했습니다: ' + (res.error.message || res.error));
+        btn.disabled = false;
+        return;
+      }
+      loadReservations();
     };
 
-    function fmt(n) { return '₩' + (n||0).toLocaleString(); }
-    function fmtDate(s) {
-      if (!s) return '—';
-      var d = new Date(s + 'T00:00:00');
-      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
-    }
-    function fmtDateTime(s) {
-      if (!s) return '—';
-      var d = new Date(s);
-      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
-    }
+    /* ── 프로필 저장 ── */
+    document.getElementById('btnSaveProfile').addEventListener('click', async function () {
+      if (!currentUserId) return;
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = '저장 중...';
 
-    function el(id) { return document.getElementById(id); }
+      var res = await window.SGH.profile.update(currentUserId, {
+        name_ko:    document.getElementById('fNameKo').value.trim(),
+        name_en:    document.getElementById('fNameEn').value.trim().toUpperCase(),
+        phone:      document.getElementById('fPhone').value.trim(),
+        birth_date: document.getElementById('fBirth').value || null,
+        address:    document.getElementById('fAddress').value.trim() || null,
+      });
+
+      var alertEl = document.getElementById('profileAlert');
+      if (res.error) {
+        alertEl.className = 'alert-box error';
+        alertEl.textContent = '저장 실패: ' + (res.error.message || '');
+      } else {
+        alertEl.className = 'alert-box success';
+        alertEl.textContent = '프로필이 저장되었습니다.';
+        if (res.data) renderSidebar(res.data);
+      }
+
+      btn.disabled = false; btn.textContent = '저장';
+      setTimeout(function () { alertEl.className = ''; alertEl.textContent = ''; }, 4000);
+    });
+
+    /* ── 비밀번호 변경 ── */
+    document.getElementById('btnChangePw').addEventListener('click', async function () {
+      var pw  = document.getElementById('newPw').value;
+      var pw2 = document.getElementById('newPwConfirm').value;
+      var alertEl = document.getElementById('pwAlert');
+
+      if (!pw || pw.length < 8) {
+        alertEl.className = 'alert-box error'; alertEl.textContent = '8자 이상 입력해주세요.'; return;
+      }
+      if (pw !== pw2) {
+        alertEl.className = 'alert-box error'; alertEl.textContent = '비밀번호가 일치하지 않습니다.'; return;
+      }
+
+      this.disabled = true;
+      var res = await window.SGH.auth.updatePassword(pw);
+      if (res.error) {
+        alertEl.className = 'alert-box error'; alertEl.textContent = '변경 실패: ' + res.error.message;
+      } else {
+        alertEl.className = 'alert-box success'; alertEl.textContent = '비밀번호가 변경되었습니다.';
+        document.getElementById('newPw').value = '';
+        document.getElementById('newPwConfirm').value = '';
+      }
+      this.disabled = false;
+    });
 
     /* ── 로그아웃 ── */
-    el('logoutBtn').addEventListener('click', async function () {
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
       await window.SGH.auth.signOut();
       window.location.href = '../index.html';
     });
-
-    /* ── 탭 전환 ── */
-    document.querySelectorAll('.tab-item').forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        document.querySelectorAll('.tab-item').forEach(function (t) { t.classList.remove('is-active'); });
-        document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('is-active'); });
-        tab.classList.add('is-active');
-        var panel = document.getElementById('tab-' + tab.dataset.tab);
-        if (panel) panel.classList.add('is-active');
-
-        if (tab.dataset.tab === 'reservations') loadReservations();
-      });
-    });
-
-    /* ── 프로필 렌더 ── */
-    function renderProfile(profile, user) {
-      var nameKo = profile.name_ko || user.user_metadata.name_ko || user.email.split('@')[0];
-      var nameEn = profile.name_en || user.user_metadata.name_en || '';
-
-      el('profileAvatar').textContent   = nameKo ? nameKo.charAt(0) : '?';
-      el('profileName').textContent     = nameKo || '—';
-      el('profileEmail').textContent    = user.email;
-      el('profileNameEn').textContent   = nameEn || '—';
-      el('profilePhone').textContent    = profile.phone || '—';
-      el('profileNationality').textContent = NAT_LABEL[profile.nationality] || profile.nationality || '—';
-      el('profileCreated').textContent  = fmtDate(profile.created_at);
-      el('profilePoints').innerHTML     = (profile.points || 0).toLocaleString() + ' <span class="points-unit">P</span>';
-
-      var mem = (profile.membership || 'guest').toUpperCase();
-      el('profileMembership').textContent = mem;
-
-      /* 편집 폼 초기값 */
-      el('editNameKo').value = profile.name_ko || '';
-      el('editNameEn').value = profile.name_en || '';
-      el('editPhone').value  = profile.phone   || '';
-      el('editNationality').value = profile.nationality || 'KR';
-    }
-
-    /* ── 프로필 편집 토글 ── */
-    el('editToggleBtn').addEventListener('click', function () {
-      el('editForm').classList.toggle('is-open');
-      this.textContent = el('editForm').classList.contains('is-open') ? '편집 취소' : '프로필 수정';
-    });
-    el('editCancelBtn').addEventListener('click', function () {
-      el('editForm').classList.remove('is-open');
-      el('editToggleBtn').textContent = '프로필 수정';
-    });
-
-    /* ── 프로필 저장 ── */
-    el('editSaveBtn').addEventListener('click', async function () {
-      var alertEl = el('editAlert');
-      alertEl.style.display = 'none';
-      this.textContent = '저장 중...';
-      this.disabled = true;
-
-      var data = {
-        name_ko:     el('editNameKo').value.trim(),
-        name_en:     el('editNameEn').value.trim().toUpperCase(),
-        phone:       el('editPhone').value.trim(),
-        nationality: el('editNationality').value,
-      };
-
-      var res = await window.SGH.profile.update(currentUser.id, data);
-      if (res.error) {
-        alertEl.textContent = '저장 실패: ' + res.error.message;
-        alertEl.className = 'alert-inline error'; alertEl.style.display = 'block';
-      } else {
-        currentProfile = res.data;
-        renderProfile(currentProfile, currentUser);
-        alertEl.textContent = '프로필이 저장되었습니다.';
-        alertEl.className = 'alert-inline success'; alertEl.style.display = 'block';
-        setTimeout(function () {
-          el('editForm').classList.remove('is-open');
-          el('editToggleBtn').textContent = '프로필 수정';
-          alertEl.style.display = 'none';
-        }, 1500);
-      }
-      this.textContent = '저장'; this.disabled = false;
-    });
-
-    /* ── 예약 내역 ── */
-    var rsvLoaded = false;
-    async function loadReservations() {
-      if (rsvLoaded) return;
-      rsvLoaded = true;
-      var wrap = el('rsvListWrap');
-
-      var res = await window.SGH.reservation.getByUser();
-      if (res.error) {
-        wrap.innerHTML = '<div class="empty-state"><div class="empty-state__sub" style="color:#c0392b;">예약 내역을 불러오는 데 실패했습니다.</div></div>';
-        return;
-      }
-      var list = res.data || [];
-      if (list.length === 0) {
-        wrap.innerHTML = '<div class="empty-state">' +
-          '<div class="empty-state__icon">🏨</div>' +
-          '<div class="empty-state__title">예약 내역이 없습니다</div>' +
-          '<div class="empty-state__sub">Seoul Grand Hotel의 특별한 경험을 예약해보세요.</div>' +
-          '<a href="reservation.html" class="btn-reserve">객실 예약하기</a>' +
-          '</div>';
-        return;
-      }
-
-      var rows = list.map(function (r) {
-        var roomName = r.rooms ? r.rooms.name_ko : '—';
-        var canCancel = r.status === 'confirmed';
-        return '<tr>' +
-          '<td style="font-family:\'Montserrat\',sans-serif;font-size:12px;font-weight:600;">' + r.reservation_no + '</td>' +
-          '<td>' + (roomName || '—') + '</td>' +
-          '<td>' + fmtDate(r.checkin_date) + '</td>' +
-          '<td>' + fmtDate(r.checkout_date) + '</td>' +
-          '<td>' + r.nights + '박</td>' +
-          '<td>' + fmt(r.price_total) + '</td>' +
-          '<td><span class="status-badge ' + r.status + '">' + (STATUS_LABEL[r.status] || r.status) + '</span></td>' +
-          '<td>' + (canCancel ? '<button class="btn-cancel-rsv" data-rsv-id="' + r.id + '">취소</button>' : '—') + '</td>' +
-          '</tr>';
-      }).join('');
-
-      wrap.innerHTML =
-        '<div class="rsv-table-wrap">' +
-          '<table class="rsv-table">' +
-            '<thead><tr>' +
-              '<th>예약번호</th><th>객실</th><th>체크인</th><th>체크아웃</th>' +
-              '<th>숙박</th><th>금액</th><th>상태</th><th>관리</th>' +
-            '</tr></thead>' +
-            '<tbody>' + rows + '</tbody>' +
-          '</table>' +
-        '</div>';
-
-      /* 예약 취소 */
-      wrap.addEventListener('click', async function (e) {
-        var btn = e.target.closest('.btn-cancel-rsv');
-        if (!btn) return;
-        if (!confirm('예약을 취소하시겠습니까?\n취소된 예약은 복구할 수 없습니다.')) return;
-        var rsvId = btn.dataset.rsvId;
-        btn.disabled = true; btn.textContent = '처리 중...';
-        var res2 = await window.SGH.reservation.cancel(rsvId);
-        if (res2.error) { alert('취소 실패: ' + res2.error.message); btn.disabled = false; btn.textContent = '취소'; }
-        else { rsvLoaded = false; loadReservations(); }
-      });
-    }
-
-    /* ── 초기화 ── */
-    async function init() {
-      if (!window.SGH || !window.SGH.supabase) {
-        el('loadingArea').textContent = '서비스를 사용할 수 없습니다.';
-        return;
-      }
-
-      /* 로그인 가드 */
-      var sessionRes = await window.SGH.supabase.auth.getSession();
-      if (!sessionRes.data || !sessionRes.data.session) {
-        sessionStorage.setItem('loginRedirect', 'mypage.html');
-        window.location.replace('login.html');
-        return;
-      }
-      currentUser = sessionRes.data.session.user;
-
-      /* 프로필 로드 */
-      var profileRes = await window.SGH.profile.getCurrent();
-      if (profileRes.error || !profileRes.data) {
-        /* 프로필이 없으면 생성 */
-        var meta = currentUser.user_metadata || {};
-        var createRes = await window.SGH.profile.create(currentUser.id, {
-          name_ko: meta.name_ko || '',
-          name_en: meta.name_en || '',
-          phone:   meta.phone   || '',
-        });
-        currentProfile = createRes.data || {};
-      } else {
-        currentProfile = profileRes.data;
-      }
-
-      renderProfile(currentProfile, currentUser);
-
-      el('loadingArea').style.display  = 'none';
-      el('mypageContent').style.display = 'block';
-    }
 
     init();
   })();

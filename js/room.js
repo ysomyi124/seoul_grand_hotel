@@ -1,71 +1,129 @@
-/* =============================================
+/* ================================================================
    ROOM MODULE — js/room.js
-   객실 조회 · 예약 가능 여부 확인
-   ============================================= */
+   객실 조회 · 가용 객실 필터 · 이미지/어메니티 조인
+   ================================================================ */
 
 (function () {
   'use strict';
 
   window.SGH = window.SGH || {};
 
+  var SELECT_FIELDS = [
+    'id', 'name_ko', 'name_en', 'description_ko', 'description_en',
+    'room_type_id', 'bed_type', 'floor', 'size_sqm',
+    'max_adults', 'max_children', 'price_per_night', 'discount_percent',
+    'status', 'is_active', 'sort_order',
+    'room_types(name_ko, name_en)',
+    'room_images(url, alt_text, is_main, sort_order)',
+    'room_amenity_map(room_amenity_types(name_ko, icon_class))',
+  ].join(', ');
+
   window.SGH.room = {
 
-    /* 전체 활성 객실 조회 */
+    /* 모든 활성 객실 (이미지 + 어메니티 조인) */
     getAll: async function () {
-      return window.SGH.supabase
-        .from('rooms')
-        .select('*')
+      var sb = window.SGH.supabase;
+      if (!sb) return { data: null, error: new Error('Supabase not initialized') };
+
+      var res = await sb.from('rooms')
+        .select(SELECT_FIELDS)
         .eq('is_active', true)
-        .order('price_per_night', { ascending: true });
+        .eq('status', 'available')
+        .order('sort_order', { ascending: true });
+
+      if (res.data) res.data = res.data.map(normalizeRoom);
+      return res;
     },
 
-    /* ID로 객실 단건 조회 */
-    getById: async function (roomId) {
-      return window.SGH.supabase
-        .from('rooms')
-        .select('*')
-        .eq('id', roomId)
+    /* 단일 객실 상세 */
+    getById: async function (id) {
+      var sb = window.SGH.supabase;
+      if (!sb) return { data: null, error: new Error('Supabase not initialized') };
+
+      var res = await sb.from('rooms')
+        .select(SELECT_FIELDS)
+        .eq('id', id)
         .single();
+
+      if (res.data) res.data = normalizeRoom(res.data);
+      return res;
     },
 
-    /* 날짜·인원 조건에 맞는 예약 가능 객실 조회 */
-    getAvailable: async function (checkin, checkout, adults) {
-      /* 해당 기간에 예약된 room_id 목록 수집 */
-      var booked = await window.SGH.supabase
-        .from('reservations')
-        .select('room_id')
-        .neq('status', 'cancelled')
-        .lt('checkin_date', checkout)
-        .gt('checkout_date', checkin);
+    /* 기간에 예약 가능한 객실 */
+    getAvailable: async function (checkIn, checkOut, adults) {
+      var sb = window.SGH.supabase;
+      if (!sb) return { data: null, error: new Error('Supabase not initialized') };
 
-      var bookedIds = (booked.data || []).map(function (r) { return r.room_id; });
+      /* 해당 기간 예약된 room_id 목록 */
+      var rsvRes = await sb.from('reservation_rooms')
+        .select('room_id, reservations!inner(check_in, check_out, status)')
+        .not('reservations.status', 'in', '("cancelled","completed")');
 
-      var query = window.SGH.supabase
-        .from('rooms')
-        .select('*')
+      var bookedIds = [];
+      if (rsvRes.data && checkIn && checkOut) {
+        bookedIds = rsvRes.data
+          .filter(function (r) {
+            var rsv = r.reservations;
+            return rsv.check_in < checkOut && rsv.check_out > checkIn;
+          })
+          .map(function (r) { return r.room_id; });
+      }
+
+      var query = sb.from('rooms')
+        .select(SELECT_FIELDS)
         .eq('is_active', true)
-        .gte('max_adults', adults || 1);
+        .eq('status', 'available');
 
+      if (adults) query = query.gte('max_adults', adults);
       if (bookedIds.length > 0) {
         query = query.not('id', 'in', '(' + bookedIds.join(',') + ')');
       }
 
-      return query.order('price_per_night', { ascending: true });
+      query = query.order('sort_order', { ascending: true });
+
+      var res = await query;
+      if (res.data) res.data = res.data.map(normalizeRoom);
+      return res;
     },
 
-    /* 특정 객실·기간의 예약 가능 여부 확인 */
-    checkAvailability: async function (roomId, checkin, checkout) {
-      var res = await window.SGH.supabase
-        .from('reservations')
-        .select('id', { count: 'exact', head: true })
+    /* 가용 여부 확인 */
+    checkAvailability: async function (roomId, checkIn, checkOut) {
+      var sb = window.SGH.supabase;
+      if (!sb) return { available: false, error: 'Supabase not initialized' };
+
+      var res = await sb.from('reservation_rooms')
+        .select('id, reservations!inner(check_in, check_out, status)')
         .eq('room_id', roomId)
-        .neq('status', 'cancelled')
-        .lt('checkin_date', checkout)
-        .gt('checkout_date', checkin);
+        .not('reservations.status', 'in', '("cancelled")');
 
       if (res.error) return { available: false, error: res.error };
-      return { available: res.count === 0, error: null };
+
+      var conflict = (res.data || []).some(function (r) {
+        var rsv = r.reservations;
+        return rsv.check_in < checkOut && rsv.check_out > checkIn;
+      });
+
+      return { available: !conflict, error: null };
     },
   };
+
+  /* 응답 객실 데이터 정규화 */
+  function normalizeRoom(r) {
+    var images = (r.room_images || []).slice().sort(function (a, b) {
+      if (a.is_main && !b.is_main) return -1;
+      if (!a.is_main && b.is_main) return 1;
+      return (a.sort_order || 0) - (b.sort_order || 0);
+    });
+
+    var amenities = (r.room_amenity_map || []).map(function (m) {
+      return m.room_amenity_types || {};
+    });
+
+    return Object.assign({}, r, {
+      images:    images,
+      mainImage: images.length > 0 ? images[0].url : null,
+      amenities: amenities,
+    });
+  }
 
 })();

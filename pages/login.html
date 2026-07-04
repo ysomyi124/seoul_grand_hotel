@@ -63,7 +63,7 @@
       <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
     </a>
     <nav class="page-header__nav">
-      <a href="register.html">회원가입</a>
+      <a href="signup.html">회원가입</a>
     </nav>
   </header>
 
@@ -77,10 +77,10 @@
       <form id="loginForm" novalidate>
 
         <div class="form-group" id="groupEmail">
-          <label class="form-label" for="userEmail">이메일</label>
-          <input type="email" class="form-input" id="userEmail" name="email"
-                 placeholder="example@email.com" autocomplete="email">
-          <span class="form-error" id="errEmail">올바른 이메일을 입력해주세요.</span>
+          <label class="form-label" for="userEmail">이메일 또는 아이디</label>
+          <input type="text" class="form-input" id="userEmail" name="email"
+                 placeholder="이메일 또는 아이디를 입력하세요" autocomplete="username">
+          <span class="form-error" id="errEmail">이메일 또는 아이디를 입력해주세요.</span>
         </div>
 
         <div class="form-group" id="groupPw">
@@ -92,7 +92,7 @@
 
         <div class="form-check">
           <input type="checkbox" id="saveEmail" name="saveEmail">
-          <label for="saveEmail">이메일 저장</label>
+          <label for="saveEmail">아이디 저장</label>
         </div>
 
         <button type="submit" class="btn-login" id="loginBtn">로그인</button>
@@ -100,7 +100,7 @@
       </form>
 
       <div class="login-links">
-        <a href="register.html">회원가입</a>
+        <a href="signup.html">회원가입</a>
         <span class="login-links__divider"></span>
         <a href="#" id="forgotPwLink">비밀번호 찾기</a>
       </div>
@@ -127,8 +127,8 @@
     var alertBox   = document.getElementById('alertBox');
     var saveChk    = document.getElementById('saveEmail');
 
-    /* 저장된 이메일 복원 */
-    var saved = localStorage.getItem('sgh_saved_email');
+    /* 저장된 아이디/이메일 복원 */
+    var saved = localStorage.getItem('sgh_saved_id');
     if (saved) { emailInput.value = saved; saveChk.checked = true; }
 
     function showAlert(msg, type) {
@@ -145,8 +145,10 @@
     /* 비밀번호 찾기 */
     document.getElementById('forgotPwLink').addEventListener('click', async function (e) {
       e.preventDefault();
-      var email = emailInput.value.trim();
-      if (!email) { alert('이메일을 먼저 입력해주세요.'); return; }
+      var val = emailInput.value.trim();
+      if (!val) { alert('이메일을 먼저 입력해주세요.'); return; }
+      var email = val.includes('@') ? val : null;
+      if (!email) { alert('비밀번호 찾기는 이메일 주소로만 가능합니다.'); return; }
       if (!window.SGH || !window.SGH.auth) { alert('인증 서비스를 사용할 수 없습니다.'); return; }
       var res = await window.SGH.auth.resetPassword(email);
       if (res.error) { showAlert('오류: ' + res.error.message); }
@@ -156,11 +158,11 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       hideAlert();
-      var email = emailInput.value.trim();
-      var pw    = pwInput.value;
-      var valid = true;
+      var identifier = emailInput.value.trim();
+      var pw         = pwInput.value;
+      var valid      = true;
 
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (!identifier) {
         setFieldError(groupEmail, true); valid = false;
       } else { setFieldError(groupEmail, false); }
 
@@ -170,9 +172,9 @@
 
       if (!valid) return;
 
-      /* 이메일 저장 */
-      if (saveChk.checked) { localStorage.setItem('sgh_saved_email', email); }
-      else                  { localStorage.removeItem('sgh_saved_email'); }
+      /* 아이디/이메일 저장 */
+      if (saveChk.checked) { localStorage.setItem('sgh_saved_id', identifier); }
+      else                  { localStorage.removeItem('sgh_saved_id'); }
 
       loginBtn.disabled    = true;
       loginBtn.textContent = '로그인 중...';
@@ -183,12 +185,19 @@
         return;
       }
 
-      var res = await window.SGH.auth.signIn(email, pw);
+      var res = await window.SGH.auth.signIn(identifier, pw);
 
       if (res.error) {
-        var msg = res.error.message;
-        if (msg.includes('Invalid login')) msg = '이메일 또는 비밀번호가 올바르지 않습니다.';
-        else if (msg.includes('Email not confirmed')) msg = '이메일 인증을 완료해주세요. 이메일을 확인해주세요.';
+        var msg = res.error.message || '';
+        if (msg.includes('Invalid login') || msg.includes('invalid_credentials')) {
+          msg = '아이디(이메일) 또는 비밀번호가 올바르지 않습니다.';
+        } else if (msg.includes('Email not confirmed')) {
+          msg = '이메일 인증을 완료해주세요. 받은편지함을 확인해주세요.';
+        } else if (msg.includes('존재하지 않는')) {
+          /* username lookup 실패 메시지 그대로 */
+        } else {
+          msg = '로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+        }
         showAlert(msg);
         loginBtn.disabled = false; loginBtn.textContent = '로그인';
         return;
@@ -201,7 +210,7 @@
     });
 
     emailInput.addEventListener('input', function () { setFieldError(groupEmail, false); hideAlert(); });
-    pwInput.addEventListener('input',    function () { setFieldError(groupPw,    false); hideAlert(); });
+    pwInput.addEventListener('input',   function () { setFieldError(groupPw,    false); hideAlert(); });
 
     /* 이미 로그인된 경우 리다이렉트 */
     if (window.SGH && window.SGH.supabase) {
