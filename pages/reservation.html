@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>예약 | Seoul Grand Hotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reservation-page.css">
+</head>
+<body>
+
+  <!-- ====== Header ====== -->
+  <header class="rsv-header">
+    <a href="../index.html" class="rsv-header__logo">
+      <img src="../images/logo_black.png" alt="Seoul Grand Hotel">
+    </a>
+    <div class="rsv-header__title">Reservation</div>
+    <a href="tel:02-750-5900" class="rsv-header__phone">02-750-5900</a>
+    <a href="../index.html" class="rsv-header__back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      메인으로
+    </a>
+  </header>
+
+  <!-- ====== Progress ====== -->
+  <nav class="rsv-progress" aria-label="예약 진행 단계">
+    <a class="rsv-progress__item is-active" href="#step-info"     data-step="step-info">    <span class="rsv-progress__num">1</span>예약 정보</a>
+    <a class="rsv-progress__item"           href="#step-room"     data-step="step-room">    <span class="rsv-progress__num">2</span>객실 선택</a>
+    <a class="rsv-progress__item"           href="#step-package"  data-step="step-package"> <span class="rsv-progress__num">3</span>패키지</a>
+    <a class="rsv-progress__item"           href="#step-guest"    data-step="step-guest">   <span class="rsv-progress__num">4</span>예약자 정보</a>
+    <a class="rsv-progress__item"           href="#step-services" data-step="step-services"><span class="rsv-progress__num">5</span>추가 서비스</a>
+    <a class="rsv-progress__item"           href="#step-coupon"   data-step="step-coupon">  <span class="rsv-progress__num">6</span>쿠폰</a>
+    <a class="rsv-progress__item"           href="#step-payment"  data-step="step-payment"> <span class="rsv-progress__num">7</span>결제 방법</a>
+    <a class="rsv-progress__item"           href="#step-agree"    data-step="step-agree">   <span class="rsv-progress__num">8</span>약관 동의</a>
+  </nav>
+
+  <!-- ====== Main ====== -->
+  <main class="rsv-main">
+    <div class="rsv-container">
+      <div class="rsv-layout">
+
+        <!-- ===== Left: Form Sections ===== -->
+        <div class="rsv-form-col">
+
+          <!-- STEP 1: Reservation Info -->
+          <section class="rsv-section" id="step-info">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">01</span>
+              <h2 class="rsv-section__title">Reservation Info</h2>
+              <button type="button" class="rsv-summary__modify" id="modifyBtn">Modify</button>
+            </div>
+            <div class="rsv-section__body" style="padding-top:0; padding-bottom:0;">
+              <div class="rsv-summary">
+                <div class="rsv-summary__item">
+                  <div class="rsv-summary__label">Check-in</div>
+                  <div class="rsv-summary__value" id="sumCheckin">—</div>
+                </div>
+                <div class="rsv-summary__item">
+                  <div class="rsv-summary__label">Check-out</div>
+                  <div class="rsv-summary__value" id="sumCheckout">—</div>
+                </div>
+                <div class="rsv-summary__item">
+                  <div class="rsv-summary__label">Adults</div>
+                  <div class="rsv-summary__value" id="sumAdults">2</div>
+                </div>
+                <div class="rsv-summary__item">
+                  <div class="rsv-summary__label">Children</div>
+                  <div class="rsv-summary__value" id="sumChildren">0</div>
+                </div>
+                <div class="rsv-summary__item">
+                  <div class="rsv-summary__label">Rooms</div>
+                  <div class="rsv-summary__value" id="sumRooms">1</div>
+                </div>
+                <div class="rsv-summary__item">
+                  <div class="rsv-summary__label">Stay</div>
+                  <div class="rsv-summary__value" id="sumNights">—</div>
+                  <div class="rsv-summary__nights" id="sumStay"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Modify inline form -->
+            <div class="rsv-modify-form" id="modifyForm">
+              <div class="rsv-modify-form__group">
+                <label class="rsv-modify-form__label">Check-in</label>
+                <input type="date" class="rsv-modify-form__input" id="modifyCheckin">
+              </div>
+              <div class="rsv-modify-form__group">
+                <label class="rsv-modify-form__label">Check-out</label>
+                <input type="date" class="rsv-modify-form__input" id="modifyCheckout">
+              </div>
+              <div class="rsv-modify-form__group">
+                <label class="rsv-modify-form__label">Guests (Adults)</label>
+                <input type="number" class="rsv-modify-form__input" id="modifyAdults" min="1" max="10">
+              </div>
+              <button type="button" class="rsv-modify-form__apply" id="modifyApply">적용</button>
+            </div>
+          </section>
+
+          <!-- STEP 2: Room Selection -->
+          <section class="rsv-section" id="step-room">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">02</span>
+              <h2 class="rsv-section__title">Room Selection</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="room-list" id="roomList"></div>
+            </div>
+          </section>
+
+          <!-- STEP 3: Package -->
+          <section class="rsv-section" id="step-package">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">03</span>
+              <h2 class="rsv-section__title">Package &amp; Promotions</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="package-grid" id="packageGrid"></div>
+              <div class="rsv-notice">
+                얼리버드 할인은 체크인 30일 전 예약 시 자동 적용됩니다. 패키지는 1가지만 선택 가능합니다.
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 4: Guest Information -->
+          <section class="rsv-section" id="step-guest">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">04</span>
+              <h2 class="rsv-section__title">Guest Information</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="rsv-form">
+                <div class="rsv-form__group">
+                  <label class="rsv-form__label" for="guestNameKo">한글 이름<span class="rsv-form__required">*</span></label>
+                  <input type="text" class="rsv-form__input" id="guestNameKo" placeholder="홍길동" autocomplete="name">
+                  <span class="rsv-form__error">이름을 입력해주세요.</span>
+                </div>
+                <div class="rsv-form__group">
+                  <label class="rsv-form__label" for="guestNameEn">영문 이름<span class="rsv-form__required">*</span></label>
+                  <input type="text" class="rsv-form__input" id="guestNameEn" placeholder="HONG GIL-DONG" autocomplete="name" style="text-transform:uppercase;">
+                  <span class="rsv-form__error">영문 이름을 입력해주세요.</span>
+                </div>
+                <div class="rsv-form__group">
+                  <label class="rsv-form__label" for="guestEmail">이메일<span class="rsv-form__required">*</span></label>
+                  <input type="email" class="rsv-form__input" id="guestEmail" placeholder="example@email.com" autocomplete="email">
+                  <span class="rsv-form__error">올바른 이메일 주소를 입력해주세요.</span>
+                </div>
+                <div class="rsv-form__group">
+                  <label class="rsv-form__label" for="guestPhone">휴대폰 번호<span class="rsv-form__required">*</span></label>
+                  <input type="tel" class="rsv-form__input" id="guestPhone" placeholder="010-0000-0000" autocomplete="tel">
+                  <span class="rsv-form__error">올바른 전화번호를 입력해주세요.</span>
+                </div>
+                <div class="rsv-form__group">
+                  <label class="rsv-form__label" for="guestCountry">국가</label>
+                  <select class="rsv-form__select" id="guestCountry">
+                    <option value="">선택 안함</option>
+                    <option value="KR" selected>대한민국</option>
+                    <option value="US">미국</option>
+                    <option value="JP">일본</option>
+                    <option value="CN">중국</option>
+                    <option value="GB">영국</option>
+                    <option value="FR">프랑스</option>
+                    <option value="DE">독일</option>
+                    <option value="AU">호주</option>
+                    <option value="CA">캐나다</option>
+                    <option value="SG">싱가포르</option>
+                    <option value="OTHER">기타</option>
+                  </select>
+                </div>
+                <div class="rsv-form__group">
+                  <label class="rsv-form__label">특별 요청 (빠른 선택)</label>
+                  <div class="request-chips" id="requestChips"></div>
+                </div>
+                <div class="rsv-form__group rsv-form__group--full">
+                  <label class="rsv-form__label" for="specialRequest">추가 요청사항</label>
+                  <textarea class="rsv-form__textarea" id="specialRequest" placeholder="호텔 측에 전달할 요청사항이 있으시면 입력해주세요. (확정은 아닙니다)"></textarea>
+                  <span class="rsv-form__hint">※ 특별 요청사항은 최선을 다해 반영하나 보장되지 않을 수 있습니다.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 5: Additional Services -->
+          <section class="rsv-section" id="step-services">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">05</span>
+              <h2 class="rsv-section__title">Additional Services</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="service-list" id="serviceList"></div>
+            </div>
+          </section>
+
+          <!-- STEP 6: Coupon -->
+          <section class="rsv-section" id="step-coupon">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">06</span>
+              <h2 class="rsv-section__title">Coupon &amp; Points</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="coupon-row">
+                <input type="text" class="coupon-input" id="couponInput" placeholder="프로모션 코드 입력 (예: SEOUL10)">
+                <button type="button" class="coupon-apply-btn" id="couponApply">적용</button>
+              </div>
+              <div class="coupon-result" id="couponResult"></div>
+              <div class="rsv-notice">
+                사용 가능 쿠폰 예시: <strong>SEOUL10</strong> (10% 할인), <strong>WELCOME20000</strong> (₩20,000 즉시 할인)
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 7: Payment Method -->
+          <section class="rsv-section" id="step-payment">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">07</span>
+              <h2 class="rsv-section__title">Payment Method</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="payment-methods">
+                <div class="payment-option" data-pay="credit">
+                  <div class="payment-option__radio"></div>
+                  <span class="payment-option__icon">💳</span>
+                  <div class="payment-option__info">
+                    <div class="payment-option__name">신용카드</div>
+                    <div class="payment-option__desc">VISA · Master · 국내 카드</div>
+                  </div>
+                </div>
+                <div class="payment-option" data-pay="kakao">
+                  <div class="payment-option__radio"></div>
+                  <span class="payment-option__icon">💛</span>
+                  <div class="payment-option__info">
+                    <div class="payment-option__name">카카오페이</div>
+                    <div class="payment-option__desc">카카오 간편결제</div>
+                  </div>
+                </div>
+                <div class="payment-option" data-pay="naver">
+                  <div class="payment-option__radio"></div>
+                  <span class="payment-option__icon">💚</span>
+                  <div class="payment-option__info">
+                    <div class="payment-option__name">네이버페이</div>
+                    <div class="payment-option__desc">네이버 간편결제</div>
+                  </div>
+                </div>
+                <div class="payment-option" data-pay="transfer">
+                  <div class="payment-option__radio"></div>
+                  <span class="payment-option__icon">🏦</span>
+                  <div class="payment-option__info">
+                    <div class="payment-option__name">계좌이체</div>
+                    <div class="payment-option__desc">실시간 계좌이체</div>
+                  </div>
+                </div>
+                <div class="payment-option" data-pay="onsite">
+                  <div class="payment-option__radio"></div>
+                  <span class="payment-option__icon">🏨</span>
+                  <div class="payment-option__info">
+                    <div class="payment-option__name">현장결제</div>
+                    <div class="payment-option__desc">체크인 시 결제 (보증금 필요)</div>
+                  </div>
+                </div>
+              </div>
+              <div class="rsv-notice" style="margin-top:16px;">
+                카드 정보는 암호화되어 안전하게 처리됩니다. 현장결제 선택 시 체크인 당일 취소 불가합니다.
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 8: Agreement -->
+          <section class="rsv-section" id="step-agree">
+            <div class="rsv-section__head">
+              <span class="rsv-section__num">08</span>
+              <h2 class="rsv-section__title">Agreement</h2>
+            </div>
+            <div class="rsv-section__body">
+              <div class="agree-all" data-agree="all">
+                <div class="agree-checkbox"></div>
+                <span style="font-size:14px; font-weight:600;">전체 동의</span>
+              </div>
+              <div class="agree-list">
+                <div class="agree-item" data-agree="privacy">
+                  <div class="agree-checkbox"></div>
+                  <span class="agree-item__text">개인정보 수집 및 이용 동의</span>
+                  <span class="agree-item__req">필수</span>
+                  <a href="#" class="agree-item__link" onclick="return false;">보기</a>
+                </div>
+                <div class="agree-item" data-agree="cancellation">
+                  <div class="agree-checkbox"></div>
+                  <span class="agree-item__text">예약 취소 및 환불 규정 동의</span>
+                  <span class="agree-item__req">필수</span>
+                  <a href="#" class="agree-item__link" onclick="return false;">보기</a>
+                </div>
+                <div class="agree-item" data-agree="terms">
+                  <div class="agree-checkbox"></div>
+                  <span class="agree-item__text">서비스 이용약관 동의</span>
+                  <span class="agree-item__req">필수</span>
+                  <a href="#" class="agree-item__link" onclick="return false;">보기</a>
+                </div>
+              </div>
+              <button type="button" class="rsv-submit" id="mainSubmit">예약하기</button>
+            </div>
+          </section>
+
+        </div><!-- /.rsv-form-col -->
+
+        <!-- ===== Right: Sticky Price Summary ===== -->
+        <aside class="rsv-sidebar">
+          <div class="rsv-sidebar-sticky">
+            <div class="price-card">
+              <div class="price-card__head">
+                <div class="price-card__selected-room" id="priceRoom">객실을 선택해주세요</div>
+                <div class="price-card__dates" id="priceDates"></div>
+              </div>
+              <div class="price-card__no-room" id="priceNoRoom">
+                원하시는 객실을 선택하면<br>금액이 표시됩니다.
+              </div>
+              <div class="price-card__body" id="priceBody" style="display:none;">
+                <div class="price-row" id="priceBaseRow">
+                  <span class="price-row__label" id="priceBaseLabel">객실 요금</span>
+                  <span class="price-row__amount" id="priceBaseAmt"></span>
+                </div>
+                <div class="price-row" id="pricePkgRow" style="display:none;">
+                  <span class="price-row__label">패키지</span>
+                  <span class="price-row__amount" id="pricePkgAmt"></span>
+                </div>
+                <div class="price-row" id="priceSvcRow" style="display:none;">
+                  <span class="price-row__label">추가 서비스</span>
+                  <span class="price-row__amount" id="priceSvcAmt"></span>
+                </div>
+                <div class="price-row price-row--discount" id="priceCouponRow" style="display:none;">
+                  <span class="price-row__label">쿠폰 할인</span>
+                  <span class="price-row__amount" id="priceCouponAmt"></span>
+                </div>
+                <div class="price-card__divider"></div>
+                <div class="price-row">
+                  <span class="price-row__label">부가세 (10%)</span>
+                  <span class="price-row__amount" id="priceTaxAmt"></span>
+                </div>
+                <div class="price-card__total">
+                  <span class="price-card__total-label">Total</span>
+                  <span class="price-card__total-amount" id="priceTotalAmt">₩0</span>
+                </div>
+                <div class="price-card__tax-note">VAT 포함 최종 결제 금액</div>
+                <button type="button" class="price-card__cta" id="sidebarCta" disabled>예약하기</button>
+              </div>
+            </div>
+
+            <div class="rsv-notice" style="margin-top:16px; font-size:11px;">
+              <strong>취소 정책</strong><br>
+              체크인 7일 전: 전액 환불<br>
+              체크인 3일 전: 50% 환불<br>
+              체크인 당일: 환불 불가
+            </div>
+          </div>
+        </aside>
+
+      </div><!-- /.rsv-layout -->
+    </div><!-- /.rsv-container -->
+  </main>
+
+  <!-- ====== Footer ====== -->
+  <footer style="background:#111; padding:28px 40px; text-align:center;">
+    <p style="font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:0.2em; color:rgba(255,255,255,0.4); text-transform:uppercase;">
+      © 2026 Seoul Grand Hotel. All Rights Reserved.
+    </p>
+  </footer>
+
+  <script src="../js/reservation-page.js"></script>
+</body>
+</html>

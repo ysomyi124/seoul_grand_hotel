@@ -66,12 +66,24 @@
     });
   }
 
-  /* ---- Reservation form submit ---- */
+  /* ---- Reservation form submit — save to sessionStorage & redirect ---- */
   const reservationForm = document.getElementById('reservationForm');
   if (reservationForm) {
     reservationForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      alert('예약 페이지로 이동합니다.');
+      var ci = document.getElementById('checkin');
+      var co = document.getElementById('checkout');
+      if (!ci || !ci.value) { ci && ci.focus(); return; }
+      if (!co || !co.value) { co && co.focus(); return; }
+      var data = {
+        checkin:  ci.value,
+        checkout: co.value,
+        rooms:    (document.getElementById('hiddenRooms')    || {}).value || '1',
+        adults:   (document.getElementById('hiddenAdults')   || {}).value || '2',
+        children: (document.getElementById('hiddenChildren') || {}).value || '0',
+      };
+      sessionStorage.setItem('rsvData', JSON.stringify(data));
+      window.location.href = 'pages/reservation.html';
     });
   }
 

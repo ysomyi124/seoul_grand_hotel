@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>예약 완료 | Seoul Grand Hotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reservation-page.css">
+  <style>
+    .complete-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; background: var(--bg); }
+    .complete-card { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 56px 56px 48px; max-width: 580px; width: 100%; text-align: center; }
+    .complete-icon { width: 72px; height: 72px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; }
+    .complete-icon svg { display: block; }
+    .complete-title { font-family: var(--font-en); font-size: 24px; font-weight: 600; color: var(--black); margin-bottom: 8px; }
+    .complete-sub { font-size: 14px; color: var(--sub); margin-bottom: 36px; line-height: 1.6; }
+    .complete-no { font-family: var(--font-en); font-size: 13px; font-weight: 600; letter-spacing: 0.15em; color: var(--accent); background: #fdf9f7; border: 1px solid #e8d5c8; border-radius: 4px; padding: 12px 20px; display: inline-block; margin-bottom: 32px; }
+    .complete-details { text-align: left; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; margin-bottom: 32px; }
+    .complete-row { display: flex; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .complete-row:last-child { border-bottom: none; }
+    .complete-row__label { color: var(--sub); }
+    .complete-row__value { font-weight: 500; color: var(--black); font-family: var(--font-en); }
+    .complete-actions { display: flex; gap: 12px; }
+    .btn-outline-dark { flex: 1; padding: 14px; font-family: var(--font-en); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--black); background: none; border: 1.5px solid var(--black); border-radius: 3px; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; }
+    .btn-outline-dark:hover { background: var(--black); color: var(--white); }
+    .btn-primary-dark { flex: 1; padding: 14px; font-family: var(--font-en); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); background: var(--accent); border: none; border-radius: 3px; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .btn-primary-dark:hover { background: #6e5344; }
+  </style>
+</head>
+<body>
+  <header class="rsv-header">
+    <a href="../index.html" class="rsv-header__logo"><img src="../images/logo_black.png" alt="Seoul Grand Hotel"></a>
+    <div class="rsv-header__title">Reservation Complete</div>
+  </header>
+
+  <div class="complete-wrap">
+    <div class="complete-card">
+      <div class="complete-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h1 class="complete-title">예약이 완료되었습니다</h1>
+      <p class="complete-sub">예약 확인 이메일이 입력하신 주소로 발송됩니다.<br>체크인 당일 예약번호를 프론트에 제시해주세요.</p>
+
+      <div class="complete-no" id="cmpNo">예약번호 로딩 중...</div>
+
+      <div class="complete-details" id="cmpDetails">
+        <div class="complete-row"><span class="complete-row__label">예약 일시</span><span class="complete-row__value" id="cmpCreated">—</span></div>
+        <div class="complete-row"><span class="complete-row__label">체크인</span><span class="complete-row__value" id="cmpCheckin">—</span></div>
+        <div class="complete-row"><span class="complete-row__label">체크아웃</span><span class="complete-row__value" id="cmpCheckout">—</span></div>
+        <div class="complete-row"><span class="complete-row__label">객실</span><span class="complete-row__value" id="cmpRoom">—</span></div>
+        <div class="complete-row"><span class="complete-row__label">인원</span><span class="complete-row__value" id="cmpGuests">—</span></div>
+        <div class="complete-row"><span class="complete-row__label">예약자</span><span class="complete-row__value" id="cmpGuest">—</span></div>
+        <div class="complete-row"><span class="complete-row__label">결제 방법</span><span class="complete-row__value" id="cmpPay">—</span></div>
+        <div class="complete-row" style="background:#fdf9f7;"><span class="complete-row__label" style="font-weight:600;">총 결제 금액</span><span class="complete-row__value" id="cmpTotal" style="color:var(--accent);font-size:16px;font-weight:700;">—</span></div>
+      </div>
+
+      <div class="complete-actions">
+        <a href="../index.html" class="btn-outline-dark">메인으로</a>
+        <button type="button" class="btn-primary-dark" onclick="window.print()">예약 확인서 출력</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var PAY_LABEL = { credit:'신용카드', kakao:'카카오페이', naver:'네이버페이', transfer:'계좌이체', onsite:'현장결제' };
+    function fmt(n) { return '₩' + (n||0).toLocaleString(); }
+    function fmtDate(s) {
+      if (!s) return '—';
+      var d = new Date(s + 'T00:00:00');
+      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+    }
+    function fmtDateTime(s) {
+      if (!s) return '—';
+      var d = new Date(s);
+      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0') +
+        ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+    function el(id) { return document.getElementById(id); }
+    try {
+      var raw = sessionStorage.getItem('rsvComplete');
+      if (!raw) { el('cmpNo').textContent = '예약 정보를 찾을 수 없습니다.'; return; }
+      var r = JSON.parse(raw);
+      el('cmpNo').textContent = '예약번호: ' + r.no;
+      el('cmpCreated').textContent  = fmtDateTime(r.createdAt);
+      el('cmpCheckin').textContent  = fmtDate(r.checkin)  + ' (15:00 체크인)';
+      el('cmpCheckout').textContent = fmtDate(r.checkout) + ' (11:00 체크아웃)';
+      el('cmpRoom').textContent     = (r.room ? r.room.name : '—') + ' × ' + (r.rooms||1) + '실';
+      el('cmpGuests').textContent   = '성인 ' + (r.adults||2) + '명' + (r.children > 0 ? ' · 소아 ' + r.children + '명' : '');
+      el('cmpGuest').textContent    = (r.guestInfo ? (r.guestInfo.nameKo || '—') : '—');
+      el('cmpPay').textContent      = PAY_LABEL[r.paymentMethod] || '—';
+      el('cmpTotal').textContent    = r.price ? fmt(r.price.total) : '—';
+    } catch(e) { el('cmpNo').textContent = '예약 정보를 불러올 수 없습니다.'; }
+  })();
+  </script>
+</body>
+</html>
