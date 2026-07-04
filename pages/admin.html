@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 페이지 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    :root { --accent:#866552; --black:#111; --white:#fff; --sub:#767676; --line:#E8E8E8; --bg:#F4F4F4; --sidebar:240px; }
+    *, *::before, *::after { box-sizing:border-box; }
+    body { font-family:'Pretendard','Montserrat',sans-serif; background:var(--bg); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ── Top Bar ── */
+    .admin-topbar { background:var(--black); padding:0 32px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+    .admin-topbar__brand { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--white); text-decoration:none; }
+    .admin-topbar__brand span { color:var(--accent); }
+    .admin-topbar__right { display:flex; align-items:center; gap:20px; }
+    .admin-topbar__user { font-size:13px; color:rgba(255,255,255,.7); }
+    .btn-topbar-logout { background:transparent; border:1px solid rgba(255,255,255,.35); color:#fff; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:6px 14px; cursor:pointer; }
+    .btn-topbar-home { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6); text-decoration:none; }
+
+    /* ── Layout ── */
+    .admin-body { display:flex; flex:1; }
+
+    /* ── Sidebar ── */
+    .admin-sidebar { width:var(--sidebar); background:var(--white); border-right:1px solid var(--line); padding:32px 0; flex-shrink:0; }
+    .sidebar-section-title { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--sub); padding:0 24px; margin-bottom:8px; margin-top:24px; }
+    .sidebar-section-title:first-child { margin-top:0; }
+    .sidebar-nav-item { display:flex; align-items:center; gap:12px; padding:10px 24px; font-size:14px; color:#333; cursor:pointer; transition:background .15s,color .15s; border-left:3px solid transparent; }
+    .sidebar-nav-item:hover { background:#fafafa; }
+    .sidebar-nav-item.is-active { background:#fdf7f4; color:var(--accent); border-left-color:var(--accent); font-weight:600; }
+    .sidebar-nav-item .nav-icon { font-size:16px; width:20px; text-align:center; }
+
+    /* ── Main ── */
+    .admin-main { flex:1; padding:32px; overflow-x:auto; }
+    .admin-section { display:none; }
+    .admin-section.is-active { display:block; }
+
+    .section-title { font-family:'Montserrat',sans-serif; font-size:20px; font-weight:700; letter-spacing:.04em; color:var(--black); margin-bottom:6px; }
+    .section-sub   { font-size:13px; color:var(--sub); margin-bottom:28px; }
+
+    /* ── Stats cards ── */
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:36px; }
+    .stat-card { background:var(--white); border:1px solid var(--line); padding:24px; }
+    .stat-card__label { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--sub); margin-bottom:10px; }
+    .stat-card__value { font-family:'Montserrat',sans-serif; font-size:28px; font-weight:700; color:var(--black); }
+    .stat-card__unit  { font-size:13px; color:var(--sub); margin-left:4px; }
+    .stat-card.accent { background:var(--accent); border-color:var(--accent); }
+    .stat-card.accent .stat-card__label,
+    .stat-card.accent .stat-card__value,
+    .stat-card.accent .stat-card__unit { color:var(--white); opacity:.9; }
+    .stat-card.accent .stat-card__value { opacity:1; }
+
+    /* ── Filters ── */
+    .filter-bar { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    .filter-bar select, .filter-bar input { padding:9px 14px; font-size:13px; border:1px solid var(--line); background:var(--white); outline:none; }
+    .filter-bar select:focus, .filter-bar input:focus { border-color:var(--black); }
+    .btn-filter { padding:9px 20px; background:var(--black); color:var(--white); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; border:none; cursor:pointer; }
+    .btn-refresh { padding:9px 16px; background:transparent; color:var(--black); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; border:1.5px solid var(--line); cursor:pointer; }
+
+    /* ── Table ── */
+    .admin-table-wrap { overflow-x:auto; background:var(--white); border:1px solid var(--line); }
+    .admin-table { width:100%; border-collapse:collapse; min-width:800px; }
+    .admin-table th { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--sub); padding:12px 16px; text-align:left; border-bottom:2px solid var(--line); background:#fafafa; white-space:nowrap; }
+    .admin-table td { font-size:13px; color:var(--black); padding:14px 16px; border-bottom:1px solid var(--line); vertical-align:middle; }
+    .admin-table tr:last-child td { border-bottom:none; }
+    .admin-table tr:hover td { background:#fafafa; }
+
+    .status-badge { display:inline-block; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; white-space:nowrap; }
+    .status-badge.confirmed    { background:#e8f5e9; color:#2e7d32; }
+    .status-badge.checked_in   { background:#e3f2fd; color:#1565c0; }
+    .status-badge.checked_out  { background:#f5f5f5; color:#555; }
+    .status-badge.cancelled    { background:#fff3e0; color:#e65100; }
+    .status-badge.pending      { background:#fff8e1; color:#f57f17; }
+    .status-badge.no_show      { background:#fce4ec; color:#880e4f; }
+
+    .action-select { font-size:12px; border:1px solid var(--line); padding:4px 8px; background:var(--white); cursor:pointer; outline:none; }
+    .action-select:focus { border-color:var(--accent); }
+
+    /* ── Room toggle ── */
+    .toggle-switch { position:relative; width:40px; height:22px; display:inline-block; }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#ccc; border-radius:22px; transition:.3s; }
+    .toggle-slider:before { position:absolute; content:""; height:16px; width:16px; left:3px; bottom:3px; background:var(--white); border-radius:50%; transition:.3s; }
+    input:checked + .toggle-slider { background:var(--accent); }
+    input:checked + .toggle-slider:before { transform:translateX(18px); }
+
+    /* ── Loading ── */
+    .loading-row td { text-align:center; padding:40px; color:var(--sub); font-style:italic; }
+    .empty-row  td { text-align:center; padding:40px; color:var(--sub); }
+
+    .alert-flash { padding:12px 16px; font-size:13px; border-radius:3px; margin-bottom:16px; display:none; }
+    .alert-flash.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
+    .alert-flash.error   { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
+
+    .pagination { display:flex; align-items:center; gap:8px; margin-top:16px; font-size:13px; color:var(--sub); }
+
+    @media(max-width:900px) { .admin-sidebar { display:none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="admin-topbar">
+    <a href="../index.html" class="admin-topbar__brand">Seoul Grand <span>Admin</span></a>
+    <div class="admin-topbar__right">
+      <span class="admin-topbar__user" id="adminUserName">관리자</span>
+      <a href="../index.html" class="btn-topbar-home">사이트</a>
+      <button class="btn-topbar-logout" id="logoutBtn">로그아웃</button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-section-title">Dashboard</div>
+      <div class="sidebar-nav-item is-active" data-section="dashboard">
+        <span class="nav-icon">📊</span> 대시보드
+      </div>
+
+      <div class="sidebar-section-title">예약 관리</div>
+      <div class="sidebar-nav-item" data-section="reservations">
+        <span class="nav-icon">📋</span> 예약 목록
+      </div>
+
+      <div class="sidebar-section-title">콘텐츠</div>
+      <div class="sidebar-nav-item" data-section="rooms">
+        <span class="nav-icon">🏨</span> 객실 관리
+      </div>
+      <div class="sidebar-nav-item" data-section="coupons">
+        <span class="nav-icon">🎟</span> 쿠폰 관리
+      </div>
+
+      <div class="sidebar-section-title">회원</div>
+      <div class="sidebar-nav-item" data-section="users">
+        <span class="nav-icon">👥</span> 회원 목록
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+      <!-- ── 대시보드 ── -->
+      <section class="admin-section is-active" id="section-dashboard">
+        <h2 class="section-title">Dashboard</h2>
+        <p class="section-sub" id="dashDate">—</p>
+
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card"><div class="stat-card__label">전체 예약</div><div class="stat-card__value" id="statTotal">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">오늘 체크인</div><div class="stat-card__value" id="statCheckin">—</div></div>
+          <div class="stat-card accent"><div class="stat-card__label">이달 매출</div><div class="stat-card__value" id="statRevenue">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">활성 객실</div><div class="stat-card__value" id="statRooms">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">전체 회원</div><div class="stat-card__value" id="statUsers">—</div></div>
+        </div>
+
+        <h3 style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--black);margin-bottom:16px;">최근 예약 (10건)</h3>
+        <div class="admin-table-wrap" id="recentRsvTable">
+          <table class="admin-table">
+            <thead><tr><th>예약번호</th><th>객실</th><th>예약자</th><th>체크인</th><th>금액</th><th>상태</th></tr></thead>
+            <tbody id="recentRsvBody"><tr class="loading-row"><td colspan="6">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── 예약 목록 ── -->
+      <section class="admin-section" id="section-reservations">
+        <h2 class="section-title">예약 목록</h2>
+        <p class="section-sub">예약 상태 관리 및 메모 기록</p>
+
+        <div class="alert-flash" id="rsvAlert"></div>
+
+        <div class="filter-bar">
+          <select id="rsvStatusFilter">
+            <option value="">전체 상태</option>
+            <option value="confirmed">예약 확정</option>
+            <option value="checked_in">체크인</option>
+            <option value="checked_out">체크아웃</option>
+            <option value="cancelled">취소됨</option>
+            <option value="pending">대기중</option>
+            <option value="no_show">노쇼</option>
+          </select>
+          <input type="date" id="rsvDateFilter" placeholder="체크인 날짜">
+          <button class="btn-filter" id="rsvFilterBtn">조회</button>
+          <button class="btn-refresh" id="rsvRefreshBtn">새로고침</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>예약번호</th><th>객실</th><th>예약자명</th><th>이메일</th>
+                <th>체크인</th><th>체크아웃</th><th>금액</th><th>상태 변경</th>
+              </tr>
+            </thead>
+            <tbody id="rsvTableBody"><tr class="loading-row"><td colspan="8">조회 버튼을 눌러 예약 목록을 불러오세요.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── 객실 관리 ── -->
+      <section class="admin-section" id="section-rooms">
+        <h2 class="section-title">객실 관리</h2>
+        <p class="section-sub">객실 활성/비활성 및 정보 확인</p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th>객실번호</th><th>이름</th><th>카테고리</th><th>면적</th><th>최대인원</th><th>1박 요금</th><th>활성</th></tr>
+            </thead>
+            <tbody id="roomTableBody"><tr class="loading-row"><td colspan="7">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── 쿠폰 관리 ── -->
+      <section class="admin-section" id="section-coupons">
+        <h2 class="section-title">쿠폰 관리</h2>
+        <p class="section-sub">할인 쿠폰 현황</p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th>코드</th><th>이름</th><th>할인</th><th>최소 금액</th><th>사용 기간</th><th>사용횟수</th><th>상태</th></tr>
+            </thead>
+            <tbody id="couponTableBody"><tr class="loading-row"><td colspan="7">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── 회원 목록 ── -->
+      <section class="admin-section" id="section-users">
+        <h2 class="section-title">회원 목록</h2>
+        <p class="section-sub">가입 회원 및 권한 관리</p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th>이름</th><th>전화</th><th>멤버십</th><th>포인트</th><th>가입일</th><th>역할</th></tr>
+            </thead>
+            <tbody id="userTableBody"><tr class="loading-row"><td colspan="6">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+  (function () {
+    var STATUS_LABEL = { confirmed:'예약 확정', checked_in:'체크인', checked_out:'체크아웃', cancelled:'취소됨', pending:'대기중', no_show:'노쇼' };
+    var CAT_LABEL    = { standard:'스탠다드', deluxe:'디럭스', suite:'스위트', presidential:'프레지덴셜' };
+
+    function fmt(n) { return '₩' + Number(n||0).toLocaleString(); }
+    function fmtDate(s) {
+      if (!s) return '—';
+      var d = new Date(s + 'T00:00:00');
+      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+    }
+    function statusBadge(s) {
+      return '<span class="status-badge ' + s + '">' + (STATUS_LABEL[s] || s) + '</span>';
+    }
+    function el(id) { return document.getElementById(id); }
+    function flash(msg, type) {
+      var a = el('rsvAlert');
+      a.textContent = msg; a.className = 'alert-flash ' + (type||'success'); a.style.display = 'block';
+      setTimeout(function () { a.style.display = 'none'; }, 3000);
+    }
+
+    /* ── 로그아웃 ── */
+    el('logoutBtn').addEventListener('click', async function () {
+      await window.SGH.auth.signOut();
+      window.location.href = '../index.html';
+    });
+
+    /* ── 탭 전환 ── */
+    document.querySelectorAll('.sidebar-nav-item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        document.querySelectorAll('.sidebar-nav-item').forEach(function (i) { i.classList.remove('is-active'); });
+        document.querySelectorAll('.admin-section').forEach(function (s) { s.classList.remove('is-active'); });
+        item.classList.add('is-active');
+        var sec = el('section-' + item.dataset.section);
+        if (sec) { sec.classList.add('is-active'); loadSection(item.dataset.section); }
+      });
+    });
+
+    var sectionLoaded = {};
+
+    function loadSection(name) {
+      if (sectionLoaded[name]) return;
+      sectionLoaded[name] = true;
+      if      (name === 'dashboard')    loadDashboard();
+      else if (name === 'reservations') loadReservations();
+      else if (name === 'rooms')        loadRooms();
+      else if (name === 'coupons')      loadCoupons();
+      else if (name === 'users')        loadUsers();
+    }
+
+    /* ── 대시보드 ── */
+    async function loadDashboard() {
+      var today = new Date();
+      el('dashDate').textContent = today.getFullYear() + '년 ' + (today.getMonth()+1) + '월 ' + today.getDate() + '일';
+
+      var stats = await window.SGH.admin.getStats();
+      el('statTotal').textContent   = stats.totalReservations.toLocaleString();
+      el('statCheckin').textContent = stats.todayCheckins.toLocaleString();
+      el('statRevenue').innerHTML   = (stats.monthRevenue/10000).toFixed(0) + '<span class="stat-card__unit">만원</span>';
+      el('statRooms').textContent   = stats.activeRooms.toLocaleString();
+      el('statUsers').textContent   = stats.totalUsers.toLocaleString();
+
+      /* 최근 예약 10건 */
+      var res = await window.SGH.admin.getReservations({ limit: 10 });
+      var body = el('recentRsvBody');
+      if (res.error || !res.data || res.data.length === 0) {
+        body.innerHTML = '<tr class="empty-row"><td colspan="6">예약 내역이 없습니다.</td></tr>';
+        return;
+      }
+      body.innerHTML = res.data.map(function (r) {
+        return '<tr>' +
+          '<td style="font-family:\'Montserrat\',sans-serif;font-size:11px;font-weight:600;">' + r.reservation_no + '</td>' +
+          '<td>' + (r.rooms ? r.rooms.name_ko : '—') + '</td>' +
+          '<td>' + (r.guest_name_ko || '—') + '</td>' +
+          '<td>' + fmtDate(r.checkin_date) + '</td>' +
+          '<td>' + fmt(r.price_total) + '</td>' +
+          '<td>' + statusBadge(r.status) + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    /* ── 예약 목록 ── */
+    async function loadReservations(opts) {
+      sectionLoaded['reservations'] = true;
+      var body = el('rsvTableBody');
+      body.innerHTML = '<tr class="loading-row"><td colspan="8">불러오는 중...</td></tr>';
+
+      var filter = opts || {};
+      var statusVal = el('rsvStatusFilter') ? el('rsvStatusFilter').value : '';
+      var dateVal   = el('rsvDateFilter')   ? el('rsvDateFilter').value   : '';
+      if (statusVal) filter.status = statusVal;
+      if (dateVal)   filter.date   = dateVal;
+
+      var res = await window.SGH.admin.getReservations(filter);
+      if (res.error || !res.data || res.data.length === 0) {
+        body.innerHTML = '<tr class="empty-row"><td colspan="8">조회된 예약이 없습니다.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = res.data.map(function (r) {
+        var statusOpts = ['confirmed','checked_in','checked_out','cancelled','no_show']
+          .map(function (s) { return '<option value="' + s + '"' + (r.status===s?' selected':'') + '>' + (STATUS_LABEL[s]||s) + '</option>'; }).join('');
+        return '<tr>' +
+          '<td style="font-family:\'Montserrat\',sans-serif;font-size:11px;font-weight:600;">' + r.reservation_no + '</td>' +
+          '<td>' + (r.rooms ? r.rooms.name_ko : '—') + '</td>' +
+          '<td>' + (r.guest_name_ko || '—') + '</td>' +
+          '<td style="font-size:12px;color:var(--sub);">' + (r.guest_email || '—') + '</td>' +
+          '<td>' + fmtDate(r.checkin_date) + '</td>' +
+          '<td>' + fmtDate(r.checkout_date) + '</td>' +
+          '<td>' + fmt(r.price_total) + '</td>' +
+          '<td><select class="action-select" data-rsv-id="' + r.id + '">' + statusOpts + '</select></td>' +
+          '</tr>';
+      }).join('');
+
+      /* 상태 변경 이벤트 */
+      body.querySelectorAll('.action-select').forEach(function (sel) {
+        sel.addEventListener('change', async function () {
+          var rsvId     = this.dataset.rsvId;
+          var newStatus = this.value;
+          var res2 = await window.SGH.admin.updateStatus(rsvId, newStatus);
+          if (res2.error) { flash('상태 변경 실패: ' + res2.error.message, 'error'); }
+          else            { flash('상태가 [' + (STATUS_LABEL[newStatus]||newStatus) + ']로 변경되었습니다.', 'success'); }
+        });
+      });
+    }
+
+    el('rsvFilterBtn')  && el('rsvFilterBtn').addEventListener('click',   function () { sectionLoaded['reservations']=false; loadReservations(); });
+    el('rsvRefreshBtn') && el('rsvRefreshBtn').addEventListener('click',  function () { sectionLoaded['reservations']=false; loadReservations(); });
+
+    /* ── 객실 관리 ── */
+    async function loadRooms() {
+      var body = el('roomTableBody');
+      var res = await window.SGH.admin.getAllRooms();
+      if (res.error || !res.data || res.data.length === 0) {
+        body.innerHTML = '<tr class="empty-row"><td colspan="7">등록된 객실이 없습니다.</td></tr>';
+        return;
+      }
+      body.innerHTML = res.data.map(function (r) {
+        return '<tr>' +
+          '<td style="font-family:\'Montserrat\',sans-serif;font-weight:600;">' + r.room_number + '</td>' +
+          '<td>' + r.name_ko + '</td>' +
+          '<td><span style="font-size:11px;background:#f0f0f0;padding:3px 8px;">' + (CAT_LABEL[r.category]||r.category) + '</span></td>' +
+          '<td>' + (r.size_sqm || '—') + 'm²</td>' +
+          '<td>' + r.max_occupancy + '인</td>' +
+          '<td>' + fmt(r.price_per_night) + '</td>' +
+          '<td><label class="toggle-switch"><input type="checkbox" ' + (r.is_active?'checked':'') + ' data-room-id="' + r.id + '"><span class="toggle-slider"></span></label></td>' +
+          '</tr>';
+      }).join('');
+
+      body.querySelectorAll('input[type="checkbox"]').forEach(function (chk) {
+        chk.addEventListener('change', async function () {
+          var res2 = await window.SGH.admin.toggleRoomActive(this.dataset.roomId, this.checked);
+          if (res2.error) { alert('변경 실패: ' + res2.error.message); this.checked = !this.checked; }
+        });
+      });
+    }
+
+    /* ── 쿠폰 관리 ── */
+    async function loadCoupons() {
+      var body = el('couponTableBody');
+      var res = await window.SGH.admin.getCoupons();
+      if (res.error || !res.data || res.data.length === 0) {
+        body.innerHTML = '<tr class="empty-row"><td colspan="7">등록된 쿠폰이 없습니다.</td></tr>';
+        return;
+      }
+      body.innerHTML = res.data.map(function (c) {
+        var disc = c.discount_type === 'percent' ? c.discount_value + '%' : fmt(c.discount_value);
+        var period = (c.valid_from || '—') + ' ~ ' + (c.valid_until || '—');
+        var uses = (c.used_count || 0) + (c.max_uses ? '/' + c.max_uses : '');
+        return '<tr>' +
+          '<td style="font-family:\'Montserrat\',sans-serif;font-weight:700;letter-spacing:.06em;">' + c.code + '</td>' +
+          '<td>' + c.name_ko + '</td>' +
+          '<td>' + disc + ' 할인</td>' +
+          '<td>' + fmt(c.min_amount) + ' 이상</td>' +
+          '<td style="font-size:12px;color:var(--sub);">' + period + '</td>' +
+          '<td>' + uses + '</td>' +
+          '<td><span style="font-size:11px;padding:3px 8px;background:' + (c.is_active?'#e8f5e9':'#fff3e0') + ';color:' + (c.is_active?'#2e7d32':'#e65100') + ';">' + (c.is_active?'활성':'비활성') + '</span></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    /* ── 회원 목록 ── */
+    async function loadUsers() {
+      var body = el('userTableBody');
+      var res = await window.SGH.admin.getUsers(50);
+      if (res.error || !res.data || res.data.length === 0) {
+        body.innerHTML = '<tr class="empty-row"><td colspan="6">등록된 회원이 없습니다.</td></tr>';
+        return;
+      }
+      body.innerHTML = res.data.map(function (u) {
+        var mem = (u.membership||'guest').toUpperCase();
+        var roleOpts = ['user','admin'].map(function(r){ return '<option value="'+r+'"'+(u.role===r?' selected':'')+'>'+r+'</option>'; }).join('');
+        return '<tr>' +
+          '<td>' + (u.name_ko||'—') + (u.name_en ? ' <span style="font-size:11px;color:var(--sub);">(' + u.name_en + ')</span>' : '') + '</td>' +
+          '<td style="font-size:12px;">' + (u.phone||'—') + '</td>' +
+          '<td><span style="font-size:10px;font-family:\'Montserrat\',sans-serif;font-weight:700;letter-spacing:.1em;background:var(--accent);color:#fff;padding:3px 8px;">' + mem + '</span></td>' +
+          '<td>' + (u.points||0).toLocaleString() + ' P</td>' +
+          '<td style="font-size:12px;color:var(--sub);">' + fmtDate(u.created_at) + '</td>' +
+          '<td><select class="action-select" data-user-id="' + u.id + '">' + roleOpts + '</select></td>' +
+          '</tr>';
+      }).join('');
+
+      body.querySelectorAll('select[data-user-id]').forEach(function (sel) {
+        sel.addEventListener('change', async function () {
+          var res2 = await window.SGH.admin.updateUserRole(this.dataset.userId, this.value);
+          if (res2.error) { alert('변경 실패: ' + res2.error.message); }
+          else            { alert('역할이 [' + this.value + ']로 변경되었습니다.'); }
+        });
+      });
+    }
+
+    /* ── 초기화 (관리자 가드) ── */
+    async function init() {
+      if (!window.SGH || !window.SGH.supabase) {
+        alert('서비스를 사용할 수 없습니다.'); return;
+      }
+
+      var ok = await window.SGH.auth.requireAdmin();
+      if (!ok) return;
+
+      /* 관리자 이름 표시 */
+      var userRes = await window.SGH.supabase.auth.getUser();
+      if (userRes.data && userRes.data.user) {
+        var meta = userRes.data.user.user_metadata || {};
+        el('adminUserName').textContent = (meta.name_ko || userRes.data.user.email) + ' 관리자';
+      }
+
+      loadSection('dashboard');
+    }
+
+    init();
+  })();
+  </script>
+
+</body>
+</html>

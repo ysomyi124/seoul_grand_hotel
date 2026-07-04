@@ -9,302 +9,207 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/variables.css">
 
   <style>
-    body {
-      font-family: 'Pretendard', 'Montserrat', sans-serif;
-      background-color: #F7F7F7;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    body { font-family:'Pretendard','Montserrat',sans-serif; background:#F7F7F7; display:flex; flex-direction:column; min-height:100vh; }
+    .page-header { background:#111; padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header__logo img { height:32px; }
+    .page-header__nav a { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-decoration:none; opacity:.7; transition:opacity .2s; }
+    .page-header__nav a:hover { opacity:1; }
 
-    /* ---- Page Header ---- */
-    .page-header {
-      background-color: #111;
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-    }
-    .page-header__logo img {
-      height: 32px;
-      width: auto;
-    }
+    .login-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:80px 24px; }
+    .login-box { width:100%; max-width:460px; background:#fff; padding:56px 48px 48px; box-shadow:0 4px 32px rgba(0,0,0,.07); }
+    .login-box__title { font-family:'Montserrat',sans-serif; font-size:24px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#111; margin-bottom:8px; }
+    .login-box__sub { font-size:14px; color:#767676; margin-bottom:40px; }
 
-    /* ---- Login Container ---- */
-    .login-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 24px;
-    }
+    .form-group { margin-bottom:20px; }
+    .form-label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#111; margin-bottom:8px; }
+    .form-input { display:block; width:100%; padding:14px 16px; font-family:'Pretendard',sans-serif; font-size:15px; color:#111; background:#fff; border:1px solid #E8E8E8; outline:none; transition:border-color .2s; box-sizing:border-box; }
+    .form-input:focus { border-color:#111; }
+    .form-input::placeholder { color:#bbb; }
+    .form-group.has-error .form-input { border-color:#c0392b; }
+    .form-error { display:none; font-size:12px; color:#c0392b; margin-top:6px; }
+    .form-group.has-error .form-error { display:block; }
 
-    .login-box {
-      width: 100%;
-      max-width: 460px;
-      background-color: #fff;
-      padding: 56px 48px 48px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.07);
-    }
+    .form-check { display:flex; align-items:center; gap:8px; margin-bottom:28px; }
+    .form-check input { width:16px; height:16px; accent-color:#111; cursor:pointer; }
+    .form-check label { font-size:13px; color:#555; cursor:pointer; }
 
-    .login-box__title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #111;
-      margin-bottom: 8px;
-    }
-    .login-box__sub {
-      font-size: 14px;
-      color: #767676;
-      margin-bottom: 40px;
-    }
+    .btn-login { display:block; width:100%; padding:16px; background:#111; color:#fff; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; border:1.5px solid #111; cursor:pointer; transition:background .2s,color .2s; margin-bottom:24px; }
+    .btn-login:hover { background:transparent; color:#111; }
+    .btn-login:disabled { opacity:.5; cursor:not-allowed; }
 
-    /* ---- Form Fields ---- */
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-label {
-      display: block;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #111;
-      margin-bottom: 8px;
-    }
-    .form-input {
-      display: block;
-      width: 100%;
-      padding: 14px 16px;
-      font-family: 'Pretendard', sans-serif;
-      font-size: 15px;
-      color: #111;
-      background-color: #fff;
-      border: 1px solid #E8E8E8;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-    .form-input:focus {
-      border-color: #111;
-    }
-    .form-input::placeholder {
-      color: #bbb;
-    }
+    .alert-box { display:none; padding:14px 16px; font-size:13px; border-radius:3px; margin-bottom:20px; }
+    .alert-box.error { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
+    .alert-box.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
 
-    /* ---- Save ID checkbox ---- */
-    .form-check {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 28px;
-    }
-    .form-check input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #111;
-      cursor: pointer;
-    }
-    .form-check label {
-      font-size: 13px;
-      color: #555;
-      cursor: pointer;
-    }
+    .login-links { display:flex; align-items:center; justify-content:center; gap:20px; }
+    .login-links a { font-size:13px; color:#767676; transition:color .2s; text-decoration:none; }
+    .login-links a:hover { color:#111; }
+    .login-links__divider { width:1px; height:12px; background:#E8E8E8; }
 
-    /* ---- Submit ---- */
-    .btn-login {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background-color: #111;
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      border: 1px solid #111;
-      cursor: pointer;
-      transition: background-color 0.2s ease, color 0.2s ease;
-      margin-bottom: 24px;
-    }
-    .btn-login:hover {
-      background-color: transparent;
-      color: #111;
-    }
+    .page-footer { padding:24px 40px; text-align:center; border-top:1px solid #E8E8E8; }
+    .page-footer p { font-family:'Montserrat',sans-serif; font-size:11px; color:#aaa; letter-spacing:.08em; }
 
-    /* ---- Links ---- */
-    .login-links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-    }
-    .login-links a {
-      font-family: 'Pretendard', sans-serif;
-      font-size: 13px;
-      color: #767676;
-      transition: color 0.2s;
-    }
-    .login-links a:hover {
-      color: #111;
-    }
-    .login-links__divider {
-      width: 1px;
-      height: 12px;
-      background-color: #E8E8E8;
-    }
-
-    /* ---- Error message ---- */
-    .form-error {
-      display: none;
-      font-size: 12px;
-      color: #c0392b;
-      margin-top: 6px;
-    }
-    .form-group.has-error .form-input {
-      border-color: #c0392b;
-    }
-    .form-group.has-error .form-error {
-      display: block;
-    }
-
-    /* ---- Simple footer ---- */
-    .page-footer {
-      padding: 24px 40px;
-      text-align: center;
-      border-top: 1px solid #E8E8E8;
-    }
-    .page-footer p {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      color: #aaa;
-      letter-spacing: 0.08em;
-    }
-
-    @media (max-width: 480px) {
-      .login-box {
-        padding: 40px 28px 36px;
-      }
-    }
+    @media (max-width:480px) { .login-box { padding:40px 28px 36px; } }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header class="page-header">
     <a href="../index.html" class="page-header__logo">
       <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
     </a>
+    <nav class="page-header__nav">
+      <a href="register.html">회원가입</a>
+    </nav>
   </header>
 
-  <!-- Login -->
   <main class="login-wrap">
     <div class="login-box">
       <h1 class="login-box__title">Login</h1>
       <p class="login-box__sub">서울 그랜드 호텔에 오신 것을 환영합니다.</p>
 
+      <div class="alert-box" id="alertBox"></div>
+
       <form id="loginForm" novalidate>
 
-        <div class="form-group" id="groupId">
-          <label class="form-label" for="userId">아이디</label>
-          <input type="text" class="form-input" id="userId" name="userId"
-                 placeholder="아이디를 입력하세요" autocomplete="username">
-          <span class="form-error" id="errId">아이디를 입력해주세요.</span>
+        <div class="form-group" id="groupEmail">
+          <label class="form-label" for="userEmail">이메일</label>
+          <input type="email" class="form-input" id="userEmail" name="email"
+                 placeholder="example@email.com" autocomplete="email">
+          <span class="form-error" id="errEmail">올바른 이메일을 입력해주세요.</span>
         </div>
 
         <div class="form-group" id="groupPw">
           <label class="form-label" for="userPw">비밀번호</label>
-          <input type="password" class="form-input" id="userPw" name="userPw"
+          <input type="password" class="form-input" id="userPw" name="password"
                  placeholder="비밀번호를 입력하세요" autocomplete="current-password">
           <span class="form-error" id="errPw">비밀번호를 입력해주세요.</span>
         </div>
 
         <div class="form-check">
-          <input type="checkbox" id="saveId" name="saveId">
-          <label for="saveId">아이디 저장</label>
+          <input type="checkbox" id="saveEmail" name="saveEmail">
+          <label for="saveEmail">이메일 저장</label>
         </div>
 
-        <button type="submit" class="btn-login">로그인</button>
+        <button type="submit" class="btn-login" id="loginBtn">로그인</button>
 
       </form>
 
       <div class="login-links">
         <a href="register.html">회원가입</a>
         <span class="login-links__divider"></span>
-        <a href="#">아이디 찾기</a>
-        <span class="login-links__divider"></span>
-        <a href="#">비밀번호 찾기</a>
+        <a href="#" id="forgotPwLink">비밀번호 찾기</a>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="page-footer">
     <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
   </footer>
 
-  <script>
-    (function () {
-      const form     = document.getElementById('loginForm');
-      const idInput  = document.getElementById('userId');
-      const pwInput  = document.getElementById('userPw');
-      const groupId  = document.getElementById('groupId');
-      const groupPw  = document.getElementById('groupPw');
-      const saveChk  = document.getElementById('saveId');
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
 
-      // Restore saved ID
-      const savedId = localStorage.getItem('sgh_saved_id');
-      if (savedId) {
-        idInput.value = savedId;
-        saveChk.checked = true;
+  <script>
+  (function () {
+    var form       = document.getElementById('loginForm');
+    var emailInput = document.getElementById('userEmail');
+    var pwInput    = document.getElementById('userPw');
+    var groupEmail = document.getElementById('groupEmail');
+    var groupPw    = document.getElementById('groupPw');
+    var loginBtn   = document.getElementById('loginBtn');
+    var alertBox   = document.getElementById('alertBox');
+    var saveChk    = document.getElementById('saveEmail');
+
+    /* 저장된 이메일 복원 */
+    var saved = localStorage.getItem('sgh_saved_email');
+    if (saved) { emailInput.value = saved; saveChk.checked = true; }
+
+    function showAlert(msg, type) {
+      alertBox.textContent = msg;
+      alertBox.className   = 'alert-box ' + (type || 'error');
+      alertBox.style.display = 'block';
+    }
+    function hideAlert() { alertBox.style.display = 'none'; }
+
+    function setFieldError(grp, show) {
+      grp.classList.toggle('has-error', show);
+    }
+
+    /* 비밀번호 찾기 */
+    document.getElementById('forgotPwLink').addEventListener('click', async function (e) {
+      e.preventDefault();
+      var email = emailInput.value.trim();
+      if (!email) { alert('이메일을 먼저 입력해주세요.'); return; }
+      if (!window.SGH || !window.SGH.auth) { alert('인증 서비스를 사용할 수 없습니다.'); return; }
+      var res = await window.SGH.auth.resetPassword(email);
+      if (res.error) { showAlert('오류: ' + res.error.message); }
+      else           { showAlert('비밀번호 재설정 링크를 이메일로 발송했습니다.', 'success'); }
+    });
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideAlert();
+      var email = emailInput.value.trim();
+      var pw    = pwInput.value;
+      var valid = true;
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError(groupEmail, true); valid = false;
+      } else { setFieldError(groupEmail, false); }
+
+      if (!pw) {
+        setFieldError(groupPw, true); valid = false;
+      } else { setFieldError(groupPw, false); }
+
+      if (!valid) return;
+
+      /* 이메일 저장 */
+      if (saveChk.checked) { localStorage.setItem('sgh_saved_email', email); }
+      else                  { localStorage.removeItem('sgh_saved_email'); }
+
+      loginBtn.disabled    = true;
+      loginBtn.textContent = '로그인 중...';
+
+      if (!window.SGH || !window.SGH.auth) {
+        showAlert('인증 서비스를 사용할 수 없습니다. 잠시 후 다시 시도해주세요.');
+        loginBtn.disabled = false; loginBtn.textContent = '로그인';
+        return;
       }
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        let valid = true;
+      var res = await window.SGH.auth.signIn(email, pw);
 
-        if (!idInput.value.trim()) {
-          groupId.classList.add('has-error');
-          valid = false;
-        } else {
-          groupId.classList.remove('has-error');
-        }
+      if (res.error) {
+        var msg = res.error.message;
+        if (msg.includes('Invalid login')) msg = '이메일 또는 비밀번호가 올바르지 않습니다.';
+        else if (msg.includes('Email not confirmed')) msg = '이메일 인증을 완료해주세요. 이메일을 확인해주세요.';
+        showAlert(msg);
+        loginBtn.disabled = false; loginBtn.textContent = '로그인';
+        return;
+      }
 
-        if (!pwInput.value.trim()) {
-          groupPw.classList.add('has-error');
-          valid = false;
-        } else {
-          groupPw.classList.remove('has-error');
-        }
+      /* 로그인 성공 */
+      var redirect = sessionStorage.getItem('loginRedirect') || '../index.html';
+      sessionStorage.removeItem('loginRedirect');
+      window.location.href = redirect;
+    });
 
-        if (!valid) return;
+    emailInput.addEventListener('input', function () { setFieldError(groupEmail, false); hideAlert(); });
+    pwInput.addEventListener('input',    function () { setFieldError(groupPw,    false); hideAlert(); });
 
-        // Save / remove ID
-        if (saveChk.checked) {
-          localStorage.setItem('sgh_saved_id', idInput.value.trim());
-        } else {
-          localStorage.removeItem('sgh_saved_id');
-        }
-
-        // Demo login (no real auth)
-        localStorage.setItem('sgh_logged_in', 'true');
-        localStorage.setItem('sgh_user_name', idInput.value.trim());
-        alert('로그인되었습니다.');
-        window.location.href = '../index.html';
+    /* 이미 로그인된 경우 리다이렉트 */
+    if (window.SGH && window.SGH.supabase) {
+      window.SGH.supabase.auth.getSession().then(function (res) {
+        if (res.data && res.data.session) window.location.href = '../index.html';
       });
-
-      // Clear errors on input
-      idInput.addEventListener('input', function () { groupId.classList.remove('has-error'); });
-      pwInput.addEventListener('input', function () { groupPw.classList.remove('has-error'); });
-    })();
+    }
+  })();
   </script>
 
 </body>

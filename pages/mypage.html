@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지 | Seoul Grand Hotel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+
+  <style>
+    :root { --accent:#866552; --black:#111; --white:#fff; --sub:#767676; --line:#E8E8E8; --bg:#F7F7F7; }
+    body { font-family:'Pretendard','Montserrat',sans-serif; background:var(--bg); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ── Header ── */
+    .page-header { background:var(--black); padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header__logo img { height:32px; }
+    .page-header__nav { display:flex; align-items:center; gap:24px; }
+    .page-header__nav a { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-decoration:none; opacity:.7; transition:opacity .2s; }
+    .page-header__nav a:hover { opacity:1; }
+    .btn-logout { background:transparent; border:1px solid rgba(255,255,255,.4); color:#fff; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:8px 16px; cursor:pointer; transition:border-color .2s; }
+    .btn-logout:hover { border-color:#fff; }
+
+    /* ── Layout ── */
+    .mypage-wrap { flex:1; max-width:1000px; margin:0 auto; padding:60px 24px 80px; width:100%; }
+    .mypage-title { font-family:'Montserrat',sans-serif; font-size:28px; font-weight:600; color:var(--black); letter-spacing:.04em; margin-bottom:8px; }
+    .mypage-sub   { font-size:14px; color:var(--sub); margin-bottom:48px; }
+
+    /* ── Tab ── */
+    .tab-bar { display:flex; border-bottom:2px solid var(--line); margin-bottom:40px; }
+    .tab-item { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); padding:12px 20px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; }
+    .tab-item.is-active { color:var(--black); border-bottom-color:var(--black); }
+
+    /* ── Profile card ── */
+    .profile-card { background:var(--white); border:1px solid var(--line); padding:40px; margin-bottom:32px; }
+    .profile-header { display:flex; align-items:center; gap:24px; margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid var(--line); }
+    .profile-avatar { width:72px; height:72px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:28px; font-weight:600; color:var(--white); flex-shrink:0; }
+    .profile-name { font-size:20px; font-weight:600; color:var(--black); margin-bottom:4px; }
+    .profile-email { font-size:14px; color:var(--sub); margin-bottom:8px; }
+    .membership-badge { display:inline-block; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:4px 12px; background:var(--accent); color:var(--white); border-radius:2px; }
+
+    .profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .profile-field label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-bottom:6px; }
+    .profile-field .value { font-size:15px; color:var(--black); font-weight:500; }
+
+    /* ── Profile edit form ── */
+    .edit-form { display:none; border-top:1px solid var(--line); margin-top:32px; padding-top:32px; }
+    .edit-form.is-open { display:block; }
+    .edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+    .edit-group label { display:block; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--black); margin-bottom:6px; }
+    .edit-group input, .edit-group select { display:block; width:100%; padding:12px 14px; font-size:14px; border:1px solid var(--line); outline:none; transition:border-color .2s; box-sizing:border-box; }
+    .edit-group input:focus, .edit-group select:focus { border-color:var(--black); }
+    .edit-actions { display:flex; gap:12px; margin-top:24px; }
+    .btn-edit-save   { flex:1; padding:12px; background:var(--black); color:var(--white); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:none; cursor:pointer; }
+    .btn-edit-cancel { flex:1; padding:12px; background:transparent; color:var(--black); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:1.5px solid var(--line); cursor:pointer; }
+
+    .btn-edit-toggle { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); background:transparent; border:1px solid var(--accent); padding:8px 18px; cursor:pointer; transition:background .2s,color .2s; }
+    .btn-edit-toggle:hover { background:var(--accent); color:var(--white); }
+
+    /* ── Points card ── */
+    .points-card { background:var(--black); color:var(--white); padding:32px 40px; margin-bottom:32px; display:flex; align-items:center; justify-content:space-between; }
+    .points-label { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; opacity:.6; margin-bottom:8px; }
+    .points-value { font-family:'Montserrat',sans-serif; font-size:36px; font-weight:700; letter-spacing:.02em; }
+    .points-unit  { font-size:14px; opacity:.6; margin-left:4px; }
+
+    /* ── Reservation list ── */
+    .rsv-table-wrap { overflow-x:auto; }
+    .rsv-table { width:100%; border-collapse:collapse; background:var(--white); border:1px solid var(--line); }
+    .rsv-table th { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--sub); padding:14px 16px; text-align:left; border-bottom:2px solid var(--line); background:#fafafa; white-space:nowrap; }
+    .rsv-table td { font-size:13px; color:var(--black); padding:16px; border-bottom:1px solid var(--line); vertical-align:middle; }
+    .rsv-table tr:last-child td { border-bottom:none; }
+    .rsv-table tr:hover td { background:#fafafa; }
+
+    .status-badge { display:inline-block; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:2px; }
+    .status-badge.confirmed    { background:#e8f5e9; color:#2e7d32; }
+    .status-badge.checked_in   { background:#e3f2fd; color:#1565c0; }
+    .status-badge.checked_out  { background:#f5f5f5; color:#555; }
+    .status-badge.cancelled    { background:#fff3e0; color:#e65100; }
+    .status-badge.pending      { background:#fff8e1; color:#f57f17; }
+    .status-badge.no_show      { background:#fce4ec; color:#880e4f; }
+
+    .btn-cancel-rsv { font-size:11px; color:#c0392b; background:none; border:1px solid #c0392b; padding:4px 10px; cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:.08em; text-transform:uppercase; transition:background .2s,color .2s; }
+    .btn-cancel-rsv:hover { background:#c0392b; color:#fff; }
+
+    .empty-state { text-align:center; padding:60px 24px; color:var(--sub); }
+    .empty-state__icon { font-size:48px; margin-bottom:16px; }
+    .empty-state__title { font-family:'Montserrat',sans-serif; font-size:16px; font-weight:600; color:var(--black); margin-bottom:8px; }
+    .empty-state__sub { font-size:14px; margin-bottom:24px; }
+    .btn-reserve { display:inline-block; padding:12px 32px; background:var(--accent); color:var(--white); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; }
+
+    /* ── Loading ── */
+    .loading-spinner { text-align:center; padding:60px; color:var(--sub); font-size:14px; }
+
+    /* ── Alert ── */
+    .alert-inline { padding:12px 16px; font-size:13px; border-radius:3px; margin-bottom:16px; display:none; }
+    .alert-inline.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
+    .alert-inline.error   { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
+
+    .tab-panel { display:none; }
+    .tab-panel.is-active { display:block; }
+
+    .page-footer { padding:24px 40px; text-align:center; border-top:1px solid var(--line); margin-top:auto; }
+    .page-footer p { font-family:'Montserrat',sans-serif; font-size:11px; color:#aaa; letter-spacing:.08em; }
+
+    @media(max-width:768px) {
+      .mypage-wrap { padding:40px 16px 60px; }
+      .profile-grid, .edit-grid { grid-template-columns:1fr; }
+      .points-card { flex-direction:column; align-items:flex-start; gap:12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="../index.html" class="page-header__logo">
+      <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
+    </a>
+    <nav class="page-header__nav">
+      <a href="../index.html">Home</a>
+      <a href="reservation.html">예약</a>
+      <button class="btn-logout" id="logoutBtn">로그아웃</button>
+    </nav>
+  </header>
+
+  <div class="mypage-wrap">
+    <h1 class="mypage-title">My Page</h1>
+    <p class="mypage-sub">예약 내역 및 회원 정보를 관리하세요.</p>
+
+    <div id="loadingArea" class="loading-spinner">불러오는 중...</div>
+
+    <div id="mypageContent" style="display:none;">
+
+      <!-- 탭 -->
+      <div class="tab-bar">
+        <div class="tab-item is-active" data-tab="profile">프로필</div>
+        <div class="tab-item" data-tab="reservations">예약 내역</div>
+      </div>
+
+      <!-- 프로필 탭 -->
+      <div class="tab-panel is-active" id="tab-profile">
+
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">?</div>
+            <div>
+              <div class="profile-name" id="profileName">—</div>
+              <div class="profile-email" id="profileEmail">—</div>
+              <span class="membership-badge" id="profileMembership">Guest</span>
+            </div>
+            <button class="btn-edit-toggle" id="editToggleBtn" style="margin-left:auto;">프로필 수정</button>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-field">
+              <label>영문 이름</label>
+              <div class="value" id="profileNameEn">—</div>
+            </div>
+            <div class="profile-field">
+              <label>휴대폰</label>
+              <div class="value" id="profilePhone">—</div>
+            </div>
+            <div class="profile-field">
+              <label>국적</label>
+              <div class="value" id="profileNationality">—</div>
+            </div>
+            <div class="profile-field">
+              <label>가입일</label>
+              <div class="value" id="profileCreated">—</div>
+            </div>
+          </div>
+
+          <!-- 편집 폼 -->
+          <div class="edit-form" id="editForm">
+            <div class="alert-inline" id="editAlert"></div>
+            <div class="edit-grid">
+              <div class="edit-group">
+                <label>한글 이름</label>
+                <input type="text" id="editNameKo" placeholder="홍길동">
+              </div>
+              <div class="edit-group">
+                <label>영문 이름</label>
+                <input type="text" id="editNameEn" placeholder="HONG GIL DONG">
+              </div>
+              <div class="edit-group">
+                <label>휴대폰</label>
+                <input type="tel" id="editPhone" placeholder="010-0000-0000">
+              </div>
+              <div class="edit-group">
+                <label>국적</label>
+                <select id="editNationality">
+                  <option value="KR">대한민국</option>
+                  <option value="US">미국</option>
+                  <option value="JP">일본</option>
+                  <option value="CN">중국</option>
+                  <option value="GB">영국</option>
+                  <option value="OTHER">기타</option>
+                </select>
+              </div>
+            </div>
+            <div class="edit-actions">
+              <button class="btn-edit-save"   id="editSaveBtn">저장</button>
+              <button class="btn-edit-cancel" id="editCancelBtn">취소</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 포인트 -->
+        <div class="points-card">
+          <div>
+            <div class="points-label">보유 포인트</div>
+            <div class="points-value" id="profilePoints">0 <span class="points-unit">P</span></div>
+          </div>
+          <div style="font-size:13px;opacity:.6;">멤버십 등급 상승 시 추가 포인트 적립</div>
+        </div>
+
+      </div><!-- /tab-profile -->
+
+      <!-- 예약 내역 탭 -->
+      <div class="tab-panel" id="tab-reservations">
+        <div id="rsvListWrap">
+          <div class="loading-spinner">예약 내역을 불러오는 중...</div>
+        </div>
+      </div>
+
+    </div><!-- /mypageContent -->
+  </div>
+
+  <footer class="page-footer">
+    <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/profile.js"></script>
+  <script src="../js/reservation.js"></script>
+
+  <script>
+  (function () {
+    var currentUser    = null;
+    var currentProfile = null;
+
+    var NAT_LABEL = { KR:'대한민국', US:'미국', JP:'일본', CN:'중국', GB:'영국', OTHER:'기타' };
+    var STATUS_LABEL = {
+      confirmed:'예약 확정', checked_in:'체크인', checked_out:'체크아웃',
+      cancelled:'취소됨', pending:'대기중', no_show:'노쇼'
+    };
+
+    function fmt(n) { return '₩' + (n||0).toLocaleString(); }
+    function fmtDate(s) {
+      if (!s) return '—';
+      var d = new Date(s + 'T00:00:00');
+      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+    }
+    function fmtDateTime(s) {
+      if (!s) return '—';
+      var d = new Date(s);
+      return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+    }
+
+    function el(id) { return document.getElementById(id); }
+
+    /* ── 로그아웃 ── */
+    el('logoutBtn').addEventListener('click', async function () {
+      await window.SGH.auth.signOut();
+      window.location.href = '../index.html';
+    });
+
+    /* ── 탭 전환 ── */
+    document.querySelectorAll('.tab-item').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.tab-item').forEach(function (t) { t.classList.remove('is-active'); });
+        document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('is-active'); });
+        tab.classList.add('is-active');
+        var panel = document.getElementById('tab-' + tab.dataset.tab);
+        if (panel) panel.classList.add('is-active');
+
+        if (tab.dataset.tab === 'reservations') loadReservations();
+      });
+    });
+
+    /* ── 프로필 렌더 ── */
+    function renderProfile(profile, user) {
+      var nameKo = profile.name_ko || user.user_metadata.name_ko || user.email.split('@')[0];
+      var nameEn = profile.name_en || user.user_metadata.name_en || '';
+
+      el('profileAvatar').textContent   = nameKo ? nameKo.charAt(0) : '?';
+      el('profileName').textContent     = nameKo || '—';
+      el('profileEmail').textContent    = user.email;
+      el('profileNameEn').textContent   = nameEn || '—';
+      el('profilePhone').textContent    = profile.phone || '—';
+      el('profileNationality').textContent = NAT_LABEL[profile.nationality] || profile.nationality || '—';
+      el('profileCreated').textContent  = fmtDate(profile.created_at);
+      el('profilePoints').innerHTML     = (profile.points || 0).toLocaleString() + ' <span class="points-unit">P</span>';
+
+      var mem = (profile.membership || 'guest').toUpperCase();
+      el('profileMembership').textContent = mem;
+
+      /* 편집 폼 초기값 */
+      el('editNameKo').value = profile.name_ko || '';
+      el('editNameEn').value = profile.name_en || '';
+      el('editPhone').value  = profile.phone   || '';
+      el('editNationality').value = profile.nationality || 'KR';
+    }
+
+    /* ── 프로필 편집 토글 ── */
+    el('editToggleBtn').addEventListener('click', function () {
+      el('editForm').classList.toggle('is-open');
+      this.textContent = el('editForm').classList.contains('is-open') ? '편집 취소' : '프로필 수정';
+    });
+    el('editCancelBtn').addEventListener('click', function () {
+      el('editForm').classList.remove('is-open');
+      el('editToggleBtn').textContent = '프로필 수정';
+    });
+
+    /* ── 프로필 저장 ── */
+    el('editSaveBtn').addEventListener('click', async function () {
+      var alertEl = el('editAlert');
+      alertEl.style.display = 'none';
+      this.textContent = '저장 중...';
+      this.disabled = true;
+
+      var data = {
+        name_ko:     el('editNameKo').value.trim(),
+        name_en:     el('editNameEn').value.trim().toUpperCase(),
+        phone:       el('editPhone').value.trim(),
+        nationality: el('editNationality').value,
+      };
+
+      var res = await window.SGH.profile.update(currentUser.id, data);
+      if (res.error) {
+        alertEl.textContent = '저장 실패: ' + res.error.message;
+        alertEl.className = 'alert-inline error'; alertEl.style.display = 'block';
+      } else {
+        currentProfile = res.data;
+        renderProfile(currentProfile, currentUser);
+        alertEl.textContent = '프로필이 저장되었습니다.';
+        alertEl.className = 'alert-inline success'; alertEl.style.display = 'block';
+        setTimeout(function () {
+          el('editForm').classList.remove('is-open');
+          el('editToggleBtn').textContent = '프로필 수정';
+          alertEl.style.display = 'none';
+        }, 1500);
+      }
+      this.textContent = '저장'; this.disabled = false;
+    });
+
+    /* ── 예약 내역 ── */
+    var rsvLoaded = false;
+    async function loadReservations() {
+      if (rsvLoaded) return;
+      rsvLoaded = true;
+      var wrap = el('rsvListWrap');
+
+      var res = await window.SGH.reservation.getByUser();
+      if (res.error) {
+        wrap.innerHTML = '<div class="empty-state"><div class="empty-state__sub" style="color:#c0392b;">예약 내역을 불러오는 데 실패했습니다.</div></div>';
+        return;
+      }
+      var list = res.data || [];
+      if (list.length === 0) {
+        wrap.innerHTML = '<div class="empty-state">' +
+          '<div class="empty-state__icon">🏨</div>' +
+          '<div class="empty-state__title">예약 내역이 없습니다</div>' +
+          '<div class="empty-state__sub">Seoul Grand Hotel의 특별한 경험을 예약해보세요.</div>' +
+          '<a href="reservation.html" class="btn-reserve">객실 예약하기</a>' +
+          '</div>';
+        return;
+      }
+
+      var rows = list.map(function (r) {
+        var roomName = r.rooms ? r.rooms.name_ko : '—';
+        var canCancel = r.status === 'confirmed';
+        return '<tr>' +
+          '<td style="font-family:\'Montserrat\',sans-serif;font-size:12px;font-weight:600;">' + r.reservation_no + '</td>' +
+          '<td>' + (roomName || '—') + '</td>' +
+          '<td>' + fmtDate(r.checkin_date) + '</td>' +
+          '<td>' + fmtDate(r.checkout_date) + '</td>' +
+          '<td>' + r.nights + '박</td>' +
+          '<td>' + fmt(r.price_total) + '</td>' +
+          '<td><span class="status-badge ' + r.status + '">' + (STATUS_LABEL[r.status] || r.status) + '</span></td>' +
+          '<td>' + (canCancel ? '<button class="btn-cancel-rsv" data-rsv-id="' + r.id + '">취소</button>' : '—') + '</td>' +
+          '</tr>';
+      }).join('');
+
+      wrap.innerHTML =
+        '<div class="rsv-table-wrap">' +
+          '<table class="rsv-table">' +
+            '<thead><tr>' +
+              '<th>예약번호</th><th>객실</th><th>체크인</th><th>체크아웃</th>' +
+              '<th>숙박</th><th>금액</th><th>상태</th><th>관리</th>' +
+            '</tr></thead>' +
+            '<tbody>' + rows + '</tbody>' +
+          '</table>' +
+        '</div>';
+
+      /* 예약 취소 */
+      wrap.addEventListener('click', async function (e) {
+        var btn = e.target.closest('.btn-cancel-rsv');
+        if (!btn) return;
+        if (!confirm('예약을 취소하시겠습니까?\n취소된 예약은 복구할 수 없습니다.')) return;
+        var rsvId = btn.dataset.rsvId;
+        btn.disabled = true; btn.textContent = '처리 중...';
+        var res2 = await window.SGH.reservation.cancel(rsvId);
+        if (res2.error) { alert('취소 실패: ' + res2.error.message); btn.disabled = false; btn.textContent = '취소'; }
+        else { rsvLoaded = false; loadReservations(); }
+      });
+    }
+
+    /* ── 초기화 ── */
+    async function init() {
+      if (!window.SGH || !window.SGH.supabase) {
+        el('loadingArea').textContent = '서비스를 사용할 수 없습니다.';
+        return;
+      }
+
+      /* 로그인 가드 */
+      var sessionRes = await window.SGH.supabase.auth.getSession();
+      if (!sessionRes.data || !sessionRes.data.session) {
+        sessionStorage.setItem('loginRedirect', 'mypage.html');
+        window.location.replace('login.html');
+        return;
+      }
+      currentUser = sessionRes.data.session.user;
+
+      /* 프로필 로드 */
+      var profileRes = await window.SGH.profile.getCurrent();
+      if (profileRes.error || !profileRes.data) {
+        /* 프로필이 없으면 생성 */
+        var meta = currentUser.user_metadata || {};
+        var createRes = await window.SGH.profile.create(currentUser.id, {
+          name_ko: meta.name_ko || '',
+          name_en: meta.name_en || '',
+          phone:   meta.phone   || '',
+        });
+        currentProfile = createRes.data || {};
+      } else {
+        currentProfile = profileRes.data;
+      }
+
+      renderProfile(currentProfile, currentUser);
+
+      el('loadingArea').style.display  = 'none';
+      el('mypageContent').style.display = 'block';
+    }
+
+    init();
+  })();
+  </script>
+
+</body>
+</html>

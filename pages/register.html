@@ -13,218 +13,63 @@
   <link rel="stylesheet" href="../css/variables.css">
 
   <style>
-    body {
-      font-family: 'Pretendard', 'Montserrat', sans-serif;
-      background-color: #F7F7F7;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .page-header {
-      background-color: #111;
-      padding: 20px 40px;
-    }
-    .page-header__logo img { height: 32px; }
+    body { font-family:'Pretendard','Montserrat',sans-serif; background:#F7F7F7; min-height:100vh; display:flex; flex-direction:column; }
 
-    .register-wrap {
-      flex: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 60px 24px 80px;
-    }
-    .register-box {
-      width: 100%;
-      max-width: 560px;
-      background: #fff;
-      padding: 52px 48px 48px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.07);
-    }
-    .register-box__title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #111;
-      margin-bottom: 8px;
-    }
-    .register-box__sub {
-      font-size: 14px;
-      color: #767676;
-      margin-bottom: 40px;
-    }
+    .page-header { background:#111; padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header__logo img { height:32px; }
+    .page-header__nav a { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-decoration:none; opacity:.7; transition:opacity .2s; }
+    .page-header__nav a:hover { opacity:1; }
 
-    /* Section divider */
-    .form-section {
-      margin-bottom: 32px;
-      padding-bottom: 32px;
-      border-bottom: 1px solid #E8E8E8;
-    }
-    .form-section:last-of-type {
-      border-bottom: none;
-      margin-bottom: 0;
-    }
-    .form-section__title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #866552;
-      margin-bottom: 24px;
-    }
+    .register-wrap { flex:1; display:flex; align-items:flex-start; justify-content:center; padding:60px 24px 80px; }
+    .register-box { width:100%; max-width:560px; background:#fff; padding:52px 48px 48px; box-shadow:0 4px 32px rgba(0,0,0,.07); }
+    .register-box__title { font-family:'Montserrat',sans-serif; font-size:24px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#111; margin-bottom:8px; }
+    .register-box__sub { font-size:14px; color:#767676; margin-bottom:40px; }
 
-    .form-group { margin-bottom: 20px; }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
+    .form-section { margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid #E8E8E8; }
+    .form-section:last-of-type { border-bottom:none; margin-bottom:0; }
+    .form-section__title { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:#866552; margin-bottom:24px; }
 
-    .form-label {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #111;
-      margin-bottom: 8px;
-    }
-    .form-label .required {
-      color: #866552;
-      font-size: 14px;
-      line-height: 1;
-    }
+    .form-group { margin-bottom:20px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-label { display:flex; align-items:center; gap:4px; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#111; margin-bottom:8px; }
+    .form-label .required { color:#866552; font-size:14px; line-height:1; }
 
     .form-input, .form-select {
-      display: block;
-      width: 100%;
-      padding: 13px 16px;
-      font-family: 'Pretendard', sans-serif;
-      font-size: 15px;
-      color: #111;
-      background-color: #fff;
-      border: 1px solid #E8E8E8;
-      outline: none;
-      transition: border-color 0.2s;
+      display:block; width:100%; padding:13px 16px;
+      font-family:'Pretendard',sans-serif; font-size:15px; color:#111;
+      background:#fff; border:1px solid #E8E8E8; outline:none;
+      transition:border-color .2s; box-sizing:border-box;
     }
-    .form-input:focus, .form-select:focus { border-color: #111; }
-    .form-input::placeholder { color: #bbb; }
-    .form-select { cursor: pointer; }
+    .form-input:focus, .form-select:focus { border-color:#111; }
+    .form-input::placeholder { color:#bbb; }
+    .form-select { cursor:pointer; }
 
-    /* Gender radio */
-    .gender-group {
-      display: flex;
-      gap: 16px;
-    }
-    .gender-option {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .gender-option input[type="radio"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #111;
-      cursor: pointer;
-    }
-    .gender-option span {
-      font-family: 'Pretendard', sans-serif;
-      font-size: 15px;
-      color: #111;
-    }
-
-    /* Phone verification */
-    .phone-group {
-      display: flex;
-      gap: 10px;
-    }
-    .phone-group .form-input { flex: 1; }
-    .btn-verify {
-      flex-shrink: 0;
-      padding: 0 20px;
-      background-color: #111;
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border: 1px solid #111;
-      cursor: pointer;
-      transition: background-color 0.2s, color 0.2s;
-      white-space: nowrap;
-    }
-    .btn-verify:hover {
-      background-color: transparent;
-      color: #111;
-    }
-
-    /* Error / hint */
-    .form-hint {
-      font-size: 12px;
-      color: #767676;
-      margin-top: 6px;
-    }
-    .form-error {
-      display: none;
-      font-size: 12px;
-      color: #c0392b;
-      margin-top: 6px;
-    }
+    .form-hint { font-size:12px; color:#767676; margin-top:6px; }
+    .form-error { display:none; font-size:12px; color:#c0392b; margin-top:6px; }
     .form-group.has-error .form-input,
-    .form-group.has-error .form-select {
-      border-color: #c0392b;
-    }
-    .form-group.has-error .form-error { display: block; }
-    .form-group.is-valid .form-input,
-    .form-group.is-valid .form-select {
-      border-color: #27ae60;
-    }
+    .form-group.has-error .form-select { border-color:#c0392b; }
+    .form-group.has-error .form-error { display:block; }
+    .form-group.is-valid .form-input { border-color:#27ae60; }
 
-    /* Submit */
-    .btn-submit {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background-color: #111;
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      border: 1px solid #111;
-      cursor: pointer;
-      transition: background-color 0.2s, color 0.2s;
-      margin-top: 36px;
-    }
-    .btn-submit:hover {
-      background-color: transparent;
-      color: #111;
-    }
+    /* 약관 체크박스 */
+    .agree-group { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+    .agree-item { display:flex; align-items:flex-start; gap:10px; cursor:pointer; }
+    .agree-item input[type="checkbox"] { width:16px; height:16px; margin-top:2px; flex-shrink:0; accent-color:#866552; cursor:pointer; }
+    .agree-item span { font-size:13px; color:#444; line-height:1.5; }
+    .agree-item a { color:#866552; }
 
-    .page-footer {
-      padding: 24px 40px;
-      text-align: center;
-      border-top: 1px solid #E8E8E8;
-    }
-    .page-footer p {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      color: #aaa;
-      letter-spacing: 0.08em;
-    }
+    .alert-box { display:none; padding:14px 16px; font-size:13px; border-radius:3px; margin-bottom:20px; }
+    .alert-box.error   { background:#fff0f0; border:1px solid #f5c6cb; color:#c0392b; }
+    .alert-box.success { background:#f0fff4; border:1px solid #b2dfdb; color:#1b7a4c; }
 
-    @media (max-width: 600px) {
-      .register-box { padding: 40px 24px 36px; }
-      .form-row { grid-template-columns: 1fr; }
-    }
+    .btn-submit { display:block; width:100%; padding:16px; background:#111; color:#fff; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; border:1.5px solid #111; cursor:pointer; transition:background .2s,color .2s; margin-top:36px; }
+    .btn-submit:hover { background:transparent; color:#111; }
+    .btn-submit:disabled { opacity:.5; cursor:not-allowed; }
+
+    .page-footer { padding:24px 40px; text-align:center; border-top:1px solid #E8E8E8; }
+    .page-footer p { font-family:'Montserrat',sans-serif; font-size:11px; color:#aaa; letter-spacing:.08em; }
+
+    @media (max-width:600px) { .register-box { padding:40px 24px 36px; } .form-row { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -233,6 +78,9 @@
     <a href="../index.html" class="page-header__logo">
       <img src="../images/logo_white.png" alt="Seoul Grand Hotel">
     </a>
+    <nav class="page-header__nav">
+      <a href="login.html">로그인</a>
+    </nav>
   </header>
 
   <main class="register-wrap">
@@ -240,25 +88,27 @@
       <h1 class="register-box__title">Sign Up</h1>
       <p class="register-box__sub">Seoul Grand Hotel 회원이 되어 다양한 혜택을 누리세요.</p>
 
+      <div class="alert-box" id="alertBox"></div>
+
       <form id="registerForm" novalidate>
 
         <!-- 계정 정보 -->
         <div class="form-section">
           <p class="form-section__title">Account</p>
 
-          <div class="form-group" id="grp-userid">
-            <label class="form-label" for="regId">아이디 <span class="required">*</span></label>
-            <input type="text" class="form-input" id="regId" name="userId"
-                   placeholder="영문·숫자 조합, 6자 이상" autocomplete="username">
-            <span class="form-error" id="err-userid">아이디를 입력해주세요.</span>
+          <div class="form-group" id="grp-email">
+            <label class="form-label" for="regEmail">이메일 <span class="required">*</span></label>
+            <input type="email" class="form-input" id="regEmail" name="email"
+                   placeholder="example@email.com" autocomplete="email">
+            <span class="form-error" id="err-email">올바른 이메일을 입력해주세요.</span>
           </div>
 
           <div class="form-group" id="grp-pw">
             <label class="form-label" for="regPw">비밀번호 <span class="required">*</span></label>
             <input type="password" class="form-input" id="regPw" name="password"
-                   placeholder="8~20자 이내 영문·숫자·특수문자" autocomplete="new-password">
+                   placeholder="영문·숫자·특수문자 포함 8자 이상" autocomplete="new-password">
             <span class="form-hint">영문, 숫자, 특수문자(!@#$%^&amp;*) 포함 8자리 이상</span>
-            <span class="form-error" id="err-pw">올바른 비밀번호를 입력해주세요. (영문+숫자+특수문자 포함 8자 이상)</span>
+            <span class="form-error" id="err-pw">영문+숫자+특수문자 포함 8자 이상으로 입력해주세요.</span>
           </div>
 
           <div class="form-group" id="grp-pw2">
@@ -273,21 +123,6 @@
         <div class="form-section">
           <p class="form-section__title">Personal Info</p>
 
-          <div class="form-group" id="grp-gender">
-            <label class="form-label">성별 <span class="required">*</span></label>
-            <div class="gender-group">
-              <label class="gender-option">
-                <input type="radio" name="gender" value="male">
-                <span>남성</span>
-              </label>
-              <label class="gender-option">
-                <input type="radio" name="gender" value="female">
-                <span>여성</span>
-              </label>
-            </div>
-            <span class="form-error" id="err-gender">성별을 선택해주세요.</span>
-          </div>
-
           <div class="form-row">
             <div class="form-group" id="grp-nameKo">
               <label class="form-label" for="nameKo">한글 이름 <span class="required">*</span></label>
@@ -301,39 +136,48 @@
             </div>
           </div>
 
-          <div class="form-group" id="grp-birth">
-            <label class="form-label" for="birth">생년월일 <span class="required">*</span></label>
-            <input type="date" class="form-input" id="birth" name="birth">
-            <span class="form-error" id="err-birth">생년월일을 입력해주세요.</span>
-          </div>
-
           <div class="form-group" id="grp-phone">
             <label class="form-label" for="phone">휴대폰번호 <span class="required">*</span></label>
-            <div class="phone-group">
-              <input type="tel" class="form-input" id="phone" name="phone"
-                     placeholder="010-0000-0000">
-              <button type="button" class="btn-verify" id="btnVerify">인증하기</button>
-            </div>
+            <input type="tel" class="form-input" id="phone" name="phone"
+                   placeholder="010-0000-0000" autocomplete="tel">
             <span class="form-error" id="err-phone">올바른 휴대폰 번호를 입력해주세요.</span>
           </div>
+
+          <div class="form-group">
+            <label class="form-label" for="nationality">국적</label>
+            <select class="form-select" id="nationality" name="nationality">
+              <option value="KR">대한민국</option>
+              <option value="US">미국</option>
+              <option value="JP">일본</option>
+              <option value="CN">중국</option>
+              <option value="GB">영국</option>
+              <option value="OTHER">기타</option>
+            </select>
+          </div>
         </div>
 
-        <!-- 선택 정보 -->
+        <!-- 약관 동의 -->
         <div class="form-section">
-          <p class="form-section__title">Optional</p>
+          <p class="form-section__title">Agreement</p>
 
-          <div class="form-group">
-            <label class="form-label" for="email">이메일</label>
-            <input type="email" class="form-input" id="email" name="email" placeholder="example@email.com">
+          <div class="agree-group">
+            <label class="agree-item">
+              <input type="checkbox" id="agreePrivacy" required>
+              <span>[필수] <a href="#" onclick="return false">개인정보 수집 및 이용</a>에 동의합니다.</span>
+            </label>
+            <label class="agree-item">
+              <input type="checkbox" id="agreeTerms" required>
+              <span>[필수] <a href="#" onclick="return false">이용약관</a>에 동의합니다.</span>
+            </label>
+            <label class="agree-item">
+              <input type="checkbox" id="agreeMarketing">
+              <span>[선택] 마케팅 정보 수신에 동의합니다.</span>
+            </label>
           </div>
-
-          <div class="form-group">
-            <label class="form-label" for="address">주소</label>
-            <input type="text" class="form-input" id="address" name="address" placeholder="주소를 입력하세요">
-          </div>
+          <div class="form-error" id="err-agree" style="display:none;margin-top:8px;">필수 약관에 동의해주세요.</div>
         </div>
 
-        <button type="submit" class="btn-submit">회원가입</button>
+        <button type="submit" class="btn-submit" id="submitBtn">회원가입</button>
 
       </form>
     </div>
@@ -343,87 +187,127 @@
     <p>COPYRIGHT 2026 SEOUL GRAND HOTEL ALL RIGHTS RESERVED.</p>
   </footer>
 
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+
   <script>
-    (function () {
-      const form = document.getElementById('registerForm');
+  (function () {
+    var form       = document.getElementById('registerForm');
+    var submitBtn  = document.getElementById('submitBtn');
+    var alertBox   = document.getElementById('alertBox');
 
-      document.getElementById('btnVerify').addEventListener('click', function () {
-        const phone = document.getElementById('phone').value.trim();
-        if (!phone) {
-          alert('휴대폰 번호를 먼저 입력해주세요.');
-          return;
-        }
-        alert('인증번호가 발송되었습니다. (데모)');
-      });
+    function showAlert(msg, type) {
+      alertBox.textContent = msg;
+      alertBox.className   = 'alert-box ' + (type || 'error');
+      alertBox.style.display = 'block';
+      alertBox.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+    function hideAlert() { alertBox.style.display = 'none'; }
 
-      function setError(grpId, show) {
-        const g = document.getElementById(grpId);
-        if (g) {
-          g.classList.toggle('has-error', show);
-          if (!show) g.classList.remove('has-error');
-        }
+    function setErr(grpId, show, customMsg) {
+      var g = document.getElementById(grpId);
+      if (!g) return;
+      g.classList.toggle('has-error', !!show);
+      if (customMsg) {
+        var errEl = g.querySelector('.form-error');
+        if (errEl) errEl.textContent = customMsg;
+      }
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideAlert();
+      var valid = true;
+
+      var email   = document.getElementById('regEmail').value.trim();
+      var pw      = document.getElementById('regPw').value;
+      var pw2     = document.getElementById('regPw2').value;
+      var nameKo  = document.getElementById('nameKo').value.trim();
+      var nameEn  = document.getElementById('nameEn').value.trim().toUpperCase();
+      var phone   = document.getElementById('phone').value.trim();
+      var nat     = document.getElementById('nationality').value;
+      var agreeP  = document.getElementById('agreePrivacy').checked;
+      var agreeT  = document.getElementById('agreeTerms').checked;
+      var agreeM  = document.getElementById('agreeMarketing').checked;
+
+      /* 유효성 검사 */
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('grp-email', true); valid = false; }
+      else setErr('grp-email', false);
+
+      var pwRe = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,30}$/;
+      if (!pwRe.test(pw)) { setErr('grp-pw', true); valid = false; }
+      else setErr('grp-pw', false);
+
+      if (pw !== pw2) { setErr('grp-pw2', true); valid = false; }
+      else setErr('grp-pw2', false);
+
+      if (!nameKo) { setErr('grp-nameKo', true); valid = false; }
+      else setErr('grp-nameKo', false);
+
+      if (!nameEn) { setErr('grp-nameEn', true); valid = false; }
+      else setErr('grp-nameEn', false);
+
+      var phoneRe = /^01[016789]-?\d{3,4}-?\d{4}$/;
+      if (!phoneRe.test(phone.replace(/-/g, ''))) { setErr('grp-phone', true); valid = false; }
+      else setErr('grp-phone', false);
+
+      var errAgree = document.getElementById('err-agree');
+      if (!agreeP || !agreeT) { errAgree.style.display = 'block'; valid = false; }
+      else errAgree.style.display = 'none';
+
+      if (!valid) return;
+
+      /* Supabase 회원가입 */
+      if (!window.SGH || !window.SGH.auth) {
+        showAlert('인증 서비스를 사용할 수 없습니다. 잠시 후 다시 시도해주세요.');
+        return;
       }
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        let valid = true;
+      submitBtn.disabled    = true;
+      submitBtn.textContent = '처리 중...';
 
-        const id   = document.getElementById('regId').value.trim();
-        const pw   = document.getElementById('regPw').value;
-        const pw2  = document.getElementById('regPw2').value;
-        const nameKo = document.getElementById('nameKo').value.trim();
-        const nameEn = document.getElementById('nameEn').value.trim();
-        const birth  = document.getElementById('birth').value;
-        const phone  = document.getElementById('phone').value.trim();
-        const gender = document.querySelector('input[name="gender"]:checked');
-
-        // ID
-        if (!id || id.length < 4) { setError('grp-userid', true); valid = false; }
-        else setError('grp-userid', false);
-
-        // Password: 8+ chars, must contain letter, number, special char
-        const pwRe = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,20}$/;
-        if (!pwRe.test(pw)) { setError('grp-pw', true); valid = false; }
-        else setError('grp-pw', false);
-
-        // Password confirm
-        if (pw !== pw2) { setError('grp-pw2', true); valid = false; }
-        else setError('grp-pw2', false);
-
-        // Gender
-        const genderGrp = document.getElementById('grp-gender');
-        if (!gender) {
-          genderGrp.classList.add('has-error');
-          document.getElementById('err-gender').style.display = 'block';
-          valid = false;
-        } else {
-          genderGrp.classList.remove('has-error');
-          document.getElementById('err-gender').style.display = 'none';
-        }
-
-        // Korean name
-        if (!nameKo) { setError('grp-nameKo', true); valid = false; }
-        else setError('grp-nameKo', false);
-
-        // English name
-        if (!nameEn) { setError('grp-nameEn', true); valid = false; }
-        else setError('grp-nameEn', false);
-
-        // Birth
-        if (!birth) { setError('grp-birth', true); valid = false; }
-        else setError('grp-birth', false);
-
-        // Phone
-        const phoneRe = /^01[0-9]-?\d{3,4}-?\d{4}$/;
-        if (!phoneRe.test(phone.replace(/-/g, ''))) { setError('grp-phone', true); valid = false; }
-        else setError('grp-phone', false);
-
-        if (!valid) return;
-
-        alert('회원가입이 완료되었습니다.');
-        window.location.href = 'login.html';
+      var res = await window.SGH.auth.signUp(email, pw, {
+        name_ko:           nameKo,
+        name_en:           nameEn,
+        phone:             phone,
+        nationality:       nat,
+        marketing_agree:   agreeM,
       });
-    })();
+
+      if (res.error) {
+        var msg = res.error.message;
+        if (msg.includes('already registered') || msg.includes('User already registered')) {
+          msg = '이미 사용 중인 이메일입니다. 로그인 페이지로 이동해주세요.';
+        }
+        showAlert(msg);
+        submitBtn.disabled = false; submitBtn.textContent = '회원가입';
+        return;
+      }
+
+      /* 이메일 인증 필요 여부에 따라 분기 */
+      if (res.data && res.data.session) {
+        /* 이메일 인증 없이 즉시 로그인됨 */
+        showAlert('회원가입이 완료되었습니다! 환영합니다.', 'success');
+        setTimeout(function () { window.location.href = '../index.html'; }, 1500);
+      } else {
+        /* 이메일 인증 필요 */
+        showAlert('회원가입이 완료되었습니다! 이메일을 확인하여 인증을 완료해주세요.', 'success');
+        setTimeout(function () { window.location.href = 'login.html'; }, 3000);
+      }
+    });
+
+    /* 실시간 에러 클리어 */
+    ['regEmail','regPw','regPw2','nameKo','nameEn','phone'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', function () {
+        var grp = el.closest('.form-group');
+        if (grp) grp.classList.remove('has-error');
+        hideAlert();
+      });
+    });
+  })();
   </script>
 
 </body>

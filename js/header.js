@@ -68,19 +68,51 @@
     link.addEventListener('click', closeMobileMenu);
   });
 
-  /* ---- Login state in header ---- */
-  function updateAuthLink() {
+  /* ---- Login state in header (Supabase 세션 기반) ---- */
+  async function updateAuthLink() {
     if (!authLink) return;
-    const isLoggedIn = localStorage.getItem('sgh_logged_in') === 'true';
-    const loggedInName = localStorage.getItem('sgh_user_name') || '';
+    if (window.SGH && window.SGH.supabase) {
+      try {
+        var res = await window.SGH.supabase.auth.getSession();
+        var session = res.data && res.data.session ? res.data.session : null;
+        if (session) {
+          var meta = session.user.user_metadata || {};
+          var name = meta.name_ko || session.user.email.split('@')[0];
+          authLink.textContent = name + ' 님';
+          authLink.href = 'pages/mypage.html';
 
-    if (isLoggedIn) {
-      authLink.textContent = loggedInName ? loggedInName + ' 님' : '마이페이지';
-      authLink.href = 'pages/mypage.html';
-    } else {
-      authLink.textContent = '로그인';
-      authLink.href = 'pages/login.html';
+          /* 로그아웃 링크 동적 추가 */
+          var logoutEl = document.getElementById('headerLogout');
+          if (!logoutEl) {
+            logoutEl = document.createElement('a');
+            logoutEl.id = 'headerLogout';
+            logoutEl.href = '#';
+            logoutEl.style.cssText = 'font-size:12px;color:#999;margin-left:12px;text-decoration:none;';
+            logoutEl.textContent = '로그아웃';
+            logoutEl.addEventListener('click', async function (e) {
+              e.preventDefault();
+              await window.SGH.supabase.auth.signOut();
+              window.location.reload();
+            });
+            authLink.parentNode && authLink.parentNode.appendChild(logoutEl);
+          }
+
+          /* 관리자 링크 표시 */
+          var adminNavLink = document.getElementById('adminLink');
+          if (adminNavLink) {
+            var pr = await window.SGH.supabase.from('profiles').select('role').eq('id', session.user.id).single();
+            if (pr.data && pr.data.role === 'admin') adminNavLink.style.display = '';
+          }
+        } else {
+          authLink.textContent = '로그인';
+          authLink.href = 'pages/login.html';
+        }
+        return;
+      } catch (e) { /* Supabase 불가 시 하단 fallback */ }
     }
+    /* Fallback (Supabase 미연결 환경) */
+    authLink.textContent = '로그인';
+    authLink.href = 'pages/login.html';
   }
 
   updateAuthLink();
