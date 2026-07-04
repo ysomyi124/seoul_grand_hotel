@@ -1,0 +1,198 @@
+/* =============================================
+   GUEST & ROOMS PICKER
+   ============================================= */
+
+/* ---- Trigger group ---- */
+.qr-form__group.guest-picker {
+  padding: 0;
+  gap: 0;
+}
+
+.guest-picker__trigger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  padding: 18px 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+}
+
+.guest-picker__summary {
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+  color: var(--color-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Popup ---- */
+.guest-picker__popup {
+  position: fixed;
+  width: 280px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 24px;
+  z-index: 9999;
+  will-change: opacity, transform;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.guest-picker__popup[hidden] {
+  display: none;
+}
+
+.guest-picker__popup.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ---- Popup header ---- */
+.guest-picker__popup-title {
+  font-family: var(--font-en);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 16px;
+}
+
+/* ---- Rows ---- */
+.guest-picker__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.guest-picker__row + .guest-picker__row {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ---- Label ---- */
+.guest-picker__label {
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+  color: rgba(255, 255, 255, 0.85);
+  user-select: none;
+}
+
+/* ---- Counter ---- */
+.guest-picker__counter {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.guest-picker__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: var(--color-white);
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.guest-picker__button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.guest-picker__button:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.guest-picker__button:disabled {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
+
+.guest-picker__value {
+  font-family: var(--font-en);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--color-white);
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
+}
+
+/* ---- Divider ---- */
+.guest-picker__divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 12px 0 16px;
+}
+
+/* ---- Footer ---- */
+.guest-picker__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.guest-picker__apply {
+  padding: 10px 28px;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color var(--ease-fast), color var(--ease-fast);
+}
+
+.guest-picker__apply:hover {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .guest-picker__trigger {
+    padding: 14px 20px;
+  }
+
+  .guest-picker__popup {
+    width: calc(100vw - 48px);
+  }
+}
+
+@media (max-width: 480px) {
+  .guest-picker__popup {
+    width: calc(100vw - 40px);
+  }
+}

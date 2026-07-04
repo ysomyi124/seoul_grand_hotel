@@ -44,8 +44,7 @@
   .qr-form__group {
     flex: 1 1 40%;
   }
-  .qr-form__divider:nth-child(6),
-  .qr-form__divider:nth-child(8) {
+  .qr-form__divider:nth-child(4) {
     display: none;
   }
 

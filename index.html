@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/reservation.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -223,27 +224,67 @@
             <input type="date" class="qr-form__input" id="checkout" name="checkout" required>
           </div>
           <div class="qr-form__divider"></div>
-          <div class="qr-form__group">
-            <label class="qr-form__label" for="qrGuests">Guests</label>
-            <select class="qr-form__select" id="qrGuests" name="guests">
-              <option value="1">1 Guest</option>
-              <option value="2" selected>2 Guests</option>
-              <option value="3">3 Guests</option>
-              <option value="4">4 Guests</option>
-              <option value="5">5+ Guests</option>
-            </select>
-          </div>
-          <div class="qr-form__divider"></div>
-          <div class="qr-form__group">
-            <label class="qr-form__label" for="qrRooms">Rooms</label>
-            <select class="qr-form__select" id="qrRooms" name="rooms">
-              <option value="1" selected>1 Room</option>
-              <option value="2">2 Rooms</option>
-              <option value="3">3 Rooms</option>
-            </select>
+          <div class="qr-form__group guest-picker" id="guestPickerGroup">
+            <button type="button"
+              class="guest-picker__trigger"
+              id="guestPickerTrigger"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+              aria-controls="guestPickerPopup">
+              <span class="qr-form__label">Guests &amp; Rooms</span>
+              <span class="guest-picker__summary" id="guestPickerSummary">Adult 2 · Children 0 · Room 1</span>
+            </button>
+            <input type="hidden" name="rooms"    id="hiddenRooms"    value="1">
+            <input type="hidden" name="adults"   id="hiddenAdults"   value="2">
+            <input type="hidden" name="children" id="hiddenChildren" value="0">
           </div>
           <button type="submit" class="qr-form__submit">예약하기</button>
         </form>
+
+        <!-- Popup: position:fixed로 hero의 overflow:hidden 우회 -->
+        <div class="guest-picker__popup"
+          id="guestPickerPopup"
+          role="dialog"
+          aria-label="Guests and Rooms"
+          aria-modal="true"
+          hidden>
+
+          <p class="guest-picker__popup-title">Guests &amp; Rooms</p>
+
+          <div class="guest-picker__row">
+            <span class="guest-picker__label">Rooms</span>
+            <div class="guest-picker__counter" role="group" aria-label="Number of rooms">
+              <button type="button" class="guest-picker__button guest-picker__button--dec" data-type="rooms"    aria-label="Decrease rooms"    disabled>&#8722;</button>
+              <span class="guest-picker__value" data-counter="rooms"    aria-live="polite" aria-atomic="true">1</span>
+              <button type="button" class="guest-picker__button guest-picker__button--inc" data-type="rooms"    aria-label="Increase rooms">+</button>
+            </div>
+          </div>
+
+          <div class="guest-picker__row">
+            <span class="guest-picker__label">Adult</span>
+            <div class="guest-picker__counter" role="group" aria-label="Number of adults">
+              <button type="button" class="guest-picker__button guest-picker__button--dec" data-type="adults"   aria-label="Decrease adults"   disabled>&#8722;</button>
+              <span class="guest-picker__value" data-counter="adults"   aria-live="polite" aria-atomic="true">2</span>
+              <button type="button" class="guest-picker__button guest-picker__button--inc" data-type="adults"   aria-label="Increase adults">+</button>
+            </div>
+          </div>
+
+          <div class="guest-picker__row">
+            <span class="guest-picker__label">Children</span>
+            <div class="guest-picker__counter" role="group" aria-label="Number of children">
+              <button type="button" class="guest-picker__button guest-picker__button--dec" data-type="children" aria-label="Decrease children" disabled>&#8722;</button>
+              <span class="guest-picker__value" data-counter="children" aria-live="polite" aria-atomic="true">0</span>
+              <button type="button" class="guest-picker__button guest-picker__button--inc" data-type="children" aria-label="Increase children">+</button>
+            </div>
+          </div>
+
+          <div class="guest-picker__divider"></div>
+
+          <div class="guest-picker__footer">
+            <button type="button" class="guest-picker__apply" id="guestPickerApply">Apply</button>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -524,6 +565,7 @@
   <script src="js/swiper-config.js"></script>
   <script src="js/scroll-effects.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/reservation.js"></script>
 
 </body>
 </html>
