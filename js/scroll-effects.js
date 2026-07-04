@@ -58,6 +58,38 @@
     }, { passive: true });
   }
 
+  /* ---- Timeless Image Scroll Zoom ---- */
+  const timelessSection = document.querySelector('.sec-timeless');
+  const timelessImg = document.querySelector('.sec-timeless__image img');
+
+  if (timelessSection && timelessImg) {
+    let zoomRafId = null;
+
+    function updateTimelessZoom() {
+      const rect = timelessSection.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const sectionH = timelessSection.offsetHeight;
+
+      // 0: section 상단이 viewport 하단에 진입 / 1: section 중앙이 viewport 중앙에 도달
+      const linear = Math.max(0, Math.min(1,
+        (viewH - rect.top) / (viewH / 2 + sectionH / 2)
+      ));
+
+      // easeOutQuart: 처음에 확 커지고 끝으로 갈수록 천천히 수렴
+      const eased = 1 - Math.pow(1 - linear, 4);
+      timelessImg.style.transform = 'scale(' + (0.45 + 0.55 * eased) + ')';
+      zoomRafId = null;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (zoomRafId === null) {
+        zoomRafId = requestAnimationFrame(updateTimelessZoom);
+      }
+    }, { passive: true });
+
+    updateTimelessZoom();
+  }
+
   /* ---- Top Button visibility ---- */
   const topBtn = document.getElementById('topBtn');
   if (topBtn) {

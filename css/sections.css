@@ -54,10 +54,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transition: transform 1.2s ease;
-}
-.sec-timeless__image:hover img {
-  transform: scale(1.04);
+  will-change: transform;
+  transform: scale(0.45);
 }
 
 /* =============================================
