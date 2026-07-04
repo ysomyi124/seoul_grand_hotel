@@ -77,7 +77,7 @@
 
       // easeOutQuart: 처음에 확 커지고 끝으로 갈수록 천천히 수렴
       const eased = 1 - Math.pow(1 - linear, 4);
-      timelessImg.style.transform = 'scale(' + (0.45 + 0.55 * eased) + ')';
+      timelessImg.style.transform = 'scale(' + (0.3 + 0.7 * eased) + ')';
       zoomRafId = null;
     }
 
