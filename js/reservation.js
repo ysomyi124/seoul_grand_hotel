@@ -256,3 +256,89 @@
   }
 
 })();
+
+/* =============================================
+   RESERVATION MODULE — window.SGH.reservation
+   예약 생성 · 조회 · 취소 (Supabase 연동)
+   ============================================= */
+
+(function () {
+  'use strict';
+
+  window.SGH = window.SGH || {};
+
+  window.SGH.reservation = {
+
+    /* 예약 생성 */
+    create: async function (payload) {
+      var userRes = await window.SGH.supabase.auth.getUser();
+      var userId = userRes.data && userRes.data.user ? userRes.data.user.id : null;
+
+      return window.SGH.supabase
+        .from('reservations')
+        .insert([{
+          user_id:        userId,
+          room_id:        payload.roomId,
+          checkin_date:   payload.checkin,
+          checkout_date:  payload.checkout,
+          nights:         payload.nights,
+          rooms:          payload.rooms || 1,
+          adults:         payload.adults || 2,
+          children:       payload.children || 0,
+          package_id:     payload.packageId || null,
+          services:       payload.services || [],
+          coupon_code:    payload.couponCode || null,
+          guest_name_ko:  payload.guestInfo ? payload.guestInfo.nameKo  : null,
+          guest_name_en:  payload.guestInfo ? payload.guestInfo.nameEn  : null,
+          guest_email:    payload.guestInfo ? payload.guestInfo.email   : null,
+          guest_phone:    payload.guestInfo ? payload.guestInfo.phone   : null,
+          guest_country:  payload.guestInfo ? payload.guestInfo.country : null,
+          special_request: payload.specialRequest || null,
+          payment_method: payload.paymentMethod || null,
+          price_base:     payload.price ? payload.price.baseRoom   : 0,
+          price_pkg:      payload.price ? payload.price.pkgAdd     : 0,
+          price_svc:      payload.price ? payload.price.svcTotal   : 0,
+          price_discount: payload.price ? payload.price.pkgDiscount + (payload.price.coupon || 0) : 0,
+          price_tax:      payload.price ? payload.price.tax        : 0,
+          price_total:    payload.price ? payload.price.total      : 0,
+          status:         'confirmed',
+        }])
+        .select()
+        .single();
+    },
+
+    /* 현재 사용자의 예약 목록 조회 */
+    getByUser: async function () {
+      var userRes = await window.SGH.supabase.auth.getUser();
+      if (userRes.error || !userRes.data.user) {
+        return { data: null, error: new Error('로그인이 필요합니다.') };
+      }
+      return window.SGH.supabase
+        .from('reservations')
+        .select('*, rooms(*)')
+        .eq('user_id', userRes.data.user.id)
+        .order('created_at', { ascending: false });
+    },
+
+    /* 예약 단건 조회 */
+    getById: async function (reservationId) {
+      return window.SGH.supabase
+        .from('reservations')
+        .select('*, rooms(*)')
+        .eq('id', reservationId)
+        .single();
+    },
+
+    /* 예약 취소 */
+    cancel: async function (reservationId) {
+      return window.SGH.supabase
+        .from('reservations')
+        .update({ status: 'cancelled' })
+        .eq('id', reservationId)
+        .select()
+        .single();
+    },
+  };
+
+})();
+

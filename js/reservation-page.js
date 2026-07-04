@@ -522,6 +522,30 @@
         price:        p,
       };
       sessionStorage.setItem('rsvComplete', JSON.stringify(reservation));
+
+      /* Supabase 저장 (fire-and-forget — 실패해도 리다이렉트 진행) */
+      if (window.SGH && window.SGH.reservation) {
+        var payload = {
+          roomId:         state.selectedRoom,
+          checkin:        state.checkin,
+          checkout:       state.checkout,
+          nights:         state.nights,
+          rooms:          state.rooms,
+          adults:         state.adults,
+          children:       state.children,
+          packageId:      state.selectedPackage,
+          services:       Object.keys(state.services).filter(function(k) { return state.services[k]; }),
+          couponCode:     state.couponCode,
+          guestInfo:      state.guestInfo,
+          specialRequest: state.guestInfo.specialRequest,
+          paymentMethod:  state.paymentMethod,
+          price:          p,
+        };
+        window.SGH.reservation.create(payload).catch(function(err) {
+          console.warn('[SGH] 예약 저장 실패 (로컬 완료 처리됨):', err);
+        });
+      }
+
       window.location.href = 'reservation-complete.html';
     });
   }
